@@ -1,6 +1,7 @@
 import { dateNavigation } from './date-navigation.mjs'
 import { readFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
+import QRCode from 'qrcode'
 import { normalizeSeasonGuideLink, seasonGuidePolicy } from '../src/link-policy.mjs'
 
 
@@ -8,6 +9,7 @@ const SEASON_GUIDE_URL = seasonGuidePolicy.fallback
 const SITE_URL = (process.env.SITE_URL ?? 'https://skydaily.nankki.com').replace(/\/$/, '')
 const ASSET_VERSION = createHash('sha256').update(readFileSync(new URL('../assets/notebook.css', import.meta.url))).update(readFileSync(new URL('../assets/notebook.js', import.meta.url))).digest('hex').slice(0, 12)
 const ICON_VERSION = createHash('sha256').update(readFileSync(new URL('../assets/favicon.svg', import.meta.url))).digest('hex').slice(0, 12)
+const SHARE_QR = await QRCode.toString(SITE_URL + '/', { type: 'svg', margin: 0 })
 
 function faviconLinks(assets = 'assets/') {
   return `<link rel="icon" href="${assets}favicon.ico?v=${ICON_VERSION}" sizes="16x16 32x32 48x48"><link rel="icon" href="${assets}favicon.svg?v=${ICON_VERSION}" type="image/svg+xml" sizes="any">`
@@ -144,7 +146,8 @@ function renderFooter({ archive = false, date, api = false } = {}) {
   const home = archive ? '<a href="../index.html">返回首页</a> · ' : api ? '<a href="index.html">返回首页</a> · ' : ''
   const guide = api ? '' : `<a href="${archive ? '../' : ''}api.html">API 使用说明</a>`
   const folio = date ? `<span>光遇每日任务</span><span>${date.replaceAll('-', '.')}</span><span>${date.split('-')[2]}</span>` : '<span>光遇每日任务</span><span>API 使用说明</span><span>v1</span>'
-  return `<footer class="journal-footer"><div class="footer-info"><div><p>图文来源于游戏内小精灵，版权归原权利人所有；本站内容仅供学习与交流。</p><p>获取最新资讯与完整攻略，请优先使用游戏内「小精灵」。</p><p>版权问题反馈：<a href="https://github.com/GuNanOvO/skydaily/issues" target="_blank" rel="noopener noreferrer">仓库 Issues ↗</a></p></div><nav aria-label="页脚导航"><div>${home}<a href="${dataHref}">完整数据</a></div>${guide}<a class="back-top" href="#page-top">回到页首 ↑</a></nav></div><div class="footer-folio">${folio}</div></footer>`
+  const share = archive ? '' : `<div class="footer-share"><div class="share-qr" aria-hidden="true">${SHARE_QR}</div><div class="share-copy"><p>扫码打开今日任务</p><button type="button" class="share-button" data-share-url="${SITE_URL}/">分享本页</button></div></div>`
+  return `<footer class="journal-footer"><div class="footer-info"><div><p>图文来源于游戏内小精灵，版权归原权利人所有；本站内容仅供学习与交流。</p><p>获取最新资讯与完整攻略，请优先使用游戏内「小精灵」。</p><p>版权问题反馈：<a href="https://github.com/GuNanOvO/skydaily/issues" target="_blank" rel="noopener noreferrer">仓库 Issues ↗</a></p>${share}</div><nav aria-label="页脚导航"><div>${home}<a href="${dataHref}">完整数据</a></div>${guide}<a class="back-top" href="#page-top">回到页首 ↑</a></nav></div><div class="footer-folio">${folio}</div></footer>`
 }
 
 export function renderApiGuide(date) {
@@ -192,12 +195,7 @@ export function renderPage(envelope, options = {}) {
   ].filter(Boolean).map((s) => `<span${s.warn ? ' class="warn"' : ''}>${s.text}</span>`).join('')
 
   const summary = overviewLine(data)
-  const ogImage =
-    data.calendar?.images[0] ??
-    data.weather?.images[0] ??
-    data.candles[0]?.images[0] ??
-    data.taskDetails.find((d) => d.images.length > 0)?.images[0] ??
-    null
+  const shareImage = `${SITE_URL}/preview/share.jpg?v=${envelope.date}`
 
   const weather = overviewPreview(data.weather, 'weather', '天气预报', '今日无天气数据')
   const calendar = overviewPreview(data.calendar, 'calendar', '本月日历', '今日无日历数据')
@@ -213,7 +211,10 @@ export function renderPage(envelope, options = {}) {
 <meta property="og:type" content="website">
 <meta property="og:title" content="光遇每日任务 · ${escapeHtml(envelope.date)}">
 ${summary ? `<meta property="og:description" content="${escapeHtml(summary)}">` : ''}
-${ogImage ? `<meta property="og:image" content="${escapeHtml(ogImage)}">` : ''}
+<meta property="og:image" content="${escapeHtml(shareImage)}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta name="twitter:card" content="summary_large_image">
 <title>光遇每日任务 · ${escapeHtml(envelope.date)}</title>
 ${faviconLinks(assets)}
 <link rel="stylesheet" href="${assets}notebook.css?v=${ASSET_VERSION}">
@@ -235,7 +236,7 @@ ${overviewDialogs(data)}
 </html>`
 }
 
-async function loadEnvelope() {
+export async function loadEnvelope() {
   const fileFlag = process.argv.indexOf('--file')
   if (fileFlag !== -1) {
     const { readFile } = await import('node:fs/promises')

@@ -86,6 +86,8 @@ try {
   if (process.argv.includes('--preview')) {
     const bytes = await readFile(join(root, 'preview/daily.webp'))
     if (bytes.toString('ascii', 0, 4) !== 'RIFF' || bytes.toString('ascii', 8, 12) !== 'WEBP') fail('README preview is missing or is not WebP')
+    const share = await readFile(join(root, 'preview/share.jpg'))
+    if (share[0] !== 0xff || share[1] !== 0xd8 || share[2] !== 0xff) fail('Share card is missing or is not JPEG')
   }
   console.log(`Publication content valid: ${dates.length} dates, ${references.size} images`)
 } catch (error) {

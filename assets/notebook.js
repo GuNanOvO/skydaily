@@ -242,3 +242,21 @@
   }, {threshold: 0.08});
   regions.forEach(region => reveal.observe(region));
 })();
+(() => {
+  document.querySelectorAll('.share-button').forEach(button => {
+    button.addEventListener('click', async () => {
+      const url = button.dataset.shareUrl || location.href;
+      const title = document.title;
+      try {
+        if (navigator.share) {
+          await navigator.share({ title, text: title, url });
+          return;
+        }
+        await navigator.clipboard.writeText(url);
+        const original = button.textContent;
+        button.textContent = '链接已复制';
+        setTimeout(() => { button.textContent = original; }, 2000);
+      } catch {}
+    });
+  });
+})();
