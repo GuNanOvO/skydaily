@@ -6,8 +6,8 @@ export async function readPublishedHistory(env: Env, date: string): Promise<Enve
   if (!env.HISTORY_BASE_URL) return null
   const base = new URL(env.HISTORY_BASE_URL.replace(/\/$/, '') + '/')
   if (base.protocol !== 'https:' || base.username || base.password) throw new Error('invalid_history_configuration')
-  const response = await fetch(new URL(`daily/${date}.json`, base), { redirect: 'error', signal: AbortSignal.timeout(20_000) })
-  if (response.status === 404) return null
+  const response = await fetch(new URL(`daily/${date}.json`, base), { redirect: 'manual', signal: AbortSignal.timeout(20_000) })
+  if (response.status === 404 || (response.status >= 300 && response.status < 400)) return null
   if (!response.ok) throw new Error('history_unavailable')
   const parsed = envelopeSchema.safeParse(await response.json())
   if (!parsed.success || parsed.data.date !== date) throw new Error('invalid_history_data')

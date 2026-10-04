@@ -147,7 +147,8 @@ app.get('/v1/media/:id', async c => {
   if (!url) return c.notFound()
   const target = new URL(url)
   if (target.protocol !== 'https:' || target.hostname !== 'ok.166.net' || target.port || target.username || target.password) return c.notFound()
-  const response = await fetch(url, { redirect: 'error', headers: c.req.header('range') ? { Range: c.req.header('range')! } : {} })
+  const response = await fetch(url, { redirect: 'manual', headers: c.req.header('range') ? { Range: c.req.header('range')! } : {} })
+  if (response.status >= 300 && response.status < 400) return c.notFound()
   if (!response.ok) return c.json({ error: { code: 'media_unavailable' } }, 502)
   const type = response.headers.get('content-type') ?? ''
   if (!/^(image\/(?:jpeg|png|webp|gif)|video\/mp4)(?:;|$)/i.test(type)) return c.notFound()
@@ -225,7 +226,7 @@ app.onError((err, c) => {
   if (err instanceof RefreshError) {
     return c.json({ error: { code: err.code } }, err.code === 'validation_failed' ? 500 : 502)
   }
-  console.error('request failed')
+  console.error('request failed:', err instanceof Error ? `${err.message}\n${err.stack ?? ''}` : err)
   return c.json({ error: { code: 'internal' } }, 500)
 })
 
