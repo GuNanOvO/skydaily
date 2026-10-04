@@ -1,0 +1,90 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-03",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "和朋友击掌",
+        "keyword": null
+      },
+      {
+        "number": 2,
+        "text": "接受一位朋友的礼物",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "向一位朋友招手",
+        "keyword": null
+      },
+      {
+        "number": 4,
+        "text": "在霞光城拱门上冥想",
+        "keyword": "霞光城拱门冥想"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "霞光城拱门冥想",
+        "title": "每日任务－在霞光城拱门上冥想",
+        "sections": [
+          {
+            "label": "任务",
+            "text": "在霞光城拱门上冥想"
+          },
+          {
+            "label": "位置",
+            "text": "霞光城－城门上"
+          },
+          {
+            "label": "步骤",
+            "text": "通过霞谷溜冰场左侧的入口进入霞光城，在霞光城门口上面"
+          },
+          {
+            "label": "视频指引",
+            "text": ""
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/23721159ef4807bb4958e4b5.webp",
+          "https://skydaily.nankki.com/history/media/be5e67b04821144d13718777.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "任务：在霞光城拱门上冥想\n位置：霞光城－城门上\n步骤：通过霞谷溜冰场左侧的入口进入霞光城，在霞光城门口上面\n视频指引："
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": ""
+      }
+    ],
+    "weather": {
+      "text": "大部分地区地区夜间晴朗，幽光山洞将会有灼热碎片降落",
+      "images": [
+        "https://skydaily.nankki.com/history/media/460f631c732a714b4eb8f376.webp",
+        "https://skydaily.nankki.com/history/media/93113bf364705f1a6efbbd5a.webp",
+        "https://skydaily.nankki.com/history/media/8bfd657f6559604e0ea306c7.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/82635faf378182c0ae1ee30b.webp"
+      ]
+    },
+    "candles": [],
+    "seasonCandleMap": null
+  },
+  "meta": {
+    "fetched_at": "2026-10-03T03:50:31.000Z",
+    "cached": true,
+    "stale": false
+  },
+  "errors": []
+}

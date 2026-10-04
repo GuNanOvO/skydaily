@@ -1,0 +1,48 @@
+name: test
+
+on:
+  repository_dispatch:
+    types: [collection-failed]
+  pull_request:
+    paths: ['src/**', 'scripts/**', 'assets/**', 'history/**', '.github/workflows/**', 'package*.json', 'tsconfig.json', 'wrangler.jsonc']
+  push:
+    branches: [main]
+    paths: ['src/**', 'scripts/**', 'assets/**', 'history/**', '.github/workflows/**', 'package*.json', 'tsconfig.json', 'wrangler.jsonc']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  content:
+    if: github.event_name != 'repository_dispatch'
+    runs-on: ubuntu-latest
+    env:
+      SITE_URL: https://skydaily.nankki.com
+      PUBLISH_HISTORY: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: npm ci
+      - run: npm run typecheck
+      - run: pip install Pillow==11.3.0
+      - name: 整理并生成待发布内容
+        run: |
+          python3 scripts/prepare-public-history.py --site "$SITE_URL"
+          RECORD=$(node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync("history/index.json"));process.stdout.write(x.dates.at(-1).file)')
+          node scripts/render-pages.mjs --file "history/$RECORD"
+      - name: 检查公开数据与图片
+        run: node --experimental-strip-types scripts/validate-publication.mjs
+  collection:
+    if: github.event_name == 'repository_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Update status
+        run: |
+          echo '::error::Daily update did not complete.'
+          exit 1

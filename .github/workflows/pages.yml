@@ -1,0 +1,123 @@
+name: pages
+
+on:
+  repository_dispatch:
+    types: [daily-updated]
+  push:
+    branches: [main]
+    paths: ['src/link-policy.*', 'src/schema/**', 'scripts/**', 'assets/**', 'history/**', 'package.json', 'package-lock.json', '.github/workflows/pages.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-publication
+  cancel-in-progress: false
+
+env:
+  SITE_URL: https://skydaily.nankki.com
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: pip install --quiet Pillow==11.3.0
+      - run: npm ci --silent --no-audit --no-fund
+      - run: npm run typecheck
+      - run: npx playwright install --with-deps chromium
+      - name: 获取私有快照并准备公开归档
+        env:
+          WORKER_URL: ${{ secrets.WORKER_URL }}
+          ADMIN_SECRET: ${{ secrets.ADMIN_SECRET }}
+          VERSION: ${{ github.event.client_payload.version }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          set -eu
+          VERSION="${VERSION:-}"
+          if [ "$EVENT_NAME" = repository_dispatch ] && [ -z "$VERSION" ]; then exit 1; fi
+          if [ -n "$VERSION" ] && ! [[ "$VERSION" =~ ^[a-f0-9]{64}$ ]]; then exit 1; fi
+          if git ls-remote --exit-code --heads origin data > /dev/null; then
+            git fetch -q origin data
+            git worktree add -q data-store FETCH_HEAD
+            rm -rf history/daily history/media
+            cp -a data-store/history/. history/
+          else
+            STATUS=$?
+            if [ "$STATUS" -ne 2 ]; then exit 1; fi
+            mkdir data-store
+            git -C data-store init -q -b data
+          fi
+          if [ -n "$VERSION" ]; then
+            curl --silent --fail --retry 5 --retry-all-errors --retry-delay 10 --max-time 90 -H "Authorization: Bearer $ADMIN_SECRET" "$WORKER_URL/admin/snapshot/$VERSION" -o "$RUNNER_TEMP/snapshot.json"
+            python3 scripts/prepare-public-history.py --site "$SITE_URL" --snapshot "$RUNNER_TEMP/snapshot.json"
+          else
+            python3 scripts/prepare-public-history.py --site "$SITE_URL"
+          fi
+          rm -f "$RUNNER_TEMP/snapshot.json"
+          rm -rf data-store/history
+          cp -a history data-store/
+      - name: 渲染页面与历史记录
+        env:
+          PUBLISH_HISTORY: '1'
+        run: |
+          RECORD=$(node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync("history/index.json"));process.stdout.write(x.dates.at(-1).file)')
+          node scripts/render-pages.mjs --file "history/$RECORD"
+      - name: 生成每日页面预览图
+        run: node scripts/capture-preview.mjs
+      - name: 检查最终发布内容
+        run: node --experimental-strip-types scripts/validate-publication.mjs --preview
+      - name: 保存已校验的公开归档
+        run: |
+          git -C data-store config http.https://github.com/.extraheader "$(git config --get http.https://github.com/.extraheader)"
+          git -C data-store config user.name 'github-actions[bot]'
+          git -C data-store config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git -C data-store add history
+          if ! git -C data-store diff --cached --quiet; then
+            git -C data-store commit -q -m 'data: update rolling journal archive'
+            git -C data-store push -q "$(git remote get-url origin)" HEAD:refs/heads/data
+          fi
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v4
+        with:
+          path: out
+      - name: 发布页面
+        id: deployment
+        uses: actions/deploy-pages@v4
+      - name: 更新仓库 README 预览
+        run: |
+          set -eu
+          git fetch -q origin main
+          git worktree add -q readme-store FETCH_HEAD
+          node scripts/update-readme.mjs readme-store/README.md
+          git -C readme-store config http.https://github.com/.extraheader "$(git config --get http.https://github.com/.extraheader)"
+          git -C readme-store config user.name 'github-actions[bot]'
+          git -C readme-store config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git -C readme-store add README.md
+          if ! git -C readme-store diff --cached --quiet; then
+            git -C readme-store commit -q -m 'docs: update daily page preview'
+            git -C readme-store push -q "$(git remote get-url origin)" HEAD:refs/heads/main
+          fi
+      - name: 确认版本发布成功
+        if: github.event_name == 'repository_dispatch'
+        env:
+          WORKER_URL: ${{ secrets.WORKER_URL }}
+          ADMIN_SECRET: ${{ secrets.ADMIN_SECRET }}
+          VERSION: ${{ github.event.client_payload.version }}
+        run: |
+          curl --silent --fail --max-time 30 -X POST -H "Authorization: Bearer $ADMIN_SECRET" "$WORKER_URL/admin/published/$VERSION" > /dev/null
+      - name: 清理私有快照
+        if: always()
+        run: rm -f "$RUNNER_TEMP/snapshot.json"

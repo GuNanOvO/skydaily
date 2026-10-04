@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-02",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "在静谧庭院外冥想",
+        "keyword": "静谧庭院冥想"
+      },
+      {
+        "number": 2,
+        "text": "向一位玩家鞠躬",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "在荧光小菇旁回复能量",
+        "keyword": "荧光小菇"
+      },
+      {
+        "number": 4,
+        "text": "前往雨林重温正步冒险家的回忆",
+        "keyword": "正步冒险家路线"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "静谧庭院冥想",
+        "title": "每日任务－在静谧庭院外冥想",
+        "sections": [
+          {
+            "label": "任务",
+            "text": "在静谧庭院外冥想"
+          },
+          {
+            "label": "位置",
+            "text": "在雨林－静谧庭院"
+          },
+          {
+            "label": "步骤",
+            "text": "进入雨林大厅后往下飞下即是静谧庭院，着陆后往左前方跑即可看到"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/3d04c92d32b9e2b37c9468c9.webp",
+          "https://skydaily.nankki.com/history/media/a1b8144d7ccde847a78a069c.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "任务：在静谧庭院外冥想\n位置：在雨林－静谧庭院\n步骤：进入雨林大厅后往下飞下即是静谧庭院，着陆后往左前方跑即可看到"
+      },
+      {
+        "keyword": "荧光小菇",
+        "title": "荧光小菇",
+        "sections": [
+          {
+            "label": "小贴士",
+            "text": "旅人们跳到荧光小菇上可补充能量\n(能量几乎消耗完时再跳上去会更容易完成每日任务哦)"
+          },
+          {
+            "label": "地点",
+            "text": "荧光小菇是生长在雨林的植物。"
+          },
+          {
+            "label": "特性",
+            "text": "荧光小菇呈半透明状态并且会发光，旅人们站在荧光蘑菇上可以悬浮起来，极容易辨认。"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/147bcbe5c9be71e5ae7b40c8.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "小贴士：旅人们跳到荧光小菇上可补充能量\n(能量几乎消耗完时再跳上去会更容易完成每日任务哦)\n地点：荧光小菇是生长在雨林的植物。\n特性：荧光小菇呈半透明状态并且会发光，旅人们站在荧光蘑菇上可以悬浮起来，极容易辨认。"
+      },
+      {
+        "keyword": "正步冒险家路线",
+        "title": "集结季先祖-正步冒险家路线",
+        "sections": [
+          {
+            "label": "先祖位置",
+            "text": "雨林·荧光森林"
+          },
+          {
+            "label": "图文指引",
+            "text": ""
+          },
+          {
+            "label": "视频指引",
+            "text": ""
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/dc5fd10dd4b49a3ef05e03f2.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "先祖位置：雨林·荧光森林\n图文指引：\n视频指引："
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": ""
+      }
+    ],
+    "weather": {
+      "text": "今日无碎片降落",
+      "images": [
+        "https://skydaily.nankki.com/history/media/786738d123af1a8767665d93.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/82635faf378182c0ae1ee30b.webp"
+      ]
+    },
+    "candles": [],
+    "seasonCandleMap": null
+  },
+  "meta": {
+    "fetched_at": "2026-10-02T04:06:54.000Z",
+    "cached": true,
+    "stale": false
+  },
+  "errors": []
+}

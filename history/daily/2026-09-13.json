@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-13",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "在中央神坛提交风筝设计方案",
+        "keyword": "中央神坛交风筝方案"
+      },
+      {
+        "number": 2,
+        "text": "和朋友击掌",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "收集30点烛火",
+        "keyword": null
+      },
+      {
+        "number": 4,
+        "text": "前往霞谷重温螺旋舞蹈冠军的回忆",
+        "keyword": "螺旋舞蹈冠军路线"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "中央神坛交风筝方案",
+        "title": "每日任务-在中央神坛提交风筝设计方案",
+        "sections": [
+          {
+            "label": "地点",
+            "text": "云野·中央神坛"
+          },
+          {
+            "label": "步骤",
+            "text": "1.先前往中央神坛\n2.找到任务地点\n3.与先祖交互获得风筝材料\n4.选择心仪的颜色为风筝材料染色\n5.选择一款最喜欢的风筝，将风筝材料提交给对应先祖即可完成任务"
+          },
+          {
+            "label": "图片指引",
+            "text": ""
+          },
+          {
+            "label": "视频指引",
+            "text": ""
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/ce5af6e89b794325630a90fa.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "地点：云野·中央神坛\n步骤：\n1.先前往中央神坛\n2.找到任务地点\n3.与先祖交互获得风筝材料\n4.选择心仪的颜色为风筝材料染色\n5.选择一款最喜欢的风筝，将风筝材料提交给对应先祖即可完成任务\n图片指引：\n视频指引："
+      },
+      {
+        "keyword": "螺旋舞蹈冠军路线",
+        "title": "追光季螺旋舞蹈冠军路线",
+        "sections": [
+          {
+            "label": "先祖位置",
+            "text": "霞谷·滑冰场"
+          },
+          {
+            "label": "视频指引",
+            "text": "2、若在图示位置找不到先祖，有可能是因为其他旅人正在收集，可重新进入地图再试试看～"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/85b63905aa5dc1cc564ddccb.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "先祖位置：霞谷·滑冰场\n视频指引：\n2、若在图示位置找不到先祖，有可能是因为其他旅人正在收集，可重新进入地图再试试看～"
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": ""
+      }
+    ],
+    "weather": {
+      "text": "大部分地区地区阴天多云，圣岛将会有灼热碎片降落",
+      "images": [
+        "https://skydaily.nankki.com/history/media/9891340a8b115dde2d8cd22a.webp",
+        "https://skydaily.nankki.com/history/media/7288f876f317adeb67b8c249.webp",
+        "https://skydaily.nankki.com/history/media/9aed9befbc57e44f1014f765.webp",
+        "https://skydaily.nankki.com/history/media/3960eea40a131203663f8f63.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/3572ff8669f4a5aa09b46643.webp"
+      ]
+    },
+    "candles": [],
+    "seasonCandleMap": null
+  },
+  "meta": {
+    "fetched_at": "2026-09-13T03:13:29.000Z",
+    "cached": true,
+    "stale": false
+  },
+  "errors": []
+}

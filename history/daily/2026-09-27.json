@@ -1,0 +1,127 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-27",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "在密林遗迹冥想",
+        "keyword": "密林遗迹冥想"
+      },
+      {
+        "number": 2,
+        "text": "向一位朋友招手",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "和朋友击掌",
+        "keyword": null
+      },
+      {
+        "number": 4,
+        "text": "前往雨林重温娇嗔搬运工的回忆",
+        "keyword": "娇嗔搬运工路线"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "密林遗迹冥想",
+        "title": "每日任务－在密林遗迹冥想",
+        "sections": [
+          {
+            "label": "任务",
+            "text": "在密林遗迹冥想"
+          },
+          {
+            "label": "位置",
+            "text": "在雨林－密林遗迹(雨林水母图)"
+          },
+          {
+            "label": "步骤",
+            "text": "进入雨林后来到水母图(雨林第三幅地图)，往右前方的树洞走，穿越树洞后，飞向左前方的小亭子就能看到"
+          },
+          {
+            "label": "视频指引",
+            "text": ""
+          },
+          {
+            "label": "大神推荐",
+            "text": "游戏里捡到的萌新竟然是…"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/47c06c813734ad1bcd677504.webp",
+          "https://skydaily.nankki.com/history/media/19fb3c1f855a094b1823a9d5.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "任务：在密林遗迹冥想\n位置：在雨林－密林遗迹(雨林水母图)\n步骤：进入雨林后来到水母图(雨林第三幅地图)，往右前方的树洞走，穿越树洞后，飞向左前方的小亭子就能看到\n视频指引：\n大神推荐：游戏里捡到的萌新竟然是…"
+      },
+      {
+        "keyword": "娇嗔搬运工路线",
+        "title": "雨林·娇嗔搬运工",
+        "sections": [
+          {
+            "label": "先祖位置",
+            "text": "进入雨林荧光森林后，沿小河走到小桥前，上桥后向左走，先祖在洞口静静等候~"
+          },
+          {
+            "label": "视频指引",
+            "text": ""
+          },
+          {
+            "label": "兑换图鉴",
+            "text": ""
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/b487f910a0d17d524e2d3e99.webp",
+          "https://skydaily.nankki.com/history/media/cd2dd76b6ded4b61094bc61e.webp",
+          "https://skydaily.nankki.com/history/media/8e48eadbeb19cbed66d5d3f8.webp",
+          "https://skydaily.nankki.com/history/media/b2197fea3188751ee432187b.webp",
+          "https://skydaily.nankki.com/history/media/bf6f08b65349fe7001bca2b0.webp",
+          "https://skydaily.nankki.com/history/media/2b07aa140a343d195465ca4f.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "先祖位置：进入雨林荧光森林后，沿小河走到小桥前，上桥后向左走，先祖在洞口静静等候~\n视频指引：\n兑换图鉴："
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": ""
+      }
+    ],
+    "weather": {
+      "text": "今日将会有灼热碎片坠落在星光沙漠一隅",
+      "images": [
+        "https://skydaily.nankki.com/history/media/836042c83214451b67bd74d4.webp",
+        "https://skydaily.nankki.com/history/media/db95520b926aed1525f5ee34.webp",
+        "https://skydaily.nankki.com/history/media/defbe5f0978d77a3c3da2415.webp",
+        "https://skydaily.nankki.com/history/media/3aac008fc33c8322f34a3721.webp"
+      ]
+    },
+    "calendar": {
+      "images": []
+    },
+    "candles": [],
+    "seasonCandleMap": null
+  },
+  "meta": {
+    "fetched_at": "2026-09-27T03:43:53.000Z",
+    "cached": true,
+    "stale": false
+  },
+  "errors": [
+    {
+      "section": "media",
+      "code": "image_unavailable"
+    }
+  ]
+}

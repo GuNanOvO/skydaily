@@ -1,0 +1,78 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-30",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "和朋友击掌",
+        "keyword": null
+      },
+      {
+        "number": 2,
+        "text": "和陌生人一起坐在长凳上",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "向一位玩家鞠躬",
+        "keyword": null
+      },
+      {
+        "number": 4,
+        "text": "前往禁阁重温浮空宗师的回忆",
+        "keyword": "浮空宗师路线"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "浮空宗师路线",
+        "title": "气功动作",
+        "sections": [
+          {
+            "label": "先祖位置",
+            "text": "来到禁阁的第二层后，打开四人门，在门背后的柱子边，先祖在静静等候~"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/136b218cad8356cb5b4e9420.webp",
+          "https://skydaily.nankki.com/history/media/3cc0fdd63241abad4c66a41d.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "先祖位置：来到禁阁的第二层后，打开四人门，在门背后的柱子边，先祖在静静等候~"
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": ""
+      }
+    ],
+    "weather": {
+      "text": "今日将会有冷却碎片坠落在滑冰场",
+      "images": [
+        "https://skydaily.nankki.com/history/media/8b4f2f75bcdf92389c4d2a5e.webp",
+        "https://skydaily.nankki.com/history/media/1b83625df624b95d2d2ffbd7.webp",
+        "https://skydaily.nankki.com/history/media/9b07749a8bd739ac1b42c3e9.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/0e28a70e989e2b2544873284.webp"
+      ]
+    },
+    "candles": [],
+    "seasonCandleMap": null
+  },
+  "meta": {
+    "fetched_at": "2026-09-30T04:02:04.000Z",
+    "cached": true,
+    "stale": false
+  },
+  "errors": []
+}

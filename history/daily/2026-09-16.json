@@ -1,0 +1,106 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-16",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "向一位朋友做个动作",
+        "keyword": null
+      },
+      {
+        "number": 2,
+        "text": "在水母上回复能量",
+        "keyword": "水母位置"
+      },
+      {
+        "number": 3,
+        "text": "点亮一位玩家",
+        "keyword": null
+      },
+      {
+        "number": 4,
+        "text": "帮助苦修行者",
+        "keyword": "苦修行者任务"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "水母位置",
+        "title": "每日任务·在水母上恢复能量",
+        "sections": [
+          {
+            "label": "位置",
+            "text": "密林遗迹(水母图)"
+          },
+          {
+            "label": "步骤",
+            "text": "密林遗迹后往前飞，来到终点图前的雨亭，点亮蜡烛即可召唤出一排水母"
+          },
+          {
+            "label": "注意",
+            "text": "几乎消耗完能量后再跳上水母会更容易完成任务哦"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/20ab602b08dc7bbc7543ab97.webp",
+          "https://skydaily.nankki.com/history/media/4c6c0134eed11351ab03141b.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "位置：密林遗迹(水母图)\n步骤：密林遗迹后往前飞，来到终点图前的雨亭，点亮蜡烛即可召唤出一排水母\n注意：几乎消耗完能量后再跳上水母会更容易完成任务哦"
+      },
+      {
+        "keyword": "苦修行者任务",
+        "title": "苦修行者任务",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "请旅人先查看接到的任务名称，然后在下方选择对应指南\n在云峰找到苦修行者 ｜ 苦修行者在仙乡需要帮助"
+          },
+          {
+            "label": "小精灵提示",
+            "text": "1、若旅人从未收集过该先祖，任务会显示为：在云峰找到苦修行者；\n2、若旅人之前已收集过该先祖，任务会显示为：苦修行者在仙乡需要帮助。"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "请旅人先查看接到的任务名称，然后在下方选择对应指南\n在云峰找到苦修行者 ｜ 苦修行者在仙乡需要帮助\n小精灵提示：\n1、若旅人从未收集过该先祖，任务会显示为：在云峰找到苦修行者；\n2、若旅人之前已收集过该先祖，任务会显示为：苦修行者在仙乡需要帮助。"
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": ""
+      }
+    ],
+    "weather": {
+      "text": "今日将会有冷却碎片坠落在远古战场",
+      "images": [
+        "https://skydaily.nankki.com/history/media/1d54b783e523ea48e14e5798.webp",
+        "https://skydaily.nankki.com/history/media/e25afa36ad0a8481440cbbee.webp",
+        "https://skydaily.nankki.com/history/media/f49c70413b5012328b63571b.webp",
+        "https://skydaily.nankki.com/history/media/ca9e25347403e45260103700.webp",
+        "https://skydaily.nankki.com/history/media/127d296e70c7da3e9922a264.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/3572ff8669f4a5aa09b46643.webp"
+      ]
+    },
+    "candles": [],
+    "seasonCandleMap": null
+  },
+  "meta": {
+    "fetched_at": "2026-09-16T03:23:25.000Z",
+    "cached": true,
+    "stale": false
+  },
+  "errors": []
+}

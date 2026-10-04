@@ -1,0 +1,119 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-23",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "在水母上回复能量",
+        "keyword": "水母位置"
+      },
+      {
+        "number": 2,
+        "text": "接受一位朋友的礼物",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "收集30点烛火",
+        "keyword": null
+      },
+      {
+        "number": 4,
+        "text": "在滑冰场旁冥想",
+        "keyword": "滑冰场冥想"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "水母位置",
+        "title": "每日任务·在水母上恢复能量",
+        "sections": [
+          {
+            "label": "位置",
+            "text": "密林遗迹(水母图)"
+          },
+          {
+            "label": "步骤",
+            "text": "密林遗迹后往前飞，来到终点图前的雨亭，点亮蜡烛即可召唤出一排水母"
+          },
+          {
+            "label": "注意",
+            "text": "几乎消耗完能量后再跳上水母会更容易完成任务哦"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/20ab602b08dc7bbc7543ab97.webp",
+          "https://skydaily.nankki.com/history/media/4c6c0134eed11351ab03141b.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "位置：密林遗迹(水母图)\n步骤：密林遗迹后往前飞，来到终点图前的雨亭，点亮蜡烛即可召唤出一排水母\n注意：几乎消耗完能量后再跳上水母会更容易完成任务哦"
+      },
+      {
+        "keyword": "滑冰场冥想",
+        "title": "每日任务－在滑冰场旁冥想",
+        "sections": [
+          {
+            "label": "任务",
+            "text": "在滑冰场旁冥想"
+          },
+          {
+            "label": "位置",
+            "text": "在霞谷－滑冰场"
+          },
+          {
+            "label": "步骤",
+            "text": "进入霞谷后一直往前滑就能来到滑冰场，冥想点就在滑冰场右上方"
+          },
+          {
+            "label": "视频指南",
+            "text": ""
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/1b83625df624b95d2d2ffbd7.webp",
+          "https://skydaily.nankki.com/history/media/9b07749a8bd739ac1b42c3e9.webp",
+          "https://skydaily.nankki.com/history/media/4a12986d8f93e24e26383e55.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "任务：在滑冰场旁冥想\n位置：在霞谷－滑冰场\n步骤：进入霞谷后一直往前滑就能来到滑冰场，冥想点就在滑冰场右上方\n视频指南："
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": ""
+      }
+    ],
+    "weather": {
+      "text": "今日将会有冷却碎片坠落在仙乡",
+      "images": [
+        "https://skydaily.nankki.com/history/media/5dd16d038782a67354ea3e7f.webp",
+        "https://skydaily.nankki.com/history/media/8a4703203d434cf8410b4bb2.webp",
+        "https://skydaily.nankki.com/history/media/65c4c598e466c42617f97612.webp"
+      ]
+    },
+    "calendar": {
+      "images": []
+    },
+    "candles": [],
+    "seasonCandleMap": null
+  },
+  "meta": {
+    "fetched_at": "2026-09-23T03:23:17.000Z",
+    "cached": true,
+    "stale": false
+  },
+  "errors": [
+    {
+      "section": "media",
+      "code": "image_unavailable"
+    }
+  ]
+}

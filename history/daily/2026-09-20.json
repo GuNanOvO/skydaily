@@ -1,0 +1,118 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-20",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "在禁阁第二层冥想",
+        "keyword": "禁阁二层冥想"
+      },
+      {
+        "number": 2,
+        "text": "和陌生人一起坐在长凳上",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "向一位玩家鞠躬",
+        "keyword": null
+      },
+      {
+        "number": 4,
+        "text": "收集紫色光芒",
+        "keyword": "紫色光芒"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "禁阁二层冥想",
+        "title": "在禁阁第二层冥想",
+        "sections": [
+          {
+            "label": "位置",
+            "text": "禁阁－禁阁二层"
+          },
+          {
+            "label": "指引",
+            "text": "进入禁阁后，往前走，通过机关电梯一路向上"
+          },
+          {
+            "label": "视频指引",
+            "text": ""
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/a7be00338373f6ee951f5ffb.webp",
+          "https://skydaily.nankki.com/history/media/fc0612a709d4d337b69b8267.webp",
+          "https://skydaily.nankki.com/history/media/b1d44a076939ac1f89bf413f.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "位置：禁阁－禁阁二层\n指引：\n进入禁阁后，往前走，通过机关电梯一路向上\n视频指引："
+      },
+      {
+        "keyword": "紫色光芒",
+        "title": "每日任务－紫色光芒",
+        "sections": [
+          {
+            "label": "位置",
+            "text": "禁阁右侧双人门"
+          },
+          {
+            "label": "指引",
+            "text": "进入禁阁后往右飞，进入双人门后往前走，在右侧建筑附近即可找到\n1、双人门需要两个人一起点火才能打开，可以喊上好朋友一起完成任务\n2、进入双人门需要先收集一名禁阁的常驻先祖哦 >>> 点击查看禁阁常驻先祖\n3、紫色光芒第一时间没见到，可以等待一会静静观察"
+          },
+          {
+            "label": "图文介绍",
+            "text": ""
+          },
+          {
+            "label": "视频介绍",
+            "text": ""
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/2a1b62931291d02fa777654a.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "位置：禁阁右侧双人门\n指引：进入禁阁后往右飞，进入双人门后往前走，在右侧建筑附近即可找到\n1、双人门需要两个人一起点火才能打开，可以喊上好朋友一起完成任务\n2、进入双人门需要先收集一名禁阁的常驻先祖哦 >>> 点击查看禁阁常驻先祖\n3、紫色光芒第一时间没见到，可以等待一会静静观察\n图文介绍：\n视频介绍："
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": ""
+      }
+    ],
+    "weather": {
+      "text": "今日将会有灼热碎片坠落在雪隐峰",
+      "images": [
+        "https://skydaily.nankki.com/history/media/3f79d6c68d36852f80d2bbed.webp",
+        "https://skydaily.nankki.com/history/media/ab76bc316b3edc272ea21c36.webp",
+        "https://skydaily.nankki.com/history/media/2465048759cf97f69d9ab3f8.webp",
+        "https://skydaily.nankki.com/history/media/3ea875d9832d76815ca9e3bd.webp",
+        "https://skydaily.nankki.com/history/media/400ab1e0ef8bdff590f16d7a.webp",
+        "https://skydaily.nankki.com/history/media/967c499969eb5dba2482c23e.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/24098af69539f2afb2845ef4.webp"
+      ]
+    },
+    "candles": [],
+    "seasonCandleMap": null
+  },
+  "meta": {
+    "fetched_at": "2026-09-20T03:27:53.000Z",
+    "cached": true,
+    "stale": false
+  },
+  "errors": []
+}

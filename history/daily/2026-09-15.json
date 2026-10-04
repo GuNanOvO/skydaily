@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-15",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "在中央神坛提交风筝设计方案",
+        "keyword": "中央神坛交风筝方案"
+      },
+      {
+        "number": 2,
+        "text": "向一位玩家鞠躬",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "在荧光小菇旁回复能量",
+        "keyword": "荧光小菇"
+      },
+      {
+        "number": 4,
+        "text": "前往禁阁重温冥想大师的回忆",
+        "keyword": "冥想大师路线"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "中央神坛交风筝方案",
+        "title": "每日任务-在中央神坛提交风筝设计方案",
+        "sections": [
+          {
+            "label": "地点",
+            "text": "云野·中央神坛"
+          },
+          {
+            "label": "步骤",
+            "text": "1.先前往中央神坛\n2.找到任务地点\n3.与先祖交互获得风筝材料\n4.选择心仪的颜色为风筝材料染色\n5.选择一款最喜欢的风筝，将风筝材料提交给对应先祖即可完成任务"
+          },
+          {
+            "label": "图片指引",
+            "text": ""
+          },
+          {
+            "label": "视频指引",
+            "text": ""
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/ce5af6e89b794325630a90fa.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "地点：云野·中央神坛\n步骤：\n1.先前往中央神坛\n2.找到任务地点\n3.与先祖交互获得风筝材料\n4.选择心仪的颜色为风筝材料染色\n5.选择一款最喜欢的风筝，将风筝材料提交给对应先祖即可完成任务\n图片指引：\n视频指引："
+      },
+      {
+        "keyword": "荧光小菇",
+        "title": "荧光小菇",
+        "sections": [
+          {
+            "label": "小贴士",
+            "text": "旅人们跳到荧光小菇上可补充能量\n(能量几乎消耗完时再跳上去会更容易完成每日任务哦)"
+          },
+          {
+            "label": "地点",
+            "text": "荧光小菇是生长在雨林的植物。"
+          },
+          {
+            "label": "特性",
+            "text": "荧光小菇呈半透明状态并且会发光，旅人们站在荧光蘑菇上可以悬浮起来，极容易辨认。"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/147bcbe5c9be71e5ae7b40c8.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "小贴士：旅人们跳到荧光小菇上可补充能量\n(能量几乎消耗完时再跳上去会更容易完成每日任务哦)\n地点：荧光小菇是生长在雨林的植物。\n特性：荧光小菇呈半透明状态并且会发光，旅人们站在荧光蘑菇上可以悬浮起来，极容易辨认。"
+      },
+      {
+        "keyword": "冥想大师路线",
+        "title": "冥想大师",
+        "sections": [
+          {
+            "label": "先祖位置",
+            "text": "禁阁第四层 >>>如何前往"
+          },
+          {
+            "label": "详细指引",
+            "text": "1.来到禁阁第四层后，飞到有残缺破屋的小岛\n2.向上看，在上方小浮石上找到石碑\n3.通过自己或小伙伴用祈祷动作点亮石碑，召唤先祖\n收集冥想大师先祖前，需要获得动作-祈祷 >>>点击查看如何获得"
+          },
+          {
+            "label": "视频指引",
+            "text": ""
+          },
+          {
+            "label": "兑换图鉴",
+            "text": ">>点击查看"
+          },
+          {
+            "label": "如何兑换",
+            "text": ">>点击查看"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/3e1da5ef6c41bcc1781ab244.webp",
+          "https://skydaily.nankki.com/history/media/46466435e61865238b4b859d.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "先祖位置：禁阁第四层 >>>如何前往\n详细指引：\n1.来到禁阁第四层后，飞到有残缺破屋的小岛\n2.向上看，在上方小浮石上找到石碑\n3.通过自己或小伙伴用祈祷动作点亮石碑，召唤先祖\n收集冥想大师先祖前，需要获得动作-祈祷 >>>点击查看如何获得\n视频指引：\n兑换图鉴：>>点击查看\n如何兑换：>>点击查看"
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": ""
+      }
+    ],
+    "weather": {
+      "text": "大部分地区地区阴天多云，滑冰场将会有冷却碎片降落",
+      "images": [
+        "https://skydaily.nankki.com/history/media/8b4f2f75bcdf92389c4d2a5e.webp",
+        "https://skydaily.nankki.com/history/media/1b83625df624b95d2d2ffbd7.webp",
+        "https://skydaily.nankki.com/history/media/9b07749a8bd739ac1b42c3e9.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/3572ff8669f4a5aa09b46643.webp"
+      ]
+    },
+    "candles": [],
+    "seasonCandleMap": null
+  },
+  "meta": {
+    "fetched_at": "2026-09-15T03:27:22.000Z",
+    "cached": true,
+    "stale": false
+  },
+  "errors": []
+}
