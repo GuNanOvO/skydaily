@@ -1,0 +1,112 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-26",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "和陌生人一起坐在长凳上",
+        "keyword": null
+      },
+      {
+        "number": 2,
+        "text": "净化10株黑暗植物",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "在水母上回复能量",
+        "keyword": "水母位置"
+      },
+      {
+        "number": 4,
+        "text": "前往云野重温引蝶人的回忆",
+        "keyword": "引蝶人路线"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "水母位置",
+        "title": "每日任务·在水母上恢复能量",
+        "sections": [
+          {
+            "label": "位置",
+            "text": "密林遗迹(水母图)"
+          },
+          {
+            "label": "步骤",
+            "text": "密林遗迹后往前飞，来到终点图前的雨亭，点亮蜡烛即可召唤出一排水母"
+          },
+          {
+            "label": "注意",
+            "text": "几乎消耗完能量后再跳上水母会更容易完成任务哦"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/20ab602b08dc7bbc7543ab97.webp",
+          "https://skydaily.nankki.com/history/media/4c6c0134eed11351ab03141b.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "位置：密林遗迹(水母图)\n步骤：密林遗迹后往前飞，来到终点图前的雨亭，点亮蜡烛即可召唤出一排水母\n注意：几乎消耗完能量后再跳上水母会更容易完成任务哦"
+      },
+      {
+        "keyword": "引蝶人路线",
+        "title": "云野-引蝶人",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "【云野·引蝶人】 >>点击查看：迁徙引蝶人位置先祖位置：穿过云野大厅，飞过风洞，站在蝴蝶平原会看到一个圆形小山包，先祖就在洞口等你~"
+          },
+          {
+            "label": "视频指引",
+            "text": ""
+          },
+          {
+            "label": "兑换图鉴",
+            "text": ""
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/f778fac37328fcf3e9f669fc.webp",
+          "https://skydaily.nankki.com/history/media/d490e18a4a810d4857982dfb.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "【云野·引蝶人】 >>点击查看：迁徙引蝶人位置先祖位置：穿过云野大厅，飞过风洞，站在蝴蝶平原会看到一个圆形小山包，先祖就在洞口等你~\n视频指引：\n兑换图鉴："
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": ""
+      }
+    ],
+    "weather": {
+      "text": "今日无碎片降落",
+      "images": [
+        "https://skydaily.nankki.com/history/media/e3610120e39f1752b2c247d3.webp"
+      ]
+    },
+    "calendar": {
+      "images": []
+    },
+    "candles": [],
+    "seasonCandleMap": null
+  },
+  "meta": {
+    "fetched_at": "2026-09-26T03:35:22.000Z",
+    "cached": true,
+    "stale": false
+  },
+  "errors": [
+    {
+      "section": "media",
+      "code": "image_unavailable"
+    }
+  ]
+}

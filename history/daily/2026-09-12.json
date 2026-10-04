@@ -1,0 +1,169 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-12",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "前往雨林帮助老奶奶整理餐桌",
+        "keyword": "整理餐桌"
+      },
+      {
+        "number": 2,
+        "text": "拯救一只被黑暗藤蔓困住的遥鲲",
+        "keyword": "拯救遥鲲"
+      },
+      {
+        "number": 3,
+        "text": "在水母上回复能量",
+        "keyword": "水母位置"
+      },
+      {
+        "number": 4,
+        "text": "前往雨林重温蓬头青年的回忆",
+        "keyword": null
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "整理餐桌",
+        "title": "每日任务-前往雨林秘密花园帮助老奶奶整理餐桌",
+        "sections": [
+          {
+            "label": "任务地点",
+            "text": "雨林－秘密花园"
+          },
+          {
+            "label": "如何完成",
+            "text": "1、先前往秘密花园-老奶奶的餐桌旁\n2、清理两个物品即可完成任务"
+          },
+          {
+            "label": "图片指引",
+            "text": ""
+          },
+          {
+            "label": "视频指引",
+            "text": ""
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/0e81d64a02ae5802ecff9cdf.webp",
+          "https://skydaily.nankki.com/history/media/9824ca28e4b88899f3d27e39.webp",
+          "https://skydaily.nankki.com/history/media/250ccab9b29ac86c0217b449.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "任务地点：雨林－秘密花园\n如何完成：\n1、先前往秘密花园-老奶奶的餐桌旁\n2、清理两个物品即可完成任务\n图片指引：\n视频指引："
+      },
+      {
+        "keyword": "拯救遥鲲",
+        "title": "每日任务－拯救遥鲲",
+        "sections": [
+          {
+            "label": "任务",
+            "text": "拯救一只被黑暗藤蔓困住的遥鲲"
+          },
+          {
+            "label": "位置",
+            "text": "密林遗迹(水母图)"
+          },
+          {
+            "label": "步骤",
+            "text": "密林遗迹后往前飞，一共有两处地点"
+          },
+          {
+            "label": "视频指南",
+            "text": ""
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/b487f910a0d17d524e2d3e99.webp",
+          "https://skydaily.nankki.com/history/media/cd2dd76b6ded4b61094bc61e.webp",
+          "https://skydaily.nankki.com/history/media/3ca3e241224ea2a4b784aaab.webp",
+          "https://skydaily.nankki.com/history/media/87b73323b4a509ca5ab3ef20.webp",
+          "https://skydaily.nankki.com/history/media/5e5b2833d346963d953fb07a.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "任务：拯救一只被黑暗藤蔓困住的遥鲲\n位置：密林遗迹(水母图)\n步骤：密林遗迹后往前飞，一共有两处地点\n视频指南："
+      },
+      {
+        "keyword": "水母位置",
+        "title": "每日任务·在水母上恢复能量",
+        "sections": [
+          {
+            "label": "位置",
+            "text": "密林遗迹(水母图)"
+          },
+          {
+            "label": "步骤",
+            "text": "密林遗迹后往前飞，来到终点图前的雨亭，点亮蜡烛即可召唤出一排水母"
+          },
+          {
+            "label": "注意",
+            "text": "几乎消耗完能量后再跳上水母会更容易完成任务哦"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/20ab602b08dc7bbc7543ab97.webp",
+          "https://skydaily.nankki.com/history/media/4c6c0134eed11351ab03141b.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "位置：密林遗迹(水母图)\n步骤：密林遗迹后往前飞，来到终点图前的雨亭，点亮蜡烛即可召唤出一排水母\n注意：几乎消耗完能量后再跳上水母会更容易完成任务哦"
+      },
+      {
+        "keyword": "蓬头青年路线",
+        "title": "归属季蓬头青年路线",
+        "sections": [
+          {
+            "label": "先祖位置",
+            "text": "雨林·地下溶洞\n1、本次先祖收集路线较为复杂，建议和其他旅人同行收集。\n2、如果在进入地图后没有找到先祖，可能是其他旅人正在进行收集，您可以选择在原地等待或与其他旅人同行收集。\n3、进入秘密花园前需要先收集8名雨林的常驻先祖 >>> 点击查看雨林常驻先祖图鉴\n4、在秘密花园树洞里需要两人一起使用生气跺脚动作才可打开石板 >>> 点击查看生气动作先祖收集路线"
+          },
+          {
+            "label": "视频介绍",
+            "text": ""
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/d37e261b78eeef546fd5d155.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "先祖位置：雨林·地下溶洞\n1、本次先祖收集路线较为复杂，建议和其他旅人同行收集。\n2、如果在进入地图后没有找到先祖，可能是其他旅人正在进行收集，您可以选择在原地等待或与其他旅人同行收集。\n3、进入秘密花园前需要先收集8名雨林的常驻先祖 >>> 点击查看雨林常驻先祖图鉴\n4、在秘密花园树洞里需要两人一起使用生气跺脚动作才可打开石板 >>> 点击查看生气动作先祖收集路线\n视频介绍："
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": ""
+      }
+    ],
+    "weather": {
+      "text": "大部分地区地区夜间晴朗，星光沙漠一隅将会有灼热碎片降落",
+      "images": [
+        "https://skydaily.nankki.com/history/media/2aa91c91e2ea0604a2cb2bcc.webp",
+        "https://skydaily.nankki.com/history/media/fdace23becd3ce6fc32d42fc.webp",
+        "https://skydaily.nankki.com/history/media/defbe5f0978d77a3c3da2415.webp",
+        "https://skydaily.nankki.com/history/media/3aac008fc33c8322f34a3721.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/3572ff8669f4a5aa09b46643.webp"
+      ]
+    },
+    "candles": [],
+    "seasonCandleMap": null
+  },
+  "meta": {
+    "fetched_at": "2026-09-12T03:10:46.000Z",
+    "cached": true,
+    "stale": false
+  },
+  "errors": []
+}
