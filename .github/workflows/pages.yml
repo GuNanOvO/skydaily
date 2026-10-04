@@ -78,7 +78,9 @@ jobs:
       - name: 生成每日页面预览图
         run: node scripts/capture-preview.mjs
       - name: 生成分享卡
-        run: node scripts/render-share.mjs
+        run: |
+          RECORD=$(node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync("history/index.json"));process.stdout.write(x.dates.at(-1).file)')
+          node scripts/render-share.mjs --file "history/$RECORD"
       - name: 检查最终发布内容
         run: node --experimental-strip-types scripts/validate-publication.mjs --preview
       - name: 保存已校验的公开归档
