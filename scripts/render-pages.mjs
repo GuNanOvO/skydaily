@@ -7,6 +7,11 @@ import { normalizeSeasonGuideLink, seasonGuidePolicy } from '../src/link-policy.
 const SEASON_GUIDE_URL = seasonGuidePolicy.fallback
 const SITE_URL = (process.env.SITE_URL ?? 'https://skydaily.nankki.com').replace(/\/$/, '')
 const ASSET_VERSION = createHash('sha256').update(readFileSync(new URL('../assets/notebook.css', import.meta.url))).update(readFileSync(new URL('../assets/notebook.js', import.meta.url))).digest('hex').slice(0, 12)
+const ICON_VERSION = createHash('sha256').update(readFileSync(new URL('../assets/favicon.svg', import.meta.url))).digest('hex').slice(0, 12)
+
+function faviconLinks(assets = 'assets/') {
+  return `<link rel="icon" href="${assets}favicon.ico?v=${ICON_VERSION}" sizes="16x16 32x32 48x48"><link rel="icon" href="${assets}favicon.svg?v=${ICON_VERSION}" type="image/svg+xml" sizes="any">`
+}
 
 export function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, (ch) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch])
@@ -153,7 +158,7 @@ export function renderApiGuide(date) {
     ['/v1/daily/YYYY-MM-DD', '指定日期的完整数据，最近 30 天'],
   ]
   return `<!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="no-referrer"><title>API 使用说明 · 光遇每日任务</title><link rel="stylesheet" href="assets/notebook.css?v=${ASSET_VERSION}"></head><body>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="no-referrer"><title>API 使用说明 · 光遇每日任务</title>${faviconLinks()}<link rel="stylesheet" href="assets/notebook.css?v=${ASSET_VERSION}"></head><body>
 <main id="page-top" class="api-guide"><div class="binding" aria-hidden="true"></div>
 <header class="page-header"><h1>API 使用说明</h1><p class="api-meta">GET · JSON · 北京时间</p></header>
 <nav class="jump" aria-label="页面导航"><a href="index.html">返回每日任务</a><a href="#endpoints">接口</a><a href="#example">示例</a><a href="#response">返回数据</a></nav>
@@ -210,6 +215,7 @@ export function renderPage(envelope, options = {}) {
 ${summary ? `<meta property="og:description" content="${escapeHtml(summary)}">` : ''}
 ${ogImage ? `<meta property="og:image" content="${escapeHtml(ogImage)}">` : ''}
 <title>光遇每日任务 · ${escapeHtml(envelope.date)}</title>
+${faviconLinks(assets)}
 <link rel="stylesheet" href="${assets}notebook.css?v=${ASSET_VERSION}">
 </head>
 <body>
