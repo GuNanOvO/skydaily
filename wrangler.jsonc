@@ -20,7 +20,7 @@
   "kv_namespaces": [
     {
       "binding": "SKYDAILY_KV",
-      "id": "REPLACE_WITH_KV_NAMESPACE_ID"
+      "id": "60ce8d9a240545c691385c9aff1590e7"
     }
   ],
   "triggers": {
