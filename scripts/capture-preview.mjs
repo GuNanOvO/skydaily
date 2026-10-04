@@ -30,14 +30,14 @@ const temporary = resolve(root, 'preview/daily.png')
 try {
   await mkdir(resolve(root, 'preview'), { recursive: true })
   browser = await chromium.launch()
-  const page = await browser.newPage({ viewport: { width: 1200, height: 900 }, deviceScaleFactor: 1, reducedMotion: 'reduce' })
+  const page = await browser.newPage({ viewport: { width: 900, height: 900 }, deviceScaleFactor: 2, reducedMotion: 'reduce' })
   await page.route('**/*', route => {
     const url = route.request().url()
     if (url.startsWith(origin)) return route.continue()
     return route.abort()
   })
   await page.goto(`${origin}:${server.address().port}/`, { waitUntil: 'domcontentloaded', timeout: 30_000 })
-  await page.addStyleTag({ content: '.season-guide{display:none}' })
+  await page.addStyleTag({ content: '.season-guide{display:none}main{zoom:1.15}' })
   for (const image of await page.locator('main img').all()) {
     if (await image.isVisible()) await image.scrollIntoViewIfNeeded({ timeout: 5_000 }).catch(() => {})
   }
