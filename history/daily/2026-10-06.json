@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-06",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "向一位朋友做个动作",
+        "keyword": null
+      },
+      {
+        "number": 2,
+        "text": "和朋友击掌",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "在水母上回复能量",
+        "keyword": "水母位置"
+      },
+      {
+        "number": 4,
+        "text": "收集绿色光芒",
+        "keyword": "绿色光芒"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "水母位置",
+        "title": "每日任务－在水母上恢复能量",
+        "sections": [
+          {
+            "label": "位置",
+            "text": "密林遗迹(水母图)"
+          },
+          {
+            "label": "步骤",
+            "text": "密林遗迹后往前飞，来到终点图前的雨亭，点亮蜡烛即可召唤出一排水母"
+          },
+          {
+            "label": "注意",
+            "text": "几乎消耗完能量后再跳上水母会更容易完成任务哦"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/20ab602b08dc7bbc7543ab97.webp",
+          "https://skydaily.nankki.com/history/media/4c6c0134eed11351ab03141b.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "位置：密林遗迹(水母图)\n步骤：密林遗迹后往前飞，来到终点图前的雨亭，点亮蜡烛即可召唤出一排水母\n注意：几乎消耗完能量后再跳上水母会更容易完成任务哦"
+      },
+      {
+        "keyword": "绿色光芒",
+        "title": "绿色光芒",
+        "sections": [
+          {
+            "label": "光芒位置",
+            "text": "云野右侧隐藏图"
+          },
+          {
+            "label": "位置指引",
+            "text": "进入云野后，往右进入云顶浮石，前往左边第一个浮岛，绿色光芒会在每一个整点降落"
+          },
+          {
+            "label": "温馨提示",
+            "text": "（请耐心看完，非常重要）\n1、例如00:30、4:50、8:20这些刚好到10的整数的都是整点\n2、不建议踩点到达，建议提前一两分钟在上述地点等待，踩点到达非常容易错过\n3、若无论如何等待都无法看见光芒，请检查是否已接取相关任务"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/4cca4e1fb542b4b31800dd79.webp",
+          "https://skydaily.nankki.com/history/media/0e0167d010cfb43fa38c65c3.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "光芒位置： 云野右侧隐藏图\n位置指引： 进入云野后，往右进入云顶浮石，前往左边第一个浮岛，绿色光芒会在每一个整点降落\n温馨提示： （请耐心看完，非常重要）\n1、例如00:30、4:50、8:20这些刚好到10的整数的都是整点\n2、不建议踩点到达，建议提前一两分钟在上述地点等待，踩点到达非常容易错过\n3、若无论如何等待都无法看见光芒，请检查是否已接取相关任务"
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [
+          "https://h5.ds.163.com/v1/6a54aac92a493300338e56aa/"
+        ],
+        "text": ""
+      }
+    ],
+    "weather": {
+      "text": "大部分地区地区阴天多云，边陲荒漠将会有冷却碎片 降落",
+      "images": [
+        "https://skydaily.nankki.com/history/media/19c696f76c41488857995fde.webp",
+        "https://skydaily.nankki.com/history/media/b5ba51c18fa34047f1623ce6.webp",
+        "https://skydaily.nankki.com/history/media/ce7f0f69a4a6071676ba31c2.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/82635faf378182c0ae1ee30b.webp"
+      ]
+    },
+    "candles": [
+      {
+        "keyword": "大蜡烛",
+        "title": "每日大蜡烛位置",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~"
+          },
+          {
+            "label": "位置分布参考",
+            "text": "大蜡烛堆攻略"
+          },
+          {
+            "label": "小精灵温馨提示",
+            "text": "4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/c37d38160f147e9dc76df94f.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~\n位置分布参考：大蜡烛堆攻略\n小精灵温馨提示：\n4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+      }
+    ],
+    "seasonCandleMap": "云野"
+  },
+  "meta": {
+    "fetched_at": "2026-10-05T16:05:11.000Z",
+    "cached": false,
+    "stale": false
+  },
+  "errors": []
+}
