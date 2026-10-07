@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-08",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "收集30点烛火",
+        "keyword": null
+      },
+      {
+        "number": 2,
+        "text": "向一位朋友招手",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "点燃20根蜡烛",
+        "keyword": null
+      },
+      {
+        "number": 4,
+        "text": "帮助健忘说书人",
+        "keyword": "健忘说书人任务"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "健忘说书人任务",
+        "title": "每日任务－帮助健忘说书人",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "请旅人先查看接到的任务名称，然后在下方选择对应指南\n在圆梦村剧场找到健忘说书人 ｜ 健忘说书人在圆梦村需要帮忙"
+          },
+          {
+            "label": "小精灵提示",
+            "text": "1、若旅人从未收集过该先祖，任务会显示为：在圆梦村剧场找到健忘说书人 ；\n2、若旅人之前已收集过该先祖，任务会显示为：健忘说书人 在在圆梦村需要帮忙"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "请旅人先查看接到的任务名称，然后在下方选择对应指南\n在圆梦村剧场找到健忘说书人 ｜ 健忘说书人在圆梦村需要帮忙\n小精灵提示：\n1、若旅人从未收集过该先祖，任务会显示为：在圆梦村剧场找到健忘说书人 ；\n2、若旅人之前已收集过该先祖，任务会显示为：健忘说书人 在在圆梦村需要帮忙"
+      }
+    ],
+    "weather": {
+      "text": "今日无碎片降落",
+      "images": [
+        "https://skydaily.nankki.com/history/media/12c9e745db22dbf0564819f4.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/82635faf378182c0ae1ee30b.webp"
+      ]
+    },
+    "candles": [
+      {
+        "keyword": "大蜡烛",
+        "title": "每日大蜡烛位置",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~"
+          },
+          {
+            "label": "位置分布参考",
+            "text": "大蜡烛堆攻略"
+          },
+          {
+            "label": "小精灵温馨提示",
+            "text": "4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/c37d38160f147e9dc76df94f.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~\n位置分布参考：大蜡烛堆攻略\n小精灵温馨提示：\n4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+      }
+    ],
+    "seasonCandleMap": null
+  },
+  "meta": {
+    "fetched_at": "2026-10-07T16:08:16.076Z",
+    "cached": false,
+    "stale": false
+  },
+  "errors": []
+}
