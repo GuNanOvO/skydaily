@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "wrangler dev",
+    "preview": "node scripts/preview.mjs",
     "typecheck": "tsc --noEmit",
     "deploy": "wrangler deploy"
   },

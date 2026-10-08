@@ -20,26 +20,28 @@ function cardHtml(envelope, qrSvg) {
 *{box-sizing:border-box}
 html,body{margin:0;width:1200px;height:630px;overflow:hidden}
 body{font:24px/64px system-ui,-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;color:#28342c;background:#fcfcfa url("assets/notebook-paper-texture.webp") repeat;background-size:512px}
-.card{position:relative;height:630px;padding:32px 64px;display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:32px}
+.card{position:relative;height:630px;padding:32px 48px 32px 64px;display:grid;grid-template-columns:minmax(0,1fr) 392px;gap:24px}
 .card::before{content:"";position:absolute;inset:32px;pointer-events:none;background:repeating-linear-gradient(to bottom,transparent 0 62px,#d3dfe3 62px 64px)}
-.main-col{display:flex;flex-direction:column}
+.main-col{display:flex;flex-direction:column;min-width:0}
 .eyebrow{margin:0;height:64px;display:flex;align-items:center;line-height:1;font-size:24px;letter-spacing:.2em;color:#7b8a80}
 h1{margin:0;height:64px;display:flex;align-items:center;line-height:1}
 .date-line{display:flex;align-items:baseline;gap:16px;font-size:52px;letter-spacing:.01em}
 .date-line small{font-size:28px;font-weight:400;color:#6b7a70}
 ol{margin:0;padding:0;list-style:none}
-li{display:flex;align-items:center;gap:16px;height:64px;line-height:1;font-size:40px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+li{display:flex;align-items:center;gap:16px;height:64px;line-height:1;font-size:32px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 li span{flex:0 0 36px;color:#8a6b4f;font-size:28px}
 .chips{display:flex;align-items:center;gap:14px;margin:0;height:64px;min-width:0}
-.chip{display:inline-flex;align-items:center;height:48px;line-height:1;font-size:28px;padding:0 18px;background:#e7ece1;color:#3d4b42;outline:1px solid #cfd8c9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip{display:block;min-width:0;max-width:100%;height:48px;line-height:48px;font-size:22px;padding:0 18px;background:#e7ece1;color:#3d4b42;outline:1px solid #cfd8c9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chip.candle{flex-shrink:0}
 .chip.weather{background:#e6ecf3;outline-color:#ccd7e4}
 .foot{margin:0;height:64px;display:flex;align-items:center;line-height:1;font-size:24px;color:#7b8a80}
-.side{position:relative}
-.qr{position:absolute;top:8px;right:4px;width:248px;height:248px;padding:14px;background:#fff;outline:1px solid #c5cec3;box-shadow:0 10px 22px rgba(38,59,50,.15);transform:rotate(1.5deg)}
+.side{position:relative;align-self:end;height:566px}
+.character-card{position:absolute;width:480px;aspect-ratio:1;right:-32px;bottom:-8px}
+.character{display:block;width:100%;height:100%;object-fit:contain}
+.qr{position:absolute;left:34%;top:61.5%;width:41%;aspect-ratio:1;transform:rotate(7deg) translateY(-12px);transform-origin:center;mix-blend-mode:multiply}
 .qr svg{display:block;width:100%;height:100%}
 .sticker{position:absolute;height:auto}
-.sticker-jelly{right:-4px;bottom:12px;width:150px;transform:rotate(9deg)}
-.sticker-star{right:250px;bottom:72px;width:60px;transform:rotate(-12deg)}
+.sticker-star{right:338px;top:40px;width:48px;transform:rotate(-12deg)}
 </style></head><body>
 <main class="card">
   <div class="main-col">
@@ -50,16 +52,15 @@ li span{flex:0 0 36px;color:#8a6b4f;font-size:28px}
     <p class="foot">skydaily.nankki.com · 扫码看图文攻略</p>
   </div>
   <div class="side">
-    <div class="qr">${qrSvg}</div>
+    <div class="character-card"><img class="character" src="assets/sky-share-character.webp" alt=""><div class="qr">${qrSvg}</div></div>
     <img class="sticker sticker-star" src="assets/sky-star-handdrawn.svg" alt="">
-    <img class="sticker sticker-jelly" src="assets/sky-jelly-handdrawn.webp" alt="">
   </div>
 </main>
 </body></html>`
 }
 
 const envelope = await loadEnvelope()
-const qrSvg = await QRCode.toString(SITE_URL + '/', { type: 'svg', margin: 0 })
+const qrSvg = await QRCode.toString(SITE_URL + '/', { type: 'svg', margin: 4, errorCorrectionLevel: 'M', color: { dark: '#4a4039', light: '#00000000' } })
 const root = resolve('out')
 await mkdir(resolve(root, 'preview'), { recursive: true })
 const htmlPath = resolve(root, 'share-card.html')

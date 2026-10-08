@@ -98,9 +98,11 @@ function taskNotes(data, detailByKeyword) {
   return data.tasks.map((t) => {
     const d = t.keyword ? detailByKeyword.get(t.keyword) : null
     const sections = d?.sections.filter((s) => s.text.trim() && !/任务|标题/.test(s.label)) ?? []
-    const brief = sections.slice(0, 2).map((s) => `<p><span class="note-label">${escapeHtml(s.label)}</span>${escapeHtml(s.text.replace(/^\s*[0-9]+[.、]\s*/gm, '').replaceAll('\n', '；').slice(0, 92))}${s.text.length > 92 ? '…' : ''}</p>`).join('') || `<p>${d?.text ? escapeHtml(d.text.slice(0, 150)) : '按游戏内提示完成。'}</p>`
+    const labelChars = Math.min(4, Math.max(0, ...sections.slice(0, 2).map(s => s.label.length)))
+    const labelStyle = labelChars > 2 ? ` style="--note-label-width:calc(var(--font-xs) * ${labelChars})"` : ''
+    const brief = sections.slice(0, 2).map((s) => `<p><span class="note-label">${escapeHtml(s.label)}</span>${escapeHtml(s.text.replace(/^\s*[0-9]+[.、]\s*/gm, '').replaceAll('\n', '；').slice(0, 92))}${s.text.length > 92 ? '…' : ''}</p>`).join('') || (d?.text ? `<p>${escapeHtml(d.text.slice(0, 150))}</p>` : '')
     const action = hasTaskDetail(d) ? `<a class="detail-trigger" href="#task-${t.number}" data-dialog="detail-${t.number}" aria-haspopup="dialog">查看图文 <span aria-hidden="true">↗</span></a>` : ''
-    return `<article class="task-note" id="task-${t.number}"><div class="note-top"><span class="note-index">任务 ${String(t.number).padStart(2, '0')}</span><label class="check-label"><input type="checkbox" data-complete="${t.number}" aria-label="标记任务 ${t.number} 已完成"><span></span></label></div><h3>${escapeHtml(t.text)}</h3><div class="note-brief">${brief}</div>${action}</article>`
+    return `<article class="task-note" id="task-${t.number}"><div class="note-top"><span class="note-index">任务 ${String(t.number).padStart(2, '0')}</span><label class="check-label"><input type="checkbox" data-complete="${t.number}" aria-label="标记任务 ${t.number} 已完成"><span></span></label></div><h3>${escapeHtml(t.text)}</h3><div class="note-brief"${labelStyle}>${brief}</div>${action}</article>`
   }).join('')
 }
 
@@ -120,7 +122,7 @@ function candleSection(data, detailByKeyword) {
   }
   const links = (seasonGuide?.links ?? []).map(normalizeSeasonGuideLink).filter(Boolean)
   const guides = links.length ? [...new Set(links)] : [SEASON_GUIDE_URL]
-  season.push(guides.map(url => `<iframe class="season-guide" src="${escapeHtml(url)}" title="季节蜡烛探索指南" loading="lazy" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin"></iframe>`).join(''))
+  season.push(guides.map(url => `<div class="guide-paper"><iframe class="season-guide" src="${escapeHtml(url)}" title="季节蜡烛探索指南" loading="lazy" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin"></iframe></div>`).join(''))
   return season.join('')
 }
 
@@ -147,7 +149,7 @@ function renderFooter({ archive = false, date, api = false } = {}) {
   const guide = api ? '' : `<a href="${archive ? '../' : ''}api.html">API 使用说明</a>`
   const folio = date ? `<span>光遇每日任务</span><span>${date.replaceAll('-', '.')}</span><span>${date.split('-')[2]}</span>` : '<span>光遇每日任务</span><span>API 使用说明</span><span>v1</span>'
   const share = archive ? '' : `<div class="footer-share"><div class="share-qr" aria-hidden="true">${SHARE_QR}</div><div class="share-copy"><p>扫码打开今日任务</p><button type="button" class="share-button" data-share-url="${SITE_URL}/">分享本页</button></div></div>`
-  return `<footer class="journal-footer"><div class="footer-info"><div><p>图文来源于游戏内小精灵，版权归原权利人所有；本站内容仅供学习与交流。</p><p>获取最新资讯与完整攻略，请优先使用游戏内「小精灵」。</p><p>版权问题反馈：<a href="https://github.com/GuNanOvO/skydaily/issues" target="_blank" rel="noopener noreferrer">仓库 Issues ↗</a></p>${share}</div><nav aria-label="页脚导航"><div>${home}<a href="${dataHref}">完整数据</a></div>${guide}<a class="back-top" href="#page-top">回到页首 ↑</a></nav></div><div class="footer-folio">${folio}</div></footer>`
+  return `<footer class="journal-footer"><div class="footer-info"><div class="footer-copyright"><p>图文来源于游戏内小精灵，版权归原权利人所有；本站内容仅供学习与交流。</p><p>获取最新资讯与完整攻略，请优先使用游戏内「小精灵」。</p><p>版权问题反馈：<a href="https://github.com/GuNanOvO/skydaily/issues" target="_blank" rel="noopener noreferrer">仓库 Issues ↗</a></p></div>${share}<nav aria-label="页脚导航"><div>${home}<a href="${dataHref}">完整数据</a></div>${guide}<a class="back-top" href="#page-top">回到页首 ↑</a></nav></div><div class="footer-folio">${folio}</div></footer>`
 }
 
 export function renderApiGuide(date) {
@@ -207,7 +209,7 @@ export function renderPage(envelope, options = {}) {
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
-<meta name="theme-color" content="#e4e8e5">
+<meta name="theme-color" content="#f4f4f4">
 <meta property="og:type" content="website">
 <meta property="og:title" content="光遇每日任务 · ${escapeHtml(envelope.date)}">
 ${summary ? `<meta property="og:description" content="${escapeHtml(summary)}">` : ''}
@@ -224,7 +226,7 @@ ${faviconLinks(assets)}
 <div class="binding" aria-hidden="true"></div><span class="journal-sticker sticker-butterfly-margin" aria-hidden="true"></span>
 <header class="page-header"><div class="header-body"><div><h1>光遇每日任务</h1><span class="journal-sticker sticker-cape" aria-hidden="true"></span><div class="status">${status}</div></div>${picker}</div></header>
 <nav class="jump" aria-label="页面导航"><span class="journal-sticker sticker-star" aria-hidden="true"></span><a href="#tasks">每日任务 <small>${data.tasks.length}</small></a><a href="#weather">天气预报</a><a href="#calendar">本月日历</a><a href="#candles">季节蜡烛</a></nav>
-<section id="tasks" aria-labelledby="h-tasks"><div class="section-head"><div><h2 id="h-tasks">每日任务</h2><span class="journal-sticker sticker-jelly" aria-hidden="true"></span></div><span class="progress"><span id="complete-count">0</span> / ${data.tasks.length} 已完成</span></div><div class="tasks">${taskNotes(data, detailByKeyword)}</div></section>
+<section id="tasks" aria-labelledby="h-tasks"><div class="section-head"><div><h2 id="h-tasks">每日任务</h2><span class="journal-sticker sticker-jelly" aria-hidden="true"></span></div><span class="progress" role="status" aria-live="polite" aria-atomic="true"><span id="complete-count">0</span> / ${data.tasks.length} 已完成</span></div><div class="tasks">${taskNotes(data, detailByKeyword)}</div></section>
 <div class="overview"><section id="weather"${hasOverviewContent(data.weather) ? ' data-section-dialog="detail-weather"' : ''} aria-labelledby="h-weather"><h2 id="h-weather">天气预报 <span class="journal-sticker sticker-manta" aria-hidden="true"></span></h2><div class="info-card">${weather}</div></section><section id="calendar"${hasOverviewContent(data.calendar) ? ' data-section-dialog="detail-calendar"' : ''} aria-labelledby="h-calendar"><h2 id="h-calendar">本月日历 <span class="journal-sticker sticker-butterfly" aria-hidden="true"></span></h2><div class="info-card">${calendar}</div></section></div>
 <section id="candles" aria-labelledby="h-candles"><h2 id="h-candles">季节蜡烛</h2><span class="journal-sticker sticker-candles" aria-hidden="true"></span>${candleSection(data, detailByKeyword)}</section>
 ${renderFooter({ archive, date: envelope.date })}

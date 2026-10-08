@@ -96,12 +96,17 @@
       }
     });
   }
-  document.querySelectorAll('.task-note').forEach(note => {
+  document.querySelectorAll('.task-note').forEach((note, index) => {
     note.style.setProperty('--tape-left', (24 + Math.random() * 34).toFixed(1) + '%');
     note.style.setProperty('--tape-angle', (Math.random() * 16 - 8).toFixed(1) + 'deg');
     note.style.setProperty('--tape-width', (40 + Math.random() * 20).toFixed(1) + 'px');
-    const colors = ['#dde3c67a', '#e6d4b87a', '#cddfd67a', '#dad4e37a'];
-    note.style.setProperty('--tape-color', colors[Math.floor(Math.random() * colors.length)]);
+    const colors = ['#ecd69b80', '#edb8c980', '#add9cc80', '#becdf080'];
+    note.style.setProperty('--tape-color', colors[index % colors.length]);
+  });
+  document.querySelectorAll('#calendar .photo-window img').forEach(img => {
+    const frame = img.closest('.photo-window');
+    frame.style.setProperty('--calendar-fill', 'url(' + JSON.stringify(img.src) + ')');
+    img.addEventListener('error', () => frame.style.removeProperty('--calendar-fill'), {once: true});
   });
   document.querySelectorAll('.photo-note img, .image-link img').forEach(img => {
     const unavailable = () => {
@@ -164,7 +169,7 @@
   });
   document.querySelectorAll('.task-note:has([data-dialog]), [data-section-dialog]').forEach(note => {
     note.addEventListener('click', event => {
-      if (event.target.closest('a, input, label')) return;
+      if (event.target.closest('a, input, label') || window.getSelection()?.toString()) return;
       note.querySelector('[data-dialog]')?.click();
     });
   });
