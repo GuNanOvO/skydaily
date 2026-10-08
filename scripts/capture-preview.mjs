@@ -37,7 +37,7 @@ try {
     return route.abort()
   })
   await page.goto(`${origin}:${server.address().port}/`, { waitUntil: 'domcontentloaded', timeout: 30_000 })
-  await page.addStyleTag({ content: '.season-guide{display:none}:root{--font-lg:23px;--font-md:19px;--font-sm:17px;--font-xs:14px}main{padding:64px 40px 32px 56px}' })
+  await page.addStyleTag({ content: '.season-guide{display:none}:root{--font-lg:23px;--font-md:19px;--font-sm:17px;--font-xs:14px}main{padding:64px 40px 32px 56px}.progress,.check-label,#candles,.share-actions,.footer-info nav{display:none}' })
   for (const image of await page.locator('main img').all()) {
     if (await image.isVisible()) await image.scrollIntoViewIfNeeded({ timeout: 5_000 }).catch(() => {})
   }
