@@ -43,6 +43,7 @@
   };
   new ResizeObserver(scheduleRules).observe(paper);
   window.addEventListener('resize', scheduleRules);
+  window.addEventListener('skydaily-theme-change', scheduleRules);
   const watchResolution = () => {
     const resolution = matchMedia('(resolution: ' + devicePixelRatio + 'dppx)');
     resolution.addEventListener('change', () => {

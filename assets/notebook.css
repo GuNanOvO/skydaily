@@ -235,3 +235,66 @@ body.modal-open main{top:var(--paper-top);left:var(--paper-left);width:var(--pap
 .share-button:hover{background:#eee8f4;box-shadow:var(--sticker-shadow-hover)}
 .share-button:focus-visible{outline:2px solid #aa96ba;outline-offset:2px}
 @media(max-width:540px){.footer-info{grid-template-columns:1fr;grid-template-areas:"copyright" "links";row-gap:32px}.footer-info:has(.footer-share){grid-template-areas:"copyright" "share" "links"}.footer-share{gap:12px;margin-top:0}.share-qr{width:80px;height:80px}}
+
+.theme-toggle{position:absolute;top:12px;right:32px;z-index:5;width:48px;height:48px;margin:0;padding:0;border:0;background:none;transform:rotate(-8deg);transition:transform var(--motion-fast);touch-action:manipulation}
+.theme-toggle[hidden]{display:none}
+.theme-toggle img{display:block;width:100%;height:100%;object-fit:contain;background:none;filter:var(--sticker-cutout-shadow);pointer-events:none;user-select:none}
+.theme-toggle .theme-icon-sun{display:none}
+:root[data-theme="dark"] .theme-toggle .theme-icon-sun{display:block}
+:root[data-theme="dark"] .theme-toggle .theme-icon-moon{display:none}
+@media(hover:hover) and (pointer:fine){.theme-toggle:hover{transform:rotate(-4deg) scale(1.05)}}
+.theme-toggle:active{transform:rotate(-8deg) scale(.96)}
+@media(prefers-reduced-motion:reduce){.theme-toggle{transition:none}}
+@media(max-width:800px){html.theme-ready main{padding-top:64px}}
+@media(max-width:540px){.theme-toggle{right:24px}}
+
+:root[data-theme="dark"]{
+  color-scheme:dark;
+  --page:#14161c;
+  --paper:#252730;
+  --ink:#efeaf2;
+  --muted:#b9b3c0;
+  --rule:#454a59;
+  --sticker-shadow:1px 2px .5px #00000060;
+  --sticker-shadow-hover:1px 3px .5px #00000078;
+  --sticker-cutout-shadow:drop-shadow(.5px 1px .25px #00000080) drop-shadow(1px 2px .75px #00000030);
+  --tape-shadow:drop-shadow(.5px 1px .25px #00000040);
+}
+:root[data-theme="dark"] main{background-blend-mode:multiply;outline-color:#4e4a58;box-shadow:0 14px 35px #00000030}
+:root[data-theme="dark"] main:before{background:#b4808790}
+:root[data-theme="dark"] .binding{background-image:radial-gradient(circle at 4px 4px,#15171e 0 1.5px,#454958 2.5px,var(--paper) 3.2px,transparent 4px)}
+:root[data-theme="dark"] .date-stamp{outline-color:#6b6176}
+:root[data-theme="dark"] .date-picker summary:hover,:root[data-theme="dark"] .date-picker[open] summary{background:#37323f}
+:root[data-theme="dark"] .jump a{background:#554b37}
+:root[data-theme="dark"] .jump a:nth-of-type(2){background:#543b49}
+:root[data-theme="dark"] .jump a:nth-of-type(3){background:#324e48}
+:root[data-theme="dark"] .jump a:nth-of-type(4){background:#3a4761}
+:root[data-theme="dark"] .task-note{background-color:#37312a;outline-color:#71697770}
+:root[data-theme="dark"] .task-note:nth-child(2){background-color:#3d2d36}
+:root[data-theme="dark"] .task-note:nth-child(3){background-color:#293d38}
+:root[data-theme="dark"] .task-note:nth-child(4){background-color:#2d3a4f}
+:root[data-theme="dark"] .check-label input{accent-color:#bca3d6}
+:root[data-theme="dark"] .detail-trigger{border-top-color:#6b617670}
+:root[data-theme="dark"] .completed:after{background:#382f45;border-color:#a990ba}
+:root[data-theme="dark"] .photo-note::before,:root[data-theme="dark"] .guide-paper::before{background:#30323d;outline-color:#68617180}
+:root[data-theme="dark"] .guide-paper::before{background:linear-gradient(90deg,#30323d 49.8%,#4a4255 50%,#30323d 50.2%)}
+:root[data-theme="dark"] .guide-paper>.season-guide{background:#30323d}
+:root[data-theme="dark"] #calendar .photo-window{background:#191d25}
+:root[data-theme="dark"] #calendar .photo-window::before{filter:blur(14px) brightness(.35) saturate(.75)}
+:root[data-theme="dark"] #calendar .photo-window:has(.image-unavailable){background:none}
+:root[data-theme="dark"] .photo-note .image-unavailable{outline-color:#68617180}
+:root[data-theme="dark"] .detail-dialog,:root[data-theme="dark"] .date-panel{background-blend-mode:multiply;outline-color:#686171}
+:root[data-theme="dark"] .dialog-bar{border-bottom-color:#68617180}
+:root[data-theme="dark"] .dialog-close,:root[data-theme="dark"] .share-button{background:#37323f;border-color:#6b6176;color:var(--ink)}
+:root[data-theme="dark"] .dialog-close:hover,:root[data-theme="dark"] .share-button:hover{background:#494053}
+:root[data-theme="dark"] .date-panel{border-color:#6b6176}
+:root[data-theme="dark"] .date-panel-caption,:root[data-theme="dark"] .date-turn{border-color:#68617180}
+:root[data-theme="dark"] .calendar-day.is-selected{background:#51415e;border-color:#b59bcc}
+:root[data-theme="dark"] .calendar-grid a:hover{background:#45394f;border-color:#b59bcc}
+:root[data-theme="dark"] .calendar-day.is-unavailable,:root[data-theme="dark"] .calendar-month-head button:disabled{color:#918b98}
+:root[data-theme="dark"] .share-copy p{color:var(--muted)}
+:root[data-theme="dark"] .share-qr{outline-color:#6b6176}
+:root[data-theme="dark"] .api-example{background:#302c3b;border-left-color:#897599}
+:root[data-theme="dark"] .image-link img{background:#30323d}
+:root[data-theme="dark"] :focus-visible{outline-color:#c5abd9}
+@media(max-width:540px){:root[data-theme="dark"] .binding{background-image:radial-gradient(circle at 2.5px 2.5px,#15171e 0 1px,#454958 1.8px,var(--paper) 2.2px,transparent 2.5px)}}

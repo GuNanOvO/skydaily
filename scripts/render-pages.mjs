@@ -7,7 +7,7 @@ import { normalizeSeasonGuideLink, seasonGuidePolicy } from '../src/link-policy.
 
 const SEASON_GUIDE_URL = seasonGuidePolicy.fallback
 const SITE_URL = (process.env.SITE_URL ?? 'https://skydaily.nankki.com').replace(/\/$/, '')
-const ASSET_VERSION = createHash('sha256').update(readFileSync(new URL('../assets/notebook.css', import.meta.url))).update(readFileSync(new URL('../assets/notebook.js', import.meta.url))).digest('hex').slice(0, 12)
+const ASSET_VERSION = createHash('sha256').update(readFileSync(new URL('../assets/notebook.css', import.meta.url))).update(readFileSync(new URL('../assets/notebook.js', import.meta.url))).update(readFileSync(new URL('../assets/theme.js', import.meta.url))).digest('hex').slice(0, 12)
 const ICON_VERSION = createHash('sha256').update(readFileSync(new URL('../assets/favicon.svg', import.meta.url))).digest('hex').slice(0, 12)
 const SHARE_QR = await QRCode.toString(SITE_URL + '/', { type: 'svg', margin: 0 })
 
@@ -143,6 +143,10 @@ function datePicker(current, dates, archive, weekday) {
   return `<details class="date-picker"><summary class="date-stamp" aria-label="选择日期，当前 ${escapeHtml(current)}" title="选择日期"><span>${parts[0]} / ${parts[1]}</span><strong>${parts[2]}</strong><span>${weekday} <svg class="date-caret" width="10" height="6" viewBox="0 0 10 6" aria-hidden="true"><path d="m1 1 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5"/></svg></span></summary><div class="date-panel"><div class="date-panel-caption"><span>日期手记</span><a href="${archive ? '../index.html' : 'index.html'}">最新记录 ↗</a></div>${months}<nav class="date-turn" aria-label="按天翻页">${turn(model.previous, '上一天')}<span>${model.dates.length} 天记录</span>${turn(model.next, '下一天')}</nav></div></details>`
 }
 
+function themeToggle(assets = 'assets/') {
+  return `<button type="button" class="theme-toggle" hidden disabled aria-label="切换到暗色模式" title="切换到暗色模式"><img class="theme-icon theme-icon-sun" src="${assets}theme-sun.webp" alt="" decoding="async" width="48" height="48"><img class="theme-icon theme-icon-moon" src="${assets}theme-moon.webp" alt="" decoding="async" width="48" height="48"></button>`
+}
+
 function renderFooter({ archive = false, date, api = false } = {}) {
   const dataHref = archive ? '../data.json' : 'data.json'
   const home = archive ? '<a href="../index.html">返回首页</a> · ' : api ? '<a href="index.html">返回首页</a> · ' : ''
@@ -163,8 +167,8 @@ export function renderApiGuide(date) {
     ['/v1/daily/YYYY-MM-DD', '指定日期的完整数据，最近 30 天'],
   ]
   return `<!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="no-referrer"><title>API 使用说明 · 光遇每日任务</title>${faviconLinks()}<link rel="stylesheet" href="assets/notebook.css?v=${ASSET_VERSION}"></head><body>
-<main id="page-top" class="api-guide"><div class="binding" aria-hidden="true"></div>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="no-referrer"><meta name="theme-color" content="#f4f4f4"><title>API 使用说明 · 光遇每日任务</title>${faviconLinks()}<script src="assets/theme.js?v=${ASSET_VERSION}"></script><link rel="stylesheet" href="assets/notebook.css?v=${ASSET_VERSION}"></head><body>
+<main id="page-top" class="api-guide">${themeToggle()}<div class="binding" aria-hidden="true"></div>
 <header class="page-header"><h1>API 使用说明</h1><p class="api-meta">GET · JSON · 北京时间</p></header>
 <nav class="jump" aria-label="页面导航"><a href="index.html">返回每日任务</a><a href="#endpoints">接口</a><a href="#example">示例</a><a href="#response">返回数据</a></nav>
 <section><h2>服务地址</h2><p><code>${SITE_URL}</code></p><p>公开接口无需密钥，支持跨域请求。</p><p>同一 IP 每分钟约 30 次；超限返回 429，请按 Retry-After 等待后重试。查询不触发数据采集。</p></section>
@@ -219,10 +223,12 @@ ${summary ? `<meta property="og:description" content="${escapeHtml(summary)}">` 
 <meta name="twitter:card" content="summary_large_image">
 <title>光遇每日任务 · ${escapeHtml(envelope.date)}</title>
 ${faviconLinks(assets)}
+<script src="${assets}theme.js?v=${ASSET_VERSION}"></script>
 <link rel="stylesheet" href="${assets}notebook.css?v=${ASSET_VERSION}">
 </head>
 <body>
 <main id="page-top" data-date="${escapeHtml(envelope.date)}">
+${themeToggle(assets)}
 <div class="binding" aria-hidden="true"></div><span class="journal-sticker sticker-butterfly-margin" aria-hidden="true"></span>
 <header class="page-header"><div class="header-body"><div><h1>光遇每日任务</h1><span class="journal-sticker sticker-cape" aria-hidden="true"></span><div class="status">${status}</div></div>${picker}</div></header>
 <nav class="jump" aria-label="页面导航"><span class="journal-sticker sticker-star" aria-hidden="true"></span><a href="#tasks">每日任务 <small>${data.tasks.length}</small></a><a href="#weather">天气预报</a><a href="#calendar">本月日历</a><a href="#candles">季节蜡烛</a></nav>

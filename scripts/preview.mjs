@@ -3,7 +3,6 @@ import { watch } from 'node:fs'
 import { cp, mkdir, readFile, writeFile } from 'node:fs/promises'
 import { resolve, extname, sep } from 'node:path'
 
-// Local preview only. Rebuilds public files and refreshes open preview tabs.
 const root = resolve('out')
 const port = Number(process.env.PREVIEW_PORT ?? 4173)
 const clients = new Set()
