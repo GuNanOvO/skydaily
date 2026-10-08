@@ -249,7 +249,7 @@
   regions.forEach(region => reveal.observe(region));
 })();
 (() => {
-  document.querySelectorAll('.share-button').forEach(button => {
+  document.querySelectorAll('[data-share-url]').forEach(button => {
     button.addEventListener('click', async () => {
       const url = button.dataset.shareUrl || location.href;
       const title = document.title;
@@ -261,6 +261,29 @@
         await navigator.clipboard.writeText(url);
         const original = button.textContent;
         button.textContent = '链接已复制';
+        setTimeout(() => { button.textContent = original; }, 2000);
+      } catch {}
+    });
+  });
+  document.querySelectorAll('[data-share-image]').forEach(button => {
+    button.addEventListener('click', async () => {
+      const original = button.textContent;
+      try {
+        const response = await fetch(button.dataset.shareImage);
+        if (!response.ok) throw new Error('share image unavailable');
+        const blob = await response.blob();
+        const name = 'skydaily-' + (document.querySelector('main')?.dataset.date ?? 'share') + '.jpg';
+        const file = new File([blob], name, { type: blob.type || 'image/jpeg' });
+        if (navigator.canShare?.({ files: [file] })) {
+          await navigator.share({ files: [file], title: document.title, text: '光遇每日任务' });
+          return;
+        }
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = name;
+        link.click();
+        URL.revokeObjectURL(link.href);
+        button.textContent = '已保存图片';
         setTimeout(() => { button.textContent = original; }, 2000);
       } catch {}
     });

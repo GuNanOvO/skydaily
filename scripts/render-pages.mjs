@@ -152,7 +152,7 @@ function renderFooter({ archive = false, date, api = false } = {}) {
   const home = archive ? '<a href="../index.html">返回首页</a> · ' : api ? '<a href="index.html">返回首页</a> · ' : ''
   const guide = api ? '' : `<a href="${archive ? '../' : ''}api.html">API 使用说明</a>`
   const folio = date ? `<span>光遇每日任务</span><span>${date.replaceAll('-', '.')}</span><span>${date.split('-')[2]}</span>` : '<span>光遇每日任务</span><span>API 使用说明</span><span>v1</span>'
-  const share = archive ? '' : `<div class="footer-share"><div class="share-qr" aria-hidden="true">${SHARE_QR}</div><div class="share-copy"><p>扫码打开今日任务</p><button type="button" class="share-button" data-share-url="${SITE_URL}/">分享本页</button></div></div>`
+  const share = archive ? '' : `<div class="footer-share"><div class="share-qr" aria-hidden="true">${SHARE_QR}</div><div class="share-copy"><p>扫码打开今日任务</p><div class="share-actions"><button type="button" class="share-button" data-share-url="${SITE_URL}/">分享本页</button><button type="button" class="share-button share-image" data-share-image="${SITE_URL}/preview/share.jpg${date ? `?v=${date}` : ''}">分享图片</button></div></div></div>`
   return `<footer class="journal-footer"><div class="footer-info"><div class="footer-copyright"><p>图文来源于游戏内小精灵，版权归原权利人所有；本站内容仅供学习与交流。</p><p>获取最新资讯与完整攻略，请优先使用游戏内「小精灵」。</p><p>版权问题反馈：<a href="https://github.com/GuNanOvO/skydaily/issues" target="_blank" rel="noopener noreferrer">仓库 Issues ↗</a></p></div>${share}<nav aria-label="页脚导航"><div>${home}<a href="${dataHref}">完整数据</a></div>${guide}<a class="back-top" href="#page-top">回到页首 ↑</a></nav></div><div class="footer-folio">${folio}</div></footer>`
 }
 

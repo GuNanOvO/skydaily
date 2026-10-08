@@ -230,7 +230,8 @@ body.modal-open main{top:var(--paper-top);left:var(--paper-left);width:var(--pap
 .footer-share{grid-area:share;display:flex;align-items:flex-start;gap:16px;margin-top:0;min-height:96px}
 .share-qr{width:96px;height:96px;padding:8px;background:#fff;outline:1px solid #cbc9cc;box-shadow:var(--sticker-shadow)}
 .share-qr svg{display:block;width:100%;height:100%}
-.share-copy{display:grid;grid-template-rows:32px 32px;justify-items:start}.share-copy p{margin:0;font-size:var(--font-xs);line-height:32px;color:#65616b}
+.share-copy{display:grid;grid-template-rows:32px auto;justify-items:start}.share-copy p{margin:0;font-size:var(--font-xs);line-height:32px;color:#65616b}
+.share-actions{display:grid;justify-items:start;gap:8px}
 .share-button{font:inherit;font-size:var(--font-xs);line-height:24px;padding:3px 14px;border:1px solid #c9c3ce;border-radius:2px;background:#f4f2f6;color:#353539;cursor:pointer;box-shadow:var(--sticker-shadow);transition:background var(--motion-fast),box-shadow var(--motion-fast)}
 .share-button:hover{background:#eee8f4;box-shadow:var(--sticker-shadow-hover)}
 .share-button:focus-visible{outline:2px solid #aa96ba;outline-offset:2px}
