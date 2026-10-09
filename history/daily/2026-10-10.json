@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-10",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "在禁阁的庇护所中捕捉3个光点",
+        "keyword": "庇护所捕捉光点"
+      },
+      {
+        "number": 2,
+        "text": "在水母上回复能量",
+        "keyword": "水母位置"
+      },
+      {
+        "number": 3,
+        "text": "点燃20根蜡烛",
+        "keyword": null
+      },
+      {
+        "number": 4,
+        "text": "在禁阁的神坛旁冥想",
+        "keyword": "禁阁顶层冥想"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "庇护所捕捉光点",
+        "title": "在禁阁的庇护所中捕捉浮动的光点",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "1、前往禁阁大厅，进入庇护所\n2、进入庇护所后往前走，浮动的光点就在前方飞\n3、触碰后可捕捉光点"
+          },
+          {
+            "label": "小精灵提醒您",
+            "text": "1、进入庇护前所需要收集一位禁阁常驻先祖\n2、需要收集三个光点\n3、在收集过程中若光点消失，旅人可尝试重新进入地图"
+          },
+          {
+            "label": "图片指引",
+            "text": ""
+          },
+          {
+            "label": "视频攻略",
+            "text": ""
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/a85f2cb45157be8b9712aa7e.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "1、前往禁阁大厅，进入庇护所\n2、进入庇护所后往前走，浮动的光点就在前方飞\n3、触碰后可捕捉光点\n小精灵提醒您：\n1、进入庇护前所需要收集一位禁阁常驻先祖\n2、需要收集三个光点\n3、在收集过程中若光点消失，旅人可尝试重新进入地图\n图片指引：\n视频攻略："
+      },
+      {
+        "keyword": "水母位置",
+        "title": "每日任务－在水母上恢复能量",
+        "sections": [
+          {
+            "label": "位置",
+            "text": "密林遗迹(水母图)"
+          },
+          {
+            "label": "步骤",
+            "text": "密林遗迹后往前飞，来到终点图前的雨亭，点亮蜡烛即可召唤出一排水母"
+          },
+          {
+            "label": "注意",
+            "text": "几乎消耗完能量后再跳上水母会更容易完成任务哦"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/20ab602b08dc7bbc7543ab97.webp",
+          "https://skydaily.nankki.com/history/media/4c6c0134eed11351ab03141b.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "位置：密林遗迹(水母图)\n步骤：密林遗迹后往前飞，来到终点图前的雨亭，点亮蜡烛即可召唤出一排水母\n注意：几乎消耗完能量后再跳上水母会更容易完成任务哦"
+      },
+      {
+        "keyword": "禁阁顶层冥想",
+        "title": "每日任务－在禁阁的神坛旁冥想",
+        "sections": [
+          {
+            "label": "任务",
+            "text": "在禁阁的神坛旁冥想"
+          },
+          {
+            "label": "位置",
+            "text": "禁阁终点旁"
+          },
+          {
+            "label": "步骤",
+            "text": "进入禁阁后一直上到第六层(最高层)，往左前方走就看到啦"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/f0bd5b57ab1eb7167e96e279.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "任务： 在禁阁的神坛旁冥想\n位置： 禁阁终点旁\n步骤： 进入禁阁后一直上到第六层(最高层)，往左前方走就看到啦"
+      }
+    ],
+    "weather": {
+      "text": "大部分地区地区夜间晴朗，圆梦村将会有灼热碎片降落",
+      "images": [
+        "https://skydaily.nankki.com/history/media/5b0daa6002e23e6c36872de7.webp",
+        "https://skydaily.nankki.com/history/media/ab76bc316b3edc272ea21c36.webp",
+        "https://skydaily.nankki.com/history/media/7e7d5e36da8601dba620a7e6.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/82635faf378182c0ae1ee30b.webp"
+      ]
+    },
+    "candles": [
+      {
+        "keyword": "大蜡烛",
+        "title": "每日大蜡烛位置",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~"
+          },
+          {
+            "label": "位置分布参考",
+            "text": "大蜡烛堆攻略"
+          },
+          {
+            "label": "小精灵温馨提示",
+            "text": "4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/c37d38160f147e9dc76df94f.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~\n位置分布参考：大蜡烛堆攻略\n小精灵温馨提示：\n4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+      }
+    ],
+    "seasonCandleMap": null
+  },
+  "meta": {
+    "fetched_at": "2026-10-09T16:11:01.930Z",
+    "cached": false,
+    "stale": false
+  },
+  "errors": []
+}
