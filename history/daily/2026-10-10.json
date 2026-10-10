@@ -11,7 +11,7 @@
       },
       {
         "number": 2,
-        "text": "在水母上回复能量",
+        "text": "在水母上恢复能量",
         "keyword": "水母位置"
       },
       {
@@ -146,7 +146,7 @@
     "seasonCandleMap": null
   },
   "meta": {
-    "fetched_at": "2026-10-09T16:11:01.930Z",
+    "fetched_at": "2026-10-10T10:50:46.246Z",
     "cached": false,
     "stale": false
   },
