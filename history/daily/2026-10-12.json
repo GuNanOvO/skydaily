@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-12",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "前往雨林帮助老奶奶整理餐桌",
+        "keyword": "整理餐桌"
+      },
+      {
+        "number": 2,
+        "text": "和朋友击掌",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "收集30点烛火",
+        "keyword": null
+      },
+      {
+        "number": 4,
+        "text": "在静谧庭院外冥想",
+        "keyword": "静谧庭院冥想"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "整理餐桌",
+        "title": "前往雨林-秘密花园帮助老奶奶整理餐桌",
+        "sections": [
+          {
+            "label": "任务地点",
+            "text": "雨林－秘密花园"
+          },
+          {
+            "label": "如何完成",
+            "text": "1、先前往秘密花园-老奶奶的餐桌旁\n2、清理两个物品即可完成任务"
+          },
+          {
+            "label": "图片指引",
+            "text": ""
+          },
+          {
+            "label": "视频指引",
+            "text": ""
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/0e81d64a02ae5802ecff9cdf.webp",
+          "https://skydaily.nankki.com/history/media/9824ca28e4b88899f3d27e39.webp",
+          "https://skydaily.nankki.com/history/media/250ccab9b29ac86c0217b449.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "任务地点： 雨林－秘密花园\n如何完成：\n1、先前往秘密花园-老奶奶的餐桌旁\n2、清理两个物品即可完成任务\n图片指引：\n视频指引："
+      },
+      {
+        "keyword": "静谧庭院冥想",
+        "title": "每日任务－在静谧庭院外冥想",
+        "sections": [
+          {
+            "label": "任务",
+            "text": "在静谧庭院外冥想"
+          },
+          {
+            "label": "位置",
+            "text": "在雨林－静谧庭院"
+          },
+          {
+            "label": "步骤",
+            "text": "进入雨林大厅后往下飞下即是静谧庭院，着陆后往左前方跑即可看到"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/3d04c92d32b9e2b37c9468c9.webp",
+          "https://skydaily.nankki.com/history/media/a1b8144d7ccde847a78a069c.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "任务： 在静谧庭院外冥想\n位置： 在雨林－静谧庭院\n步骤： 进入雨林大厅后往下飞下即是静谧庭院，着陆后往左前方跑即可看到"
+      }
+    ],
+    "weather": {
+      "text": "今日无碎片降落",
+      "images": [
+        "https://skydaily.nankki.com/history/media/786738d123af1a8767665d93.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/82635faf378182c0ae1ee30b.webp"
+      ]
+    },
+    "candles": [
+      {
+        "keyword": "大蜡烛",
+        "title": "每日大蜡烛位置",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~"
+          },
+          {
+            "label": "位置分布参考",
+            "text": "大蜡烛堆攻略"
+          },
+          {
+            "label": "小精灵温馨提示",
+            "text": "4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/c37d38160f147e9dc76df94f.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~\n位置分布参考：大蜡烛堆攻略\n小精灵温馨提示：\n4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+      }
+    ],
+    "seasonCandleMap": null
+  },
+  "meta": {
+    "fetched_at": "2026-10-11T16:11:35.859Z",
+    "cached": false,
+    "stale": false
+  },
+  "errors": []
+}
