@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-13",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "收集蓝色光芒",
+        "keyword": "蓝色光芒"
+      },
+      {
+        "number": 2,
+        "text": "向一位朋友招手",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "接受一位朋友的礼物",
+        "keyword": null
+      },
+      {
+        "number": 4,
+        "text": "帮助谦虚舞者",
+        "keyword": "谦虚舞者任务"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "蓝色光芒",
+        "title": "蓝色光芒",
+        "sections": [
+          {
+            "label": "出现时机",
+            "text": "1、当日的每日任务有“收集蓝色光芒”时\n2、接取了魔法季任务二时\n3、森灵日活动期间，当旅人任务解锁至“收集蓝色光芒 储备净水 ”时"
+          },
+          {
+            "label": "所在地图",
+            "text": "霞谷溜冰场"
+          },
+          {
+            "label": "位置指引",
+            "text": "进入溜冰场就可以看到蓝色光芒啦，但要注意它有时候会潜入水底哦"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/1b83625df624b95d2d2ffbd7.webp",
+          "https://skydaily.nankki.com/history/media/9b07749a8bd739ac1b42c3e9.webp",
+          "https://skydaily.nankki.com/history/media/7cdda6ef370fce854d9cddba.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "出现时机：\n1、当日的每日任务有“收集蓝色光芒”时\n2、接取了魔法季任务二时\n3、森灵日活动期间，当旅人任务解锁至“收集蓝色光芒 储备净水 ”时\n所在地图： 霞谷溜冰场\n位置指引： 进入溜冰场就可以看到蓝色光芒啦，但要注意它有时候会潜入水底哦"
+      },
+      {
+        "keyword": "谦虚舞者任务",
+        "title": "每日任务－帮助谦虚舞者",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "请旅人先查看接到的任务名称，然后在下方选择对应指南\n在圆梦村剧场找到谦虚舞者 ｜ 谦虚舞者在圆梦村需要帮助"
+          },
+          {
+            "label": "小精灵提示",
+            "text": "1、若旅人从未收集过该先祖，任务会显示为：在圆梦村剧场找到谦虚舞者 ；\n2、若旅人之前已收集过该先祖，任务会显示为：谦虚舞者在圆梦村需要帮助"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "请旅人先查看接到的任务名称，然后在下方选择对应指南\n在圆梦村剧场找到谦虚舞者 ｜ 谦虚舞者在圆梦村需要帮助\n小精灵提示：\n1、若旅人从未收集过该先祖，任务会显示为：在圆梦村剧场找到谦虚舞者 ；\n2、若旅人之前已收集过该先祖，任务会显示为：谦虚舞者在圆梦村需要帮助"
+      }
+    ],
+    "weather": {
+      "text": "大部分地区地区阴天多云，蝴蝶平原将会有冷却碎片 降落",
+      "images": [
+        "https://skydaily.nankki.com/history/media/ae3d1f28884dda76c293877f.webp",
+        "https://skydaily.nankki.com/history/media/1c4ad4c9eff7ba33ff302361.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/82635faf378182c0ae1ee30b.webp"
+      ]
+    },
+    "candles": [
+      {
+        "keyword": "大蜡烛",
+        "title": "每日大蜡烛位置",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~"
+          },
+          {
+            "label": "位置分布参考",
+            "text": "大蜡烛堆攻略"
+          },
+          {
+            "label": "小精灵温馨提示",
+            "text": "4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/c37d38160f147e9dc76df94f.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~\n位置分布参考：大蜡烛堆攻略\n小精灵温馨提示：\n4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+      }
+    ],
+    "seasonCandleMap": null
+  },
+  "meta": {
+    "fetched_at": "2026-10-12T16:09:49.567Z",
+    "cached": false,
+    "stale": false
+  },
+  "errors": []
+}
