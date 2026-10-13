@@ -17,6 +17,8 @@ curl https://skydaily.nankki.com/v1/daily/tasks
 curl https://skydaily.nankki.com/v1/daily/weather
 curl https://skydaily.nankki.com/v1/daily/calendar
 curl https://skydaily.nankki.com/v1/daily/candles
+curl https://skydaily.nankki.com/v1/notice
+curl https://skydaily.nankki.com/v1/notice/history
 ```
 
 返回 JSON，包含日期、结构化内容与数据更新时间。历史记录保留最近 30 天。服务支持跨域访问。
