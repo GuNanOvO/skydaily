@@ -45,13 +45,14 @@ export async function pollNotice(env: Env, options: { signal?: AbortSignal } = {
     if (current.etag !== response.etag) await writeNoticeRecord(env, { ...current, etag: response.etag })
     return { status: 'unchanged' }
   }
+  const seenAt = new Date().toISOString()
   const record: NoticeRecord = {
     hash,
     ...payload,
     published_at: response.lastModified && Number.isFinite(Date.parse(response.lastModified))
       ? new Date(response.lastModified).toISOString()
-      : new Date().toISOString(),
-    first_seen_at: new Date().toISOString(),
+      : seenAt,
+    first_seen_at: seenAt,
     etag: response.etag,
   }
   await writeNoticeRecord(env, record)

@@ -39,14 +39,28 @@ export async function readNoticeIndex(env: Env): Promise<NoticeIndexEntry[]> {
 }
 
 export async function writeNoticeRecord(env: Env, record: NoticeRecord): Promise<void> {
-  const index = await readNoticeIndex(env)
   await env.SKYDAILY_KV.put(CURRENT_KEY, JSON.stringify(record))
   await env.SKYDAILY_KV.put(VERSION_PREFIX + record.hash, JSON.stringify(record), { expirationTtl: VERSION_TTL })
-  if (!index.some(entry => entry.hash === record.hash)) {
-    index.push({ hash: record.hash, title: record.title, published_at: record.published_at, first_seen_at: record.first_seen_at })
-    index.sort((a, b) => a.first_seen_at.localeCompare(b.first_seen_at))
-    await env.SKYDAILY_KV.put(INDEX_KEY, JSON.stringify(index.slice(-NOTICE_INDEX_LIMIT)))
+  await appendNoticeIndex(env, {
+    hash: record.hash,
+    title: record.title,
+    published_at: record.published_at,
+    first_seen_at: record.first_seen_at,
+  })
+}
+
+async function appendNoticeIndex(env: Env, entry: NoticeIndexEntry): Promise<void> {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const index = await readNoticeIndex(env)
+    if (index.some(item => item.hash === entry.hash)) return
+    const merged = [...index, entry]
+      .sort((a, b) => a.first_seen_at.localeCompare(b.first_seen_at))
+      .slice(-NOTICE_INDEX_LIMIT)
+    await env.SKYDAILY_KV.put(INDEX_KEY, JSON.stringify(merged))
+    const verify = await readNoticeIndex(env)
+    if (verify.some(item => item.hash === entry.hash)) return
   }
+  console.error('notice index append failed')
 }
 
 export async function readNoticeHistory(env: Env, limit = 200): Promise<NoticeRecord[]> {

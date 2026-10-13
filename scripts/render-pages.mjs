@@ -168,6 +168,15 @@ export function noticeForDate(notices, date) {
   return { latest: (sameDay.length > 0 ? sameDay : effective).at(-1), sameDay }
 }
 
+function noticeForHome(notices) {
+  const versions = notices ?? []
+  if (versions.length === 0) return null
+  const latest = versions.at(-1)
+  const day = beijingDateOf(latest.first_seen_at)
+  const sameDay = versions.filter(item => beijingDateOf(item.first_seen_at) === day)
+  return { latest, sameDay }
+}
+
 function noticeBrief(record) {
   const text = String(record.message).replace(/\s*\n+\s*/g, ' ').trim()
   return `${escapeHtml(text.slice(0, 96))}${text.length > 96 ? '…' : ''}`
@@ -272,7 +281,7 @@ export function renderPage(envelope, options = {}) {
 
   const weather = overviewPreview(data.weather, 'weather', '天气预报', '今日无天气数据')
   const calendar = overviewPreview(data.calendar, 'calendar', '本月日历', '今日无日历数据')
-  const notice = noticeForDate(notices, envelope.date)
+  const notice = archive ? noticeForDate(notices, envelope.date) : noticeForHome(notices)
 
 
   return `<!doctype html>

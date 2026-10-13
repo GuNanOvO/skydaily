@@ -97,12 +97,10 @@ try {
       if (/https?:\/\//i.test(item.title + item.message)) fail('Notice text contains a URL')
     }
     if (notices.current && notices.current.hash !== notices.versions.at(-1)?.hash) fail('Notice current does not match the newest version')
-    const beijing = iso => new Date(Date.parse(iso) + 8 * 3600_000).toISOString().slice(0, 10)
-    const effective = notices.versions.filter(item => beijing(item.first_seen_at) <= latest.date)
-    if (effective.length > 0) {
+    if (notices.current) {
       const escape = value => value.replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch])
       const page = await readFile(join(root, 'index.html'), 'utf8')
-      if (!page.includes(escape(effective.at(-1).title))) fail('Rendered page is missing the effective notice')
+      if (!page.includes(escape(notices.current.title))) fail('Rendered page is missing the current notice')
     }
   }
   const documents = [join(root, 'index.html'), join(root, 'api.html'), ...dates.map(date => join(root, 'archive', date + '.html'))]
