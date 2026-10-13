@@ -167,11 +167,11 @@ export function renderApiGuide(date) {
     ['/v1/daily/YYYY-MM-DD', '指定日期的完整数据，最近 30 天'],
   ]
   return `<!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="no-referrer"><meta name="theme-color" content="#f4f4f4"><title>API 使用说明 · 光遇每日任务</title>${faviconLinks()}<script src="assets/theme.js?v=${ASSET_VERSION}"></script><link rel="stylesheet" href="assets/notebook.css?v=${ASSET_VERSION}"></head><body>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="no-referrer"><meta name="theme-color" content="#f4f4f4"><meta name="keywords" content="光遇国服, 光遇国服 API, 国服每日任务 API, 光遇国服数据接口, JSON 接口, API 使用说明"><title>API 使用说明 · 光遇国服每日任务</title>${faviconLinks()}<script src="assets/theme.js?v=${ASSET_VERSION}"></script><link rel="stylesheet" href="assets/notebook.css?v=${ASSET_VERSION}"></head><body>
 <main id="page-top" class="api-guide">${themeToggle()}<div class="binding" aria-hidden="true"></div>
 <header class="page-header"><h1>API 使用说明</h1><p class="api-meta">GET · JSON · 北京时间</p></header>
 <nav class="jump" aria-label="页面导航"><a href="index.html">返回每日任务</a><a href="#endpoints">接口</a><a href="#example">示例</a><a href="#response">返回数据</a></nav>
-<section><h2>服务地址</h2><p><code>${SITE_URL}</code></p><p>公开接口无需密钥，支持跨域请求。</p><p>同一 IP 每分钟约 30 次；超限返回 429，请按 Retry-After 等待后重试。查询不触发数据采集。</p></section>
+<section><h2>服务地址</h2><p><code>${SITE_URL}</code></p><p>接口提供光遇国服数据，无需密钥，支持跨域请求。</p><p>同一 IP 每分钟约 30 次；超限返回 429，请按 Retry-After 等待后重试。查询不触发数据采集。</p></section>
 <section id="endpoints"><h2>接口</h2><dl class="api-endpoints">${endpoints.map(([path, text]) => `<div><dt><code>${path}</code></dt><dd>${text}</dd></div>`).join('')}</dl></section>
 <section id="example"><h2>调用示例</h2><pre class="api-example"><code>curl ${SITE_URL}/v1/daily/tasks
 
@@ -214,14 +214,15 @@ export function renderPage(envelope, options = {}) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#f4f4f4">
+<meta name="keywords" content="光遇国服, 光遇国服每日任务, ${archive ? '光遇国服历史任务, 国服任务归档' : '光遇国服今日任务'}, 光遇国服任务攻略, 国服季节蜡烛, 光遇国服天气预报, 光遇国服日历">
 <meta property="og:type" content="website">
-<meta property="og:title" content="光遇每日任务 · ${escapeHtml(envelope.date)}">
+<meta property="og:title" content="光遇国服每日任务 · ${escapeHtml(envelope.date)}">
 ${summary ? `<meta property="og:description" content="${escapeHtml(summary)}">` : ''}
 <meta property="og:image" content="${escapeHtml(shareImage)}">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta name="twitter:card" content="summary_large_image">
-<title>光遇每日任务 · ${escapeHtml(envelope.date)}</title>
+<title>光遇国服每日任务 · ${escapeHtml(envelope.date)}</title>
 ${faviconLinks(assets)}
 <script src="${assets}theme.js?v=${ASSET_VERSION}"></script>
 <link rel="stylesheet" href="${assets}notebook.css?v=${ASSET_VERSION}">
