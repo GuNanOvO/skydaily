@@ -178,46 +178,78 @@ function noticeForHome(notices) {
 }
 
 function noticeBrief(record) {
-  const text = String(record.message).replace(/\s*\n+\s*/g, ' ').trim()
-  return `${escapeHtml(text.slice(0, 96))}${text.length > 96 ? '…' : ''}`
+  return escapeHtml(String(record.message)
+    .replace(/\s*\n+\s*/g, ' ')
+    .replace(/([：、，。；！？】》）])\s+/g, '$1')
+    .replace(/\s+([（【《])/g, '$1')
+    .trim()
+    .slice(0, 120))
 }
 
 function renderNoticeText(text) {
-  const out = []
-  let list = []
+  const blocks = []
+  let run = null
   const flush = () => {
-    if (list.length > 0) {
-      out.push(`<ol>${list.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ol>`)
-      list = []
+    if (run) {
+      blocks.push(run)
+      run = null
+    }
+  }
+  const push = (type, item) => {
+    if (run?.type === type) run.items.push(item)
+    else {
+      flush()
+      run = { type, items: [item] }
     }
   }
   for (const line of String(text).split('\n')) {
     const heading = /^\s*【(.+)】\s*$/.exec(line)
-    const item = /^\s*\d+[.、]\s*(.+)$/.exec(line)
-    if (item) list.push(item[1])
+    const num = /^\s*\d+[.、]\s*(.+)$/.exec(line)
+    const dot = /^\s*[·•⋅]\s*(.+)$/.exec(line)
+    if (num) push('num', num[1])
+    else if (dot) push('dot', dot[1])
     else {
       flush()
-      if (heading) out.push(`<h4>${escapeHtml(heading[1])}</h4>`)
-      else if (line.trim()) out.push(`<p>${escapeHtml(line)}</p>`)
+      if (heading) blocks.push({ type: 'section', text: heading[1] })
+      else if (line.trim()) blocks.push({ type: 'p', text: line.trim() })
     }
   }
   flush()
-  return out.join('')
+
+  const groups = []
+  for (const block of blocks) {
+    const previous = groups.at(-1)
+    if (block.type === 'dot' && previous?.type === 'num') previous.subs.set(previous.items.length - 1, block.items)
+    else if (block.type === 'num' && previous?.type === 'num') previous.items.push(...block.items)
+    else groups.push(block.type === 'num' ? { ...block, subs: new Map() } : { ...block })
+  }
+
+  const list = (tag, items, className = '') => `<${tag}${className}>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</${tag}>`
+  return groups.map((group) => {
+    if (group.type === 'section') return `<h4 class="notice-section">${escapeHtml(group.text)}</h4>`
+    if (group.type === 'p') return `<p>${escapeHtml(group.text)}</p>`
+    if (group.type === 'dot') return list('ul', group.items, ' class="notice-sub"')
+    const items = group.items.map((item, index) => {
+      const sub = group.subs.get(index)
+      return `<li>${escapeHtml(item)}${sub ? list('ul', sub, ' class="notice-sub"') : ''}</li>`
+    }).join('')
+    return `<ol>${items}</ol>`
+  }).join('')
 }
 
 function noticeSection(found) {
   if (!found) return ''
   const { latest, sameDay } = found
   const count = sameDay.length > 1 ? `<span class="notice-count">当日更新 ${sameDay.length} 次</span>` : ''
-  return `<section id="notice" aria-labelledby="h-notice"><div class="section-head"><div><h2 id="h-notice">游戏公告</h2></div>${count}</div><article class="notice-paper"><div class="notice-meta"><span>${escapeHtml(latest.title)}</span><time datetime="${escapeHtml(latest.published_at)}">${escapeHtml(beijingStamp(latest.published_at))}</time></div><p class="notice-brief">${noticeBrief(latest)}</p><a class="detail-trigger" href="#notice-details" data-dialog="detail-notice" aria-haspopup="dialog">查看全文 <span aria-hidden="true">↗</span></a></article></section>`
+  return `<section id="notice" aria-labelledby="h-notice"><div class="section-head"><div><h2 id="h-notice">游戏公告</h2></div>${count}</div><article class="notice-paper"><div class="notice-top"><h3 class="notice-title">${escapeHtml(latest.title)}</h3><time class="notice-time" datetime="${escapeHtml(latest.published_at)}">${escapeHtml(beijingStamp(latest.published_at))}</time></div><p class="notice-brief">${noticeBrief(latest)}</p><a class="detail-trigger" href="#notice-details" data-dialog="detail-notice" aria-haspopup="dialog">查看全文 <span aria-hidden="true">↗</span></a></article></section>`
 }
 
 function noticeDialog(found) {
   if (!found) return ''
   const { latest, sameDay } = found
   const versions = sameDay.length > 1 ? sameDay : [latest]
-  const body = versions.map((item) => `${versions.length > 1 ? `<h4>${escapeHtml(beijingStamp(item.first_seen_at))}</h4>` : ''}${renderNoticeText(item.message)}`).join('')
-  return `<dialog class="detail-dialog" id="detail-notice" data-has-text="true" aria-labelledby="dialog-title-notice"><div class="dialog-bar"><span class="dialog-context"><span>游戏公告</span><time datetime="${escapeHtml(latest.published_at)}">${escapeHtml(beijingStamp(latest.published_at))}</time></span><button type="button" class="dialog-close" aria-label="关闭详情"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button></div><div class="dialog-scroll"><h2 id="dialog-title-notice">${escapeHtml(latest.title)}</h2>${body}</div></dialog>`
+  const body = versions.map((item) => `${versions.length > 1 ? `<h4 class="notice-version">${escapeHtml(beijingStamp(item.first_seen_at))}</h4>` : ''}${renderNoticeText(item.message)}`).join('')
+  return `<dialog class="detail-dialog notice-dialog" id="detail-notice" data-has-text="true" aria-labelledby="dialog-title-notice"><div class="dialog-bar"><span class="dialog-context"><span>游戏公告</span><time datetime="${escapeHtml(latest.published_at)}">${escapeHtml(beijingStamp(latest.published_at))}</time></span><button type="button" class="dialog-close" aria-label="关闭详情"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button></div><div class="dialog-scroll"><h2 id="dialog-title-notice">${escapeHtml(latest.title)}</h2>${body}</div></dialog>`
 }
 
 function renderFooter({ archive = false, date, api = false } = {}) {
