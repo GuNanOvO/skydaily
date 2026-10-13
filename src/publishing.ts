@@ -38,6 +38,15 @@ export async function requestPublication(env: Env, envelope: Envelope): Promise<
   if (!response.ok) throw new Error('publication_queue_failed')
 }
 
+export async function dispatchNotice(env: Env, hash: string): Promise<'done' | 'pending' | 'sent'> {
+  if (await env.SKYDAILY_KV.get('publish:notice-complete:' + hash)) return 'done'
+  const pendingRaw = await env.SKYDAILY_KV.get('publish:notice-pending')
+  const pending = pendingRaw ? JSON.parse(pendingRaw) as { hash: string; at: number } : null
+  if (pending?.hash === hash && Date.now() - pending.at < 20 * 60_000) return 'pending'
+  await dispatchEvent(env, 'notice-updated', { notice: hash })
+  await env.SKYDAILY_KV.put('publish:notice-pending', JSON.stringify({ hash, at: Date.now() }), { expirationTtl: 86400 })
+  return 'sent'
+}
 export async function dispatchPublication(env: Env, version: string): Promise<'done' | 'pending' | 'sent'> {
   if (await env.SKYDAILY_KV.get('publish:complete:' + version) || await env.SKYDAILY_KV.get('publish:complete') === version) return 'done'
   const raw = await env.SKYDAILY_KV.get('snapshot:' + version)

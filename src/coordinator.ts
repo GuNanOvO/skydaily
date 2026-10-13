@@ -3,7 +3,7 @@ import type { Envelope } from './schema/types.ts'
 import { beijingDate, runRefresh, storeRefresh } from './refresh.ts'
 import { readDaily } from './store/kv.ts'
 import { digest } from './public-data.ts'
-import { completeEnvelope, dispatchEvent, dispatchPublication, requestPublication } from './publishing.ts'
+import { completeEnvelope, dispatchEvent, dispatchNotice, dispatchPublication, requestPublication } from './publishing.ts'
 import { midnightWindow, randomDelay } from './schedule.ts'
 
 type Collection = {
@@ -12,7 +12,9 @@ type Collection = {
   noticeDue?: number; notices?: number; notified?: boolean; daySlots: number[];
 }
 type Publication = { kind: 'publication'; version: string; due: number; attempts: number; phase: 'waiting' | 'done' | 'failed' }
-type State = Collection | Publication
+type Notice = { kind: 'notice'; hash: string; phase: 'waiting' | 'done' | 'failed'; due: number; attempts: number }
+type State = Collection | Publication | Notice
+export const NOTICE_DELAY_RANGE: [number, number] = [0, 3 * 60_000]
 export class UpdateCoordinator {
   private busy = false
   private ctx: DurableObjectState
@@ -29,12 +31,29 @@ export class UpdateCoordinator {
       if (!state || state.kind !== 'collection') return Response.json({ status: 'not_started' })
       return Response.json({ date: state.date, status: state.phase, attempts: state.attempts })
     }
-    const input = await request.json() as { date?: string; version?: string; slot?: number }
+    const input = await request.json() as { date?: string; version?: string; hash?: string; slot?: number }
     if (path === '/publish' && input.version && /^[a-f0-9]{64}$/.test(input.version)) {
       await this.ctx.blockConcurrencyWhile(async () => {
         const current = await this.ctx.storage.get<Publication>('state')
         if (current?.phase === 'waiting') return
         const state: Publication = { kind: 'publication', version: input.version!, phase: 'waiting', due: Date.now() + randomDelay(2 * 60_000, 8 * 60_000), attempts: 0 }
+        await this.save(state, state.due)
+      })
+      return Response.json({ ok: true })
+    }
+    if (path === '/notice') {
+      if (!input.hash || !/^[a-f0-9]{64}$/.test(input.hash)) return new Response(null, { status: 400 })
+      await this.ctx.blockConcurrencyWhile(async () => {
+        const current = await this.ctx.storage.get<State>('state')
+        if (current?.kind === 'notice' && current.phase === 'waiting') return
+        if (current?.kind === 'notice' && current.hash === input.hash && current.phase === 'done') return
+        const state: Notice = {
+          kind: 'notice',
+          hash: input.hash!,
+          phase: 'waiting',
+          due: Date.now() + randomDelay(NOTICE_DELAY_RANGE[0], NOTICE_DELAY_RANGE[1]),
+          attempts: 0,
+        }
         await this.save(state, state.due)
       })
       return Response.json({ ok: true })
@@ -90,6 +109,19 @@ export class UpdateCoordinator {
   async alarm(): Promise<void> {
     const state = await this.ctx.storage.get<State>('state')
     if (!state) return
+    if (state.kind === 'notice') {
+      if (state.phase !== 'waiting') return
+      if (Date.now() < state.due) { await this.ctx.storage.setAlarm(state.due); return }
+      try {
+        const result = await dispatchNotice(this.env, state.hash)
+        if (result === 'done') { state.phase = 'done'; await this.save(state); return }
+      } catch { console.error('notice publication pending') }
+      state.attempts++
+      if (state.attempts >= 6) { state.phase = 'failed'; await this.save(state); return }
+      state.due = Date.now() + randomDelay(16 * 60_000, 22 * 60_000)
+      await this.save(state, state.due)
+      return
+    }
     if (state.kind === 'publication') {
       if (state.phase !== 'waiting') return
       if (Date.now() < state.due) { await this.ctx.storage.setAlarm(state.due); return }
