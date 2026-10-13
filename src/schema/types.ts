@@ -70,3 +70,13 @@ export type Calendar = z.infer<typeof calendarSchema>
 export type DailyData = z.infer<typeof dailyDataSchema>
 export type SectionError = z.infer<typeof sectionErrorSchema>
 export type Envelope = z.infer<typeof envelopeSchema>
+
+export const noticeSchema = z.object({
+  hash: z.string().regex(/^[a-f0-9]{64}$/),
+  title: z.string().min(1),
+  message: z.string().min(1),
+  published_at: z.string().datetime(),
+  first_seen_at: z.string().datetime(),
+})
+
+export type Notice = z.infer<typeof noticeSchema>

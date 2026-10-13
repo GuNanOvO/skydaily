@@ -7,8 +7,10 @@ import { DATA_SOURCE, SCHEMA_VERSION, TAKEDOWN_CONTACT, TIMEZONE } from './confi
 import { readDaily, readRefreshMeta } from './store/kv.ts'
 import { beijingDate, refreshAndStore, RefreshError } from './refresh.ts'
 import type { Envelope } from './schema/types.ts'
-import { publicEnvelope } from './public-data.ts'
+import { publicEnvelope, cleanText } from './public-data.ts'
 import { readPublishedHistory } from './store/history.ts'
+import { readNoticeCurrent, readNoticeFailure, readNoticeHistory } from './store/notice.ts'
+import { noticeSchema } from './schema/types.ts'
 import { shouldRefreshAt } from './schedule.ts'
 import { contentVersion } from './publishing.ts'
 export { UpdateCoordinator } from './coordinator.ts'
@@ -63,8 +65,11 @@ app.get('/', (c) =>
       'GET /v1/daily/weather',
       'GET /v1/daily/calendar',
       'GET /v1/daily/candles',
+      'GET /v1/notice',
+      'GET /v1/notice/history',
       'GET /v1/daily/:date',
       'POST /admin/refresh',
+      'POST /admin/notice-published/:hash',
     ],
   }),
 )
@@ -74,7 +79,15 @@ app.get('/healthz', async (c) => {
   const today = (await readDaily(c.env, beijingDate())) as Envelope | null
   const version = today ? await contentVersion(today) : null
   const published = version !== null && (await c.env.SKYDAILY_KV.get('publish:complete')) === version
-  return c.json({ ok: true, refresh, today: today !== null, published })
+  const notice = await readNoticeCurrent(c.env)
+  const noticePublished = notice ? (await c.env.SKYDAILY_KV.get('publish:notice-complete:' + notice.hash)) !== null : null
+  return c.json({
+    ok: true,
+    refresh,
+    today: today !== null,
+    published,
+    notice: notice ? { hash: notice.hash, published_at: notice.published_at, published: noticePublished } : null,
+  })
 })
 
 function sendEnvelope(
@@ -126,6 +139,44 @@ for (const s of SECTIONS) {
 }
 
 app.get('/v1/daily', (c) => serve(c, beijingDate()))
+
+app.get('/v1/notice', async (c) => {
+  const record = await readNoticeCurrent(c.env)
+  if (!record) return c.json({ error: { code: 'not_found' } }, 404)
+  const failure = await readNoticeFailure(c.env)
+  const parsed = noticeSchema.safeParse({ ...record, title: cleanText(record.title), message: cleanText(record.message) })
+  if (!parsed.success) return c.json({ error: { code: 'internal' } }, 500)
+  return c.json(
+    {
+      schema_version: SCHEMA_VERSION,
+      date: beijingDate(),
+      timezone: TIMEZONE,
+      meta: { fetched_at: parsed.data.first_seen_at, cached: true, stale: failure !== null },
+      errors: [],
+      data: parsed.data,
+    },
+    200,
+    { 'Cache-Control': CACHE_CONTROL },
+  )
+})
+
+app.get('/v1/notice/history', async (c) => {
+  const records = await readNoticeHistory(c.env)
+  const notices = records.map(record => noticeSchema.safeParse({ ...record, title: cleanText(record.title), message: cleanText(record.message) }))
+  if (notices.some(result => !result.success)) return c.json({ error: { code: 'internal' } }, 500)
+  return c.json(
+    {
+      schema_version: SCHEMA_VERSION,
+      date: beijingDate(),
+      timezone: TIMEZONE,
+      meta: { fetched_at: new Date().toISOString(), cached: true, stale: false },
+      errors: [],
+      data: { notices: notices.flatMap(result => (result.success ? [result.data] : [])) },
+    },
+    200,
+    { 'Cache-Control': CACHE_CONTROL },
+  )
+})
 
 app.get('/v1/daily/tasks/:number', async (c) => {
   const raw = c.req.param('number')
@@ -209,6 +260,13 @@ app.post('/admin/published/:version', async c => {
   await c.env.SKYDAILY_KV.put('publish:complete:' + version, '1', { expirationTtl: 7 * 86400 })
   const current = await readDaily(c.env, beijingDate()) as Envelope | null
   if (current && await contentVersion(current) === version && snapshot.date === current.date) await c.env.SKYDAILY_KV.put('publish:complete', version)
+  return c.json({ ok: true })
+})
+
+app.post('/admin/notice-published/:hash', async c => {
+  const hash = c.req.param('hash')
+  if (!/^[a-f0-9]{64}$/.test(hash)) return c.json({ error: { code: 'bad_hash' } }, 400)
+  await c.env.SKYDAILY_KV.put('publish:notice-complete:' + hash, '1', { expirationTtl: 30 * 86400 })
   return c.json({ ok: true })
 })
 
