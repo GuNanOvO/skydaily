@@ -78,6 +78,33 @@ try {
   }
   const mediaFiles = await readdir(join(archive, 'media'))
   if (mediaFiles.length !== references.size || mediaFiles.some(name => !references.has('media/' + name))) fail('Archive contains unreferenced media')
+  let notices = null
+  try {
+    notices = await json(join(archive, 'notices.json'))
+  } catch (error) {
+    if (error?.code !== 'ENOENT') throw error
+  }
+  if (notices) {
+    if (notices.schema !== 1) fail('Unsupported notice archive schema')
+    if (!Array.isArray(notices.versions)) fail('Notice archive versions must be an array')
+    let previous = ''
+    for (const item of notices.versions) {
+      if (!/^[a-f0-9]{64}$/.test(item.hash)) fail('Invalid notice hash')
+      if (!item.title.trim() || !item.message.trim()) fail('Empty notice content')
+      if (!Number.isFinite(Date.parse(item.published_at)) || !Number.isFinite(Date.parse(item.first_seen_at))) fail('Invalid notice timestamp')
+      if (item.first_seen_at < previous) fail('Notice archive is not ordered')
+      previous = item.first_seen_at
+      if (/https?:\/\//i.test(item.title + item.message)) fail('Notice text contains a URL')
+    }
+    if (notices.current && notices.current.hash !== notices.versions.at(-1)?.hash) fail('Notice current does not match the newest version')
+    const beijing = iso => new Date(Date.parse(iso) + 8 * 3600_000).toISOString().slice(0, 10)
+    const effective = notices.versions.filter(item => beijing(item.first_seen_at) <= latest.date)
+    if (effective.length > 0) {
+      const escape = value => value.replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch])
+      const page = await readFile(join(root, 'index.html'), 'utf8')
+      if (!page.includes(escape(effective.at(-1).title))) fail('Rendered page is missing the effective notice')
+    }
+  }
   const documents = [join(root, 'index.html'), join(root, 'api.html'), ...dates.map(date => join(root, 'archive', date + '.html'))]
   for (const file of documents) {
     const html = await readFile(file, 'utf8')

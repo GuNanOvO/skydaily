@@ -2,7 +2,7 @@ name: pages
 
 on:
   repository_dispatch:
-    types: [daily-updated]
+    types: [daily-updated, notice-updated]
   push:
     branches: [main]
     paths: ['src/link-policy.*', 'src/schema/**', 'scripts/**', 'assets/**', 'history/**', 'package.json', 'package-lock.json', '.github/workflows/pages.yml']
@@ -38,17 +38,9 @@ jobs:
       - run: npm ci --silent --no-audit --no-fund
       - run: npm run typecheck
       - run: npx playwright install --with-deps chromium
-      - name: 获取私有快照并准备公开归档
-        env:
-          WORKER_URL: ${{ secrets.WORKER_URL }}
-          ADMIN_SECRET: ${{ secrets.ADMIN_SECRET }}
-          VERSION: ${{ github.event.client_payload.version }}
-          EVENT_NAME: ${{ github.event_name }}
+      - name: 取回公开归档
         run: |
           set -eu
-          VERSION="${VERSION:-}"
-          if [ "$EVENT_NAME" = repository_dispatch ] && [ -z "$VERSION" ]; then exit 1; fi
-          if [ -n "$VERSION" ] && ! [[ "$VERSION" =~ ^[a-f0-9]{64}$ ]]; then exit 1; fi
           if git ls-remote --exit-code --heads origin data > /dev/null; then
             git fetch -q origin data
             git worktree add -q data-store FETCH_HEAD
@@ -60,6 +52,16 @@ jobs:
             mkdir data-store
             git -C data-store init -q -b data
           fi
+      - name: 下载私有快照并整理公开归档
+        if: github.event_name != 'repository_dispatch' || github.event.client_payload.version != ''
+        env:
+          WORKER_URL: ${{ secrets.WORKER_URL }}
+          ADMIN_SECRET: ${{ secrets.ADMIN_SECRET }}
+          VERSION: ${{ github.event.client_payload.version }}
+        run: |
+          set -eu
+          VERSION="${VERSION:-}"
+          if [ -n "$VERSION" ] && ! [[ "$VERSION" =~ ^[a-f0-9]{64}$ ]]; then exit 1; fi
           if [ -n "$VERSION" ]; then
             curl --silent --fail --retry 5 --retry-all-errors --retry-delay 10 --max-time 90 -H "Authorization: Bearer $ADMIN_SECRET" "$WORKER_URL/admin/snapshot/$VERSION" -o "$RUNNER_TEMP/snapshot.json"
             python3 scripts/prepare-public-history.py --site "$SITE_URL" --snapshot "$RUNNER_TEMP/snapshot.json"
@@ -69,6 +71,16 @@ jobs:
           rm -f "$RUNNER_TEMP/snapshot.json"
           rm -rf data-store/history
           cp -a history data-store/
+      - name: 同步公告归档
+        env:
+          WORKER_URL: ${{ secrets.WORKER_URL }}
+        run: |
+          set -eu
+          node scripts/update-notices.mjs --base "$WORKER_URL" --out history/notices.json || echo "::warning::notice archive unavailable"
+          if [ -f history/notices.json ]; then
+            mkdir -p data-store/history
+            cp history/notices.json data-store/history/notices.json
+          fi
       - name: 渲染页面与历史记录
         env:
           PUBLISH_HISTORY: '1'
@@ -120,8 +132,15 @@ jobs:
           WORKER_URL: ${{ secrets.WORKER_URL }}
           ADMIN_SECRET: ${{ secrets.ADMIN_SECRET }}
           VERSION: ${{ github.event.client_payload.version }}
+          NOTICE: ${{ github.event.client_payload.notice }}
         run: |
-          curl --silent --fail --max-time 30 -X POST -H "Authorization: Bearer $ADMIN_SECRET" "$WORKER_URL/admin/published/$VERSION" > /dev/null
+          set -eu
+          if [ -n "${NOTICE:-}" ]; then
+            curl --silent --fail --max-time 30 -X POST -H "Authorization: Bearer $ADMIN_SECRET" "$WORKER_URL/admin/notice-published/${NOTICE}" > /dev/null
+          fi
+          if [ -n "${VERSION:-}" ]; then
+            curl --silent --fail --max-time 30 -X POST -H "Authorization: Bearer $ADMIN_SECRET" "$WORKER_URL/admin/published/${VERSION}" > /dev/null
+          fi
       - name: 清理私有快照
         if: always()
         run: rm -f "$RUNNER_TEMP/snapshot.json"
