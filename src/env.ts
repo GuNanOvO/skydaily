@@ -8,6 +8,7 @@ export interface Env {
   NETEASE_TASK_ORIGIN: string
   NETEASE_TASK_REFERER: string
   NETEASE_USER_AGENT: string
+  NOTICE_URL: string
 
   SKY_UID: string
   SKY_GAME_UID: string
