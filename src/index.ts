@@ -10,6 +10,7 @@ import type { Envelope } from './schema/types.ts'
 import { publicEnvelope, cleanText } from './public-data.ts'
 import { readPublishedHistory } from './store/history.ts'
 import { readNoticeCurrent, readNoticeFailure, readNoticeHistory } from './store/notice.ts'
+import { pollNotice } from './notice.ts'
 import { noticeSchema } from './schema/types.ts'
 import { shouldRefreshAt } from './schedule.ts'
 import { contentVersion } from './publishing.ts'
@@ -290,10 +291,22 @@ app.onError((err, c) => {
 
 export { app }
 
+async function pollNoticeTick(env: Env): Promise<void> {
+  const result = await pollNotice(env, { signal: AbortSignal.timeout(20_000) })
+  if (result.status !== 'updated' || !result.record) return
+  const coordinator = env.UPDATE_COORDINATOR.get(env.UPDATE_COORDINATOR.idFromName('notice:' + result.record.hash))
+  const response = await coordinator.fetch('https://coordinator/notice', {
+    method: 'POST',
+    body: JSON.stringify({ hash: result.record.hash }),
+  })
+  if (!response.ok) throw new Error('notice_queue_failed')
+}
+
 export default {
   fetch: app.fetch,
   async scheduled(event: ScheduledController, env: Env, ctx: ExecutionContext) {
     ctx.waitUntil((async () => {
+      await pollNoticeTick(env).catch(() => console.error('notice update incomplete'))
       const local = new Date(event.scheduledTime + 8 * 3600_000)
       const minute = local.getUTCHours() * 60 + local.getUTCMinutes()
       const date = beijingDate(event.scheduledTime)
