@@ -147,6 +147,70 @@ function themeToggle(assets = 'assets/') {
   return `<button type="button" class="theme-toggle" hidden disabled aria-label="切换到暗色模式" title="切换到暗色模式"><img class="theme-icon theme-icon-sun" src="${assets}theme-sun.webp" alt="" decoding="async" width="48" height="48"><img class="theme-icon theme-icon-moon" src="${assets}theme-moon.webp" alt="" decoding="async" width="48" height="48"></button>`
 }
 
+function beijingDateOf(iso) {
+  const time = Date.parse(iso)
+  if (!Number.isFinite(time)) return null
+  return new Date(time + 8 * 3600_000).toISOString().slice(0, 10)
+}
+
+function beijingStamp(iso) {
+  const date = beijingDateOf(iso)
+  return date ? date.replaceAll('-', '.') : '日期未知'
+}
+
+export function noticeForDate(notices, date) {
+  const effective = (notices ?? []).filter((item) => {
+    const seen = beijingDateOf(item.first_seen_at)
+    return seen !== null && seen <= date
+  })
+  if (effective.length === 0) return null
+  const sameDay = effective.filter(item => beijingDateOf(item.first_seen_at) === date)
+  return { latest: (sameDay.length > 0 ? sameDay : effective).at(-1), sameDay }
+}
+
+function noticeBrief(record) {
+  const text = String(record.message).replace(/\s*\n+\s*/g, ' ').trim()
+  return `${escapeHtml(text.slice(0, 96))}${text.length > 96 ? '…' : ''}`
+}
+
+function renderNoticeText(text) {
+  const out = []
+  let list = []
+  const flush = () => {
+    if (list.length > 0) {
+      out.push(`<ol>${list.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</ol>`)
+      list = []
+    }
+  }
+  for (const line of String(text).split('\n')) {
+    const heading = /^\s*【(.+)】\s*$/.exec(line)
+    const item = /^\s*\d+[.、]\s*(.+)$/.exec(line)
+    if (item) list.push(item[1])
+    else {
+      flush()
+      if (heading) out.push(`<h4>${escapeHtml(heading[1])}</h4>`)
+      else if (line.trim()) out.push(`<p>${escapeHtml(line)}</p>`)
+    }
+  }
+  flush()
+  return out.join('')
+}
+
+function noticeSection(found) {
+  if (!found) return ''
+  const { latest, sameDay } = found
+  const count = sameDay.length > 1 ? `<span class="notice-count">当日更新 ${sameDay.length} 次</span>` : ''
+  return `<section id="notice" aria-labelledby="h-notice"><div class="section-head"><div><h2 id="h-notice">游戏公告</h2></div>${count}</div><article class="notice-paper"><div class="notice-meta"><span>${escapeHtml(latest.title)}</span><time datetime="${escapeHtml(latest.published_at)}">${escapeHtml(beijingStamp(latest.published_at))}</time></div><p class="notice-brief">${noticeBrief(latest)}</p><a class="detail-trigger" href="#notice-details" data-dialog="detail-notice" aria-haspopup="dialog">查看全文 <span aria-hidden="true">↗</span></a></article></section>`
+}
+
+function noticeDialog(found) {
+  if (!found) return ''
+  const { latest, sameDay } = found
+  const versions = sameDay.length > 1 ? sameDay : [latest]
+  const body = versions.map((item) => `${versions.length > 1 ? `<h4>${escapeHtml(beijingStamp(item.first_seen_at))}</h4>` : ''}${renderNoticeText(item.message)}`).join('')
+  return `<dialog class="detail-dialog" id="detail-notice" data-has-text="true" aria-labelledby="dialog-title-notice"><div class="dialog-bar"><span class="dialog-context"><span>游戏公告</span><time datetime="${escapeHtml(latest.published_at)}">${escapeHtml(beijingStamp(latest.published_at))}</time></span><button type="button" class="dialog-close" aria-label="关闭详情"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button></div><div class="dialog-scroll"><h2 id="dialog-title-notice">${escapeHtml(latest.title)}</h2>${body}</div></dialog>`
+}
+
 function renderFooter({ archive = false, date, api = false } = {}) {
   const dataHref = archive ? '../data.json' : 'data.json'
   const home = archive ? '<a href="../index.html">返回首页</a> · ' : api ? '<a href="index.html">返回首页</a> · ' : ''
@@ -164,6 +228,8 @@ export function renderApiGuide(date) {
     ['/v1/daily/weather', '今日天气'],
     ['/v1/daily/calendar', '本月日历'],
     ['/v1/daily/candles', '蜡烛相关数据'],
+    ['/v1/notice', '当前游戏公告'],
+    ['/v1/notice/history', '公告变更历史'],
     ['/v1/daily/YYYY-MM-DD', '指定日期的完整数据，最近 30 天'],
   ]
   return `<!doctype html>
@@ -184,6 +250,7 @@ export function renderPage(envelope, options = {}) {
   const { meta } = envelope
   const data = structuredClone(envelope.data)
   const archive = Boolean(options.archive)
+  const notices = options.notices ?? []
   const assets = archive ? '../assets/' : 'assets/'
   for (const detail of [...data.taskDetails, ...data.candles, data.weather, data.calendar]) {
     if (!detail) continue
@@ -205,6 +272,7 @@ export function renderPage(envelope, options = {}) {
 
   const weather = overviewPreview(data.weather, 'weather', '天气预报', '今日无天气数据')
   const calendar = overviewPreview(data.calendar, 'calendar', '本月日历', '今日无日历数据')
+  const notice = noticeForDate(notices, envelope.date)
 
 
   return `<!doctype html>
@@ -232,14 +300,16 @@ ${faviconLinks(assets)}
 ${themeToggle(assets)}
 <div class="binding" aria-hidden="true"></div><span class="journal-sticker sticker-butterfly-margin" aria-hidden="true"></span>
 <header class="page-header"><div class="header-body"><div><h1>光遇每日任务</h1><span class="journal-sticker sticker-cape" aria-hidden="true"></span><div class="status">${status}</div></div>${picker}</div></header>
-<nav class="jump" aria-label="页面导航"><span class="journal-sticker sticker-star" aria-hidden="true"></span><a href="#tasks">每日任务 <small>${data.tasks.length}</small></a><a href="#weather">天气预报</a><a href="#calendar">本月日历</a><a href="#candles">季节蜡烛</a></nav>
+<nav class="jump" aria-label="页面导航"><span class="journal-sticker sticker-star" aria-hidden="true"></span><a href="#tasks">每日任务 <small>${data.tasks.length}</small></a><a href="#weather">天气预报</a><a href="#calendar">本月日历</a><a href="#candles">季节蜡烛</a>${notice ? '<a href="#notice">游戏公告</a>' : ''}</nav>
 <section id="tasks" aria-labelledby="h-tasks"><div class="section-head"><div><h2 id="h-tasks">每日任务</h2><span class="journal-sticker sticker-jelly" aria-hidden="true"></span></div><span class="progress" role="status" aria-live="polite" aria-atomic="true"><span id="complete-count">0</span> / ${data.tasks.length} 已完成</span></div><div class="tasks">${taskNotes(data, detailByKeyword)}</div></section>
 <div class="overview"><section id="weather"${hasOverviewContent(data.weather) ? ' data-section-dialog="detail-weather"' : ''} aria-labelledby="h-weather"><h2 id="h-weather">天气预报 <span class="journal-sticker sticker-manta" aria-hidden="true"></span></h2><div class="info-card">${weather}</div></section><section id="calendar"${hasOverviewContent(data.calendar) ? ' data-section-dialog="detail-calendar"' : ''} aria-labelledby="h-calendar"><h2 id="h-calendar">本月日历 <span class="journal-sticker sticker-butterfly" aria-hidden="true"></span></h2><div class="info-card">${calendar}</div></section></div>
 <section id="candles" aria-labelledby="h-candles"><h2 id="h-candles">季节蜡烛</h2><span class="journal-sticker sticker-candles" aria-hidden="true"></span>${candleSection(data, detailByKeyword)}</section>
+${noticeSection(notice)}
 ${renderFooter({ archive, date: envelope.date })}
 </main>
 ${taskDialogs(data, detailByKeyword, envelope.date)}
 ${overviewDialogs(data)}
+${noticeDialog(notice)}
 <script src="${assets}notebook.js?v=${ASSET_VERSION}" defer></script>
 </body>
 </html>`
@@ -263,9 +333,21 @@ export async function loadEnvelope() {
   return body
 }
 
+export async function loadNotices(file) {
+  try {
+    const { readFile } = await import('node:fs/promises')
+    const archive = JSON.parse(await readFile(file, 'utf8'))
+    return Array.isArray(archive?.versions) ? archive.versions : []
+  } catch {
+    return []
+  }
+}
+
 if (process.argv[1]?.endsWith('render-pages.mjs')) {
   const { mkdir, writeFile, cp, rm } = await import('node:fs/promises')
   const envelope = await loadEnvelope()
+  const noticesFile = process.env.NOTICES_FILE ?? 'history/notices.json'
+  const notices = await loadNotices(noticesFile)
   if (process.env.PUBLISH_HISTORY === '1') await rm('out', { recursive: true, force: true })
   await mkdir('out/archive', { recursive: true })
   await rm('out/assets', { recursive: true, force: true })
@@ -284,15 +366,16 @@ if (process.argv[1]?.endsWith('render-pages.mjs')) {
     await cp('history/index.json', 'out/history/index.json')
     for (const entry of index.dates) {
       const record = readHistory(entry.date)
-      await writeFile(`out/archive/${entry.date}.html`, renderPage(record, { archive: true, dates }))
+      await writeFile(`out/archive/${entry.date}.html`, renderPage(record, { archive: true, dates, notices }))
       await writeFile(`out/archive/${entry.date}.json`, JSON.stringify(record, null, 2))
     }
   }
-  await writeFile('out/index.html', renderPage(envelope, { dates }))
+  await writeFile('out/index.html', renderPage(envelope, { dates, notices }))
   await writeFile('out/api.html', renderApiGuide(envelope.date))
   await writeFile('out/CNAME', 'skydaily.nankki.com\n')
   await writeFile('out/data.json', JSON.stringify(envelope, null, 2))
   await writeFile(`out/archive/${envelope.date}.json`, JSON.stringify(envelope, null, 2))
-  await writeFile(`out/archive/${envelope.date}.html`, renderPage(envelope, { archive: true, dates }))
+  await writeFile(`out/archive/${envelope.date}.html`, renderPage(envelope, { archive: true, dates, notices }))
+  try { await cp(noticesFile, 'out/history/notices.json') } catch {}
   console.log(`rendered ${envelope.date}: index.html, data.json, archive/${envelope.date}.json, archive/${envelope.date}.html`)
 }
