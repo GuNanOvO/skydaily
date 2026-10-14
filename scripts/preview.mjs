@@ -68,7 +68,10 @@ const server = createServer(async (req, res) => {
   } catch { res.writeHead(404).end('Not found') }
 })
 server.listen(port, '127.0.0.1', () => console.log(`Local preview: http://127.0.0.1:${port}/`))
-const watchers = ['assets', 'scripts/render-pages.mjs', 'scripts/date-navigation.mjs', 'history/index.json', 'history/daily', ...(process.env.NOTICES_FILE ? [process.env.NOTICES_FILE] : [])].map(path => watch(path, schedule))
+const noticesPath = process.env.NOTICES_FILE ?? 'history/notices.json'
+const watchPaths = ['assets', 'scripts/render-pages.mjs', 'scripts/date-navigation.mjs', 'history/index.json', 'history/daily']
+watchPaths.push(noticesPath)
+const watchers = watchPaths.map(path => watch(path, schedule))
 const heartbeat = setInterval(() => { for (const client of clients) client.write(': heartbeat\n\n') }, 15000)
 function shutdown() {
   clearTimeout(timer)
