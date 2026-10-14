@@ -2,7 +2,7 @@ import { readFile, stat, readdir } from 'node:fs/promises'
 import { resolve, join } from 'node:path'
 import { envelopeSchema } from '../src/schema/types.ts'
 import { completeEnvelope } from '../src/publishing.ts'
-import { normalizeSeasonGuideLink, seasonGuidePolicy } from '../src/link-policy.mjs'
+import { normalizeNoticeLink, normalizeSeasonGuideLink, seasonGuidePolicy } from '../src/link-policy.mjs'
 
 const root = resolve(process.argv.find(arg => arg.startsWith('--directory='))?.split('=')[1] ?? 'out')
 const site = new URL(process.env.SITE_URL ?? 'https://skydaily.nankki.com')
@@ -94,7 +94,10 @@ try {
       if (!Number.isFinite(Date.parse(item.published_at)) || !Number.isFinite(Date.parse(item.first_seen_at))) fail('Invalid notice timestamp')
       if (item.first_seen_at < previous) fail('Notice archive is not ordered')
       previous = item.first_seen_at
-      if (/https?:\/\//i.test(item.title + item.message)) fail('Notice text contains a URL')
+      const noticeUrls = `${item.title} ${item.message}`.match(/https?:\/\/[^\s<>"'）)]+/gi) ?? []
+    for (const url of noticeUrls) {
+      if (normalizeNoticeLink(url) !== url) fail('Notice text contains an unapproved URL')
+    }
     }
     if (notices.current && notices.current.hash !== notices.versions.at(-1)?.hash) fail('Notice current does not match the newest version')
     if (notices.current) {

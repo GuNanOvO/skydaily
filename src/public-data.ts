@@ -1,6 +1,8 @@
 import type { Env } from './env.ts'
 import type { Envelope, TaskDetail } from './schema/types.ts'
-import { normalizeSeasonGuideLink, seasonGuidePolicy } from './link-policy.mjs'
+import { normalizeNoticeLink, normalizeSeasonGuideLink, seasonGuidePolicy } from './link-policy.mjs'
+
+export { normalizeNoticeLink }
 
 export async function digest(value: string): Promise<string> {
   const bytes = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(value))
@@ -13,6 +15,14 @@ export function isSeasonGuideLink(value: string): boolean {
 
 export function cleanText(value: string): string {
   return value.replace(/https?:\/\/[^\s<>"'）)]+/gi, '').trim()
+}
+
+export function cleanNoticeText(value: string): string {
+  return value
+    .replace(/https?:\/\/[^\s<>"'）)]+/gi, (match) => normalizeNoticeLink(match) ?? '')
+    .replace(/[ \t]{2,}/g, ' ')
+    .replace(/[ \t]+$/gm, '')
+    .trim()
 }
 
 function isSourceMedia(value: string): boolean {

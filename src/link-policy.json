@@ -4,5 +4,8 @@
     "origin": "https://h5.ds.163.com",
     "pathPattern": "^/v[0-9]+/[a-f0-9]{24}/?$",
     "fallback": "https://h5.ds.163.com/v1/6a54aac92a493300338e56aa/"
+  },
+  "noticeLinks": {
+    "hosts": ["sky.163.com"]
   }
 }

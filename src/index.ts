@@ -7,7 +7,7 @@ import { DATA_SOURCE, SCHEMA_VERSION, TAKEDOWN_CONTACT, TIMEZONE } from './confi
 import { readDaily, readRefreshMeta } from './store/kv.ts'
 import { beijingDate, refreshAndStore, RefreshError } from './refresh.ts'
 import type { Envelope } from './schema/types.ts'
-import { publicEnvelope, cleanText } from './public-data.ts'
+import { publicEnvelope, cleanNoticeText } from './public-data.ts'
 import { readPublishedHistory } from './store/history.ts'
 import { readNoticeCurrent, readNoticeFailure, readNoticeHistory } from './store/notice.ts'
 import { pollNotice } from './notice.ts'
@@ -145,7 +145,7 @@ app.get('/v1/notice', async (c) => {
   const record = await readNoticeCurrent(c.env)
   if (!record) return c.json({ error: { code: 'not_found' } }, 404)
   const failure = await readNoticeFailure(c.env)
-  const parsed = noticeSchema.safeParse({ ...record, title: cleanText(record.title), message: cleanText(record.message) })
+  const parsed = noticeSchema.safeParse({ ...record, title: cleanNoticeText(record.title), message: cleanNoticeText(record.message) })
   if (!parsed.success) return c.json({ error: { code: 'internal' } }, 500)
   return c.json(
     {
@@ -163,7 +163,7 @@ app.get('/v1/notice', async (c) => {
 
 app.get('/v1/notice/history', async (c) => {
   const records = await readNoticeHistory(c.env)
-  const notices = records.map(record => noticeSchema.safeParse({ ...record, title: cleanText(record.title), message: cleanText(record.message) }))
+  const notices = records.map(record => noticeSchema.safeParse({ ...record, title: cleanNoticeText(record.title), message: cleanNoticeText(record.message) }))
   if (notices.some(result => !result.success)) return c.json({ error: { code: 'internal' } }, 500)
   return c.json(
     {

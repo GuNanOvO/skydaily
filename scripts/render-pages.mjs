@@ -2,7 +2,7 @@ import { dateNavigation } from './date-navigation.mjs'
 import { readFileSync } from 'node:fs'
 import { createHash } from 'node:crypto'
 import QRCode from 'qrcode'
-import { normalizeSeasonGuideLink, seasonGuidePolicy } from '../src/link-policy.mjs'
+import { normalizeNoticeLink, normalizeSeasonGuideLink, seasonGuidePolicy } from '../src/link-policy.mjs'
 
 
 const SEASON_GUIDE_URL = seasonGuidePolicy.fallback
@@ -186,6 +186,13 @@ function noticeBrief(record) {
     .slice(0, 240))
 }
 
+function linkifyNotice(text) {
+  return escapeHtml(String(text)).replace(/https?:\/\/[^\s<>"'）)]+/gi, (match) => {
+    const canonical = normalizeNoticeLink(match)
+    return canonical ? `<a class="notice-link" href="${canonical}" target="_blank" rel="noopener noreferrer">${match}</a>` : match
+  })
+}
+
 function renderNoticeText(text) {
   const blocks = []
   let run = null
@@ -224,14 +231,14 @@ function renderNoticeText(text) {
     else groups.push(block.type === 'num' ? { ...block, subs: new Map() } : { ...block })
   }
 
-  const list = (tag, items, className = '') => `<${tag}${className}>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join('')}</${tag}>`
+  const list = (tag, items, className = '') => `<${tag}${className}>${items.map((item) => `<li>${linkifyNotice(item)}</li>`).join('')}</${tag}>`
   return groups.map((group) => {
     if (group.type === 'section') return `<h4 class="notice-section">${escapeHtml(group.text)}</h4>`
-    if (group.type === 'p') return `<p>${escapeHtml(group.text)}</p>`
+    if (group.type === 'p') return `<p>${linkifyNotice(group.text)}</p>`
     if (group.type === 'dot') return list('ul', group.items, ' class="notice-sub"')
     const items = group.items.map((item, index) => {
       const sub = group.subs.get(index)
-      return `<li>${escapeHtml(item)}${sub ? list('ul', sub, ' class="notice-sub"') : ''}</li>`
+      return `<li>${linkifyNotice(item)}${sub ? list('ul', sub, ' class="notice-sub"') : ''}</li>`
     }).join('')
     return `<ol>${items}</ol>`
   }).join('')

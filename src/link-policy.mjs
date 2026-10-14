@@ -10,3 +10,15 @@ export function normalizeSeasonGuideLink(value) {
     return url.origin + url.pathname.replace(/\/?$/, '/')
   } catch { return null }
 }
+
+export const noticeLinkPolicy = policy.noticeLinks
+const noticeHosts = new Set(noticeLinkPolicy.hosts)
+
+export function normalizeNoticeLink(value) {
+  try {
+    const url = new URL(value)
+    if (url.protocol !== 'https:' || url.port || url.username || url.password) return null
+    if (!noticeHosts.has(url.hostname)) return null
+    return url.origin + (url.pathname === '' ? '/' : url.pathname)
+  } catch { return null }
+}
