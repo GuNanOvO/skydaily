@@ -47,7 +47,8 @@ main:before{top:32px;bottom:32px;left:80px}
 #candles{display:flex;flex-direction:column}
 #notice{margin:32px 0 0}
 .notice-count{font-size:var(--font-xs);line-height:32px;color:var(--muted)}
-.notice-paper{position:relative;isolation:isolate;margin:0;padding:16px 24px;background:#fffdf6;outline:1px solid #cbc9cc50;box-shadow:var(--sticker-shadow)}
+.notice-paper{position:relative;isolation:isolate;margin:0;padding:16px 24px;background:#fffdf6;outline:1px solid #cbc9cc50;box-shadow:var(--sticker-shadow);cursor:pointer;transition:box-shadow .2s,transform .2s}
+.notice-paper:hover{transform:translateY(-2px);box-shadow:var(--sticker-shadow-hover)}
 .notice-paper::before{content:"";position:absolute;top:-9px;left:46%;width:58px;height:18px;background:#ecd69b80;border-left:1px dashed #c1b5a660;border-right:1px dashed #c1b5a660;transform:rotate(3deg);filter:var(--tape-shadow);pointer-events:none}
 .notice-top{display:flex;align-items:baseline;justify-content:space-between;gap:16px}
 .notice-title{min-width:0;margin:0;font-weight:600;font-size:var(--font-md);line-height:32px;letter-spacing:1px}

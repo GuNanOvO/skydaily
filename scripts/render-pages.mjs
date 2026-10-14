@@ -270,7 +270,7 @@ function noticeSection(found) {
   if (!found) return ''
   const { latest, sameDay } = found
   const count = sameDay.length > 1 ? `<span class="notice-count">当日更新 ${sameDay.length} 次</span>` : ''
-  return `<section id="notice" aria-labelledby="h-notice"><div class="section-head"><div><h2 id="h-notice">游戏公告</h2></div>${count}</div><article class="notice-paper"><div class="notice-top"><h3 class="notice-title">${escapeHtml(latest.title)}</h3><time class="notice-time" datetime="${escapeHtml(latest.published_at)}">${escapeHtml(beijingStamp(latest.published_at))}</time></div><p class="notice-brief">${noticeBrief(latest)}</p><a class="detail-trigger" href="#notice-details" data-dialog="detail-notice" aria-haspopup="dialog">查看全文 <span aria-hidden="true">↗</span></a></article></section>`
+  return `<section id="notice" aria-labelledby="h-notice"><div class="section-head"><div><h2 id="h-notice">游戏公告</h2></div>${count}</div><article class="notice-paper" data-section-dialog="detail-notice"><div class="notice-top"><h3 class="notice-title">${escapeHtml(latest.title)}</h3><time class="notice-time" datetime="${escapeHtml(latest.published_at)}">${escapeHtml(beijingStamp(latest.published_at))}</time></div><p class="notice-brief">${noticeBrief(latest)}</p><a class="detail-trigger" href="#notice-details" data-dialog="detail-notice" aria-haspopup="dialog">查看全文 <span aria-hidden="true">↗</span></a></article></section>`
 }
 
 function noticeDialog(found) {
