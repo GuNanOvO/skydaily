@@ -92,7 +92,7 @@ function overviewPreview(detail, id, title, emptyText) {
   const text = detail.text ? `<p class="preview-text">${escapeHtml(detail.text)}</p>` : '<div class="preview-text" aria-hidden="true"></div>'
   const firstImage = detail.images[0]
   if (firstImage) {
-    return `<a class="overview-trigger" href="#image-${id}" data-dialog="image-${id}" aria-haspopup="dialog" aria-label="查看${title}大图">${text}<figure class="photo-note"><div class="photo-window"><img src="${escapeHtml(thumbUrl(firstImage))}" alt="${title}首图" loading="lazy" decoding="async"></div><figcaption>查看大图 ↗</figcaption></figure></a>`
+    return `<a class="overview-trigger" href="#image-${id}" data-dialog="image-${id}" aria-haspopup="dialog" aria-label="查看${title}大图">${text}<figure class="photo-note"><div class="photo-window"><img src="${escapeHtml(thumbUrl(firstImage))}" data-original="${escapeHtml(firstImage)}" alt="${title}首图" loading="lazy" decoding="async"></div><figcaption>查看大图 ↗</figcaption></figure></a>`
   }
   return `<a class="overview-trigger" href="#${id}-details" data-dialog="detail-${id}" aria-haspopup="dialog" aria-label="查看${title}详情">${text}<span class="preview-caption">查看详情 ↗</span></a>`
 }

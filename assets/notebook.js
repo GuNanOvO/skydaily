@@ -143,6 +143,77 @@
   document.querySelectorAll('.photo-note img, .image-link img').forEach(img => {
     if (img.complete && img.naturalWidth === 0) img.dispatchEvent(new Event('error'));
   });
+  const imageCacheKey = 'skydaily-image-cache';
+  const imageKey = value => String(value).replace(/^https?:\/\/[^/]+/, '').replace(/^(?:\.\.\/)+/, '');
+  const readCachedImages = () => {
+    try {
+      const list = JSON.parse(localStorage.getItem(imageCacheKey) ?? '[]');
+      return new Set(Array.isArray(list) ? list.filter(item => typeof item === 'string') : []);
+    } catch { return new Set(); }
+  };
+  const cachedImages = readCachedImages();
+  const rememberImage = value => {
+    const key = imageKey(value);
+    cachedImages.delete(key);
+    cachedImages.add(key);
+    try { localStorage.setItem(imageCacheKey, JSON.stringify([...cachedImages].slice(-40))); } catch {}
+  };
+  const forgetImage = value => {
+    if (!cachedImages.delete(imageKey(value))) return;
+    try { localStorage.setItem(imageCacheKey, JSON.stringify([...cachedImages])); } catch {}
+  };
+  const thumbsByOriginal = new Map();
+  document.querySelectorAll('img[data-original]').forEach(img => {
+    const key = imageKey(img.dataset.original);
+    thumbsByOriginal.set(key, [...(thumbsByOriginal.get(key) ?? []), img]);
+    if (!cachedImages.has(key)) return;
+    img.src = img.dataset.original;
+    img.addEventListener('error', () => forgetImage(key), {once: true});
+  });
+  document.querySelectorAll('img').forEach(img => {
+    const src = img.getAttribute('src');
+    if (!src || !/history\/media\/[a-f0-9]{24}\.webp$/.test(src)) return;
+    const upgrade = () => {
+      const key = imageKey(src);
+      rememberImage(key);
+      for (const thumb of thumbsByOriginal.get(key) ?? []) {
+        if (thumb === img || imageKey(thumb.getAttribute('src') ?? '') === key) continue;
+        thumb.src = thumb.dataset.original;
+        thumb.addEventListener('error', () => forgetImage(key), {once: true});
+      }
+    };
+    if (img.complete && img.naturalWidth > 0) upgrade();
+    else img.addEventListener('load', upgrade, {once: true});
+  });
+  const upgradeThumb = (thumb, key) => {
+    thumb.src = thumb.dataset.original;
+    thumb.addEventListener('error', () => forgetImage(key), {once: true});
+  };
+  const prefetchOriginals = () => {
+    if (window.matchMedia?.('(prefers-reduced-data: reduce)').matches) return;
+    const connection = navigator.connection ?? navigator.mozConnection ?? navigator.webkitConnection;
+    if (connection?.saveData) return;
+    if (connection?.effectiveType && connection.effectiveType !== '4g') return;
+    for (const [key, thumbs] of thumbsByOriginal) {
+      const thumb = thumbs[0];
+      if (!thumb || cachedImages.has(key)) continue;
+      const preload = new Image();
+      preload.decoding = 'async';
+      preload.addEventListener('load', () => {
+        rememberImage(key);
+        for (const target of thumbsByOriginal.get(key) ?? []) {
+          if (imageKey(target.getAttribute('src') ?? '') !== key) upgradeThumb(target, key);
+        }
+      }, {once: true});
+      preload.src = thumb.dataset.original;
+    }
+  };
+  const schedulePrefetch = () => {
+    if ('requestIdleCallback' in window) requestIdleCallback(prefetchOriginals, {timeout: 3000});
+    else setTimeout(prefetchOriginals, 1200);
+  };
+  if (document.readyState === 'complete') schedulePrefetch();
+  else window.addEventListener('load', schedulePrefetch, {once: true});
   const open = (id, trigger) => {
     const dialog = document.getElementById(id);
     if (!dialog || dialog.open) return;
