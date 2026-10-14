@@ -129,6 +129,9 @@ body.modal-open{overflow:visible}
 .dialog-scroll{max-height:none;overflow:visible;padding:20px 28px 28px;background:none}
 
 .dialog-scroll h2{line-height:28px;margin:0 0 12px}
+.image-dialog .dialog-scroll img{width:auto;max-width:100%;max-height:calc(100vh - 220px);margin:0 auto;object-fit:contain}
+.image-dialog .image-link{margin:0 0 24px}
+.image-dialog .image-link:last-child{margin-bottom:0}
 .dialog-scroll h4{line-height:24px;margin:12px 0 0;font-size:var(--font-xs)}
 .dialog-scroll p,.dialog-scroll li{line-height:24px}
 .dialog-scroll .image-link,.dialog-scroll video{margin:16px 0 0}

@@ -76,17 +76,34 @@ function hasOverviewContent(detail) {
   return Boolean(detail && (detail.text?.trim() || detail.images.length))
 }
 
+function overviewDialogId(id, detail) {
+  if (!hasOverviewContent(detail)) return null
+  return detail.images.length > 0 ? `image-${id}` : `detail-${id}`
+}
+
 function overviewPreview(detail, id, title, emptyText) {
   if (!detail) return `<p class="empty">${emptyText}</p>`
   if (!hasOverviewContent(detail)) return `<figure class="photo-note"><div class="photo-window"><span class="image-unavailable">图片暂缺</span></div></figure>`
   const text = detail.text ? `<p class="preview-text">${escapeHtml(detail.text)}</p>` : '<div class="preview-text" aria-hidden="true"></div>'
   const firstImage = detail.images[0]
-  const image = firstImage ? `<figure class="photo-note"><div class="photo-window"><img src="${escapeHtml(firstImage)}" alt="${title}首图" loading="lazy" decoding="async"></div><figcaption>查看详情 ↗</figcaption></figure>` : '<span class="preview-caption">查看详情 ↗</span>'
-  return `<a class="overview-trigger" href="#${id}-details" data-dialog="detail-${id}" aria-haspopup="dialog" aria-label="查看${title}详情">${text}${image}</a>`
+  if (firstImage) {
+    return `<a class="overview-trigger" href="#image-${id}" data-dialog="image-${id}" aria-haspopup="dialog" aria-label="查看${title}大图">${text}<figure class="photo-note"><div class="photo-window"><img src="${escapeHtml(firstImage)}" alt="${title}首图" loading="lazy" decoding="async"></div><figcaption>查看大图 ↗</figcaption></figure></a>`
+  }
+  return `<a class="overview-trigger" href="#${id}-details" data-dialog="detail-${id}" aria-haspopup="dialog" aria-label="查看${title}详情">${text}<span class="preview-caption">查看详情 ↗</span></a>`
 }
 
 function overviewDialogs(data) {
-  return [['weather', '天气预报', data.weather], ['calendar', '本月日历', data.calendar]].filter(([, , detail]) => hasOverviewContent(detail)).map(([id, title, detail]) => `<dialog class="detail-dialog" id="detail-${id}" data-has-text="${Boolean(detail.text?.trim())}" aria-labelledby="dialog-title-${id}"><div class="dialog-bar"><span>${title}</span><button type="button" class="dialog-close" aria-label="关闭详情"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button></div><div class="dialog-scroll"><h2 id="dialog-title-${id}">${title}</h2>${detail.text ? `<p>${escapeHtml(detail.text)}</p>` : ''}${detail.images.map(src => linkedImage(src, title)).join('')}</div></dialog>`).join('')
+  return [['weather', '天气预报', data.weather], ['calendar', '本月日历', data.calendar]]
+    .filter(([, , detail]) => hasOverviewContent(detail))
+    .map(([id, title, detail]) => {
+      const close = '<button type="button" class="dialog-close" aria-label="关闭详情"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><path d="m4 4 8 8M12 4l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></button>'
+      if (detail.images.length > 0) {
+        const images = detail.images.map((src) => linkedImage(src, title)).join('')
+        return `<dialog class="detail-dialog image-dialog" id="image-${id}" data-has-text="false" aria-labelledby="dialog-title-image-${id}"><div class="dialog-bar"><span>${title}</span>${close}</div><div class="dialog-scroll"><h2 id="dialog-title-image-${id}">${title}</h2>${images}</div></dialog>`
+      }
+      return `<dialog class="detail-dialog" id="detail-${id}" data-has-text="true" aria-labelledby="dialog-title-${id}"><div class="dialog-bar"><span>${title}</span>${close}</div><div class="dialog-scroll"><h2 id="dialog-title-${id}">${title}</h2>${detail.text ? `<p>${escapeHtml(detail.text)}</p>` : ''}</div></dialog>`
+    })
+    .join('')
 }
 
 function hasTaskDetail(detail) {
@@ -320,6 +337,10 @@ export function renderPage(envelope, options = {}) {
 
   const weather = overviewPreview(data.weather, 'weather', '天气预报', '今日无天气数据')
   const calendar = overviewPreview(data.calendar, 'calendar', '本月日历', '今日无日历数据')
+  const sectionDialog = (id, detail) => {
+    const dialogId = overviewDialogId(id, detail)
+    return dialogId ? ` data-section-dialog="${dialogId}"` : ''
+  }
   const notice = archive ? noticeForDate(notices, envelope.date) : noticeForHome(notices)
 
 
@@ -350,7 +371,7 @@ ${themeToggle(assets)}
 <header class="page-header"><div class="header-body"><div><h1>光遇每日任务</h1><span class="journal-sticker sticker-cape" aria-hidden="true"></span><div class="status">${status}</div></div>${picker}</div></header>
 <nav class="jump" aria-label="页面导航"><span class="journal-sticker sticker-star" aria-hidden="true"></span><a href="#tasks">每日任务 <small>${data.tasks.length}</small></a><a href="#weather">天气预报</a><a href="#calendar">本月日历</a><a href="#candles">季节蜡烛</a>${notice ? '<a href="#notice">游戏公告</a>' : ''}</nav>
 <section id="tasks" aria-labelledby="h-tasks"><div class="section-head"><div><h2 id="h-tasks">每日任务</h2><span class="journal-sticker sticker-jelly" aria-hidden="true"></span></div><span class="progress" role="status" aria-live="polite" aria-atomic="true"><span id="complete-count">0</span> / ${data.tasks.length} 已完成</span></div><div class="tasks">${taskNotes(data, detailByKeyword)}</div></section>
-<div class="overview"><section id="weather"${hasOverviewContent(data.weather) ? ' data-section-dialog="detail-weather"' : ''} aria-labelledby="h-weather"><h2 id="h-weather">天气预报 <span class="journal-sticker sticker-manta" aria-hidden="true"></span></h2><div class="info-card">${weather}</div></section><section id="calendar"${hasOverviewContent(data.calendar) ? ' data-section-dialog="detail-calendar"' : ''} aria-labelledby="h-calendar"><h2 id="h-calendar">本月日历 <span class="journal-sticker sticker-butterfly" aria-hidden="true"></span></h2><div class="info-card">${calendar}</div></section></div>
+<div class="overview"><section id="weather"${sectionDialog('weather', data.weather)} aria-labelledby="h-weather"><h2 id="h-weather">天气预报 <span class="journal-sticker sticker-manta" aria-hidden="true"></span></h2><div class="info-card">${weather}</div></section><section id="calendar"${sectionDialog('calendar', data.calendar)} aria-labelledby="h-calendar"><h2 id="h-calendar">本月日历 <span class="journal-sticker sticker-butterfly" aria-hidden="true"></span></h2><div class="info-card">${calendar}</div></section></div>
 <section id="candles" aria-labelledby="h-candles"><h2 id="h-candles">季节蜡烛</h2><span class="journal-sticker sticker-candles" aria-hidden="true"></span>${candleSection(data, detailByKeyword)}</section>
 ${noticeSection(notice)}
 ${renderFooter({ archive, date: envelope.date })}
