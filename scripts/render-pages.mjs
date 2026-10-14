@@ -76,6 +76,11 @@ function hasOverviewContent(detail) {
   return Boolean(detail && (detail.text?.trim() || detail.images.length))
 }
 
+function thumbUrl(src) {
+  const match = /^(.*)history\/media\/([a-f0-9]{24})\.webp$/.exec(src)
+  return match ? `${match[1]}history/thumbs/${match[2]}.webp` : src
+}
+
 function overviewDialogId(id, detail) {
   if (!hasOverviewContent(detail)) return null
   return detail.images.length > 0 ? `image-${id}` : `detail-${id}`
@@ -87,7 +92,7 @@ function overviewPreview(detail, id, title, emptyText) {
   const text = detail.text ? `<p class="preview-text">${escapeHtml(detail.text)}</p>` : '<div class="preview-text" aria-hidden="true"></div>'
   const firstImage = detail.images[0]
   if (firstImage) {
-    return `<a class="overview-trigger" href="#image-${id}" data-dialog="image-${id}" aria-haspopup="dialog" aria-label="查看${title}大图">${text}<figure class="photo-note"><div class="photo-window"><img src="${escapeHtml(firstImage)}" alt="${title}首图" loading="lazy" decoding="async"></div><figcaption>查看大图 ↗</figcaption></figure></a>`
+    return `<a class="overview-trigger" href="#image-${id}" data-dialog="image-${id}" aria-haspopup="dialog" aria-label="查看${title}大图">${text}<figure class="photo-note"><div class="photo-window"><img src="${escapeHtml(thumbUrl(firstImage))}" alt="${title}首图" loading="lazy" decoding="async"></div><figcaption>查看大图 ↗</figcaption></figure></a>`
   }
   return `<a class="overview-trigger" href="#${id}-details" data-dialog="detail-${id}" aria-haspopup="dialog" aria-label="查看${title}详情">${text}<span class="preview-caption">查看详情 ↗</span></a>`
 }
@@ -432,6 +437,7 @@ if (process.argv[1]?.endsWith('render-pages.mjs')) {
     await mkdir('out/archive', { recursive: true })
     await cp('history/daily', 'out/history/daily', { recursive: true })
     await cp('history/media', 'out/history/media', { recursive: true })
+    try { await cp('history/thumbs', 'out/history/thumbs', { recursive: true }) } catch {}
     await cp('history/index.json', 'out/history/index.json')
     for (const entry of index.dates) {
       const record = readHistory(entry.date)

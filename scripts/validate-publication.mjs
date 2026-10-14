@@ -75,9 +75,20 @@ try {
   for (const file of references) {
     const bytes = await readFile(join(archive, file))
     if (bytes.toString('ascii', 0, 4) !== 'RIFF' || bytes.toString('ascii', 8, 12) !== 'WEBP') fail('Image is missing or is not WebP')
+    const thumbFile = file.replace(/^media\//, 'thumbs/')
+    let thumb
+    try {
+      thumb = await readFile(join(archive, thumbFile))
+    } catch {
+      fail('Thumbnail is missing')
+    }
+    if (thumb.toString('ascii', 0, 4) !== 'RIFF' || thumb.toString('ascii', 8, 12) !== 'WEBP') fail('Thumbnail is not WebP')
   }
   const mediaFiles = await readdir(join(archive, 'media'))
   if (mediaFiles.length !== references.size || mediaFiles.some(name => !references.has('media/' + name))) fail('Archive contains unreferenced media')
+  const thumbReferences = new Set([...references].map(file => file.replace(/^media\//, 'thumbs/')))
+  const thumbFiles = await readdir(join(archive, 'thumbs'))
+  if (thumbFiles.length !== thumbReferences.size || thumbFiles.some(name => !thumbReferences.has('thumbs/' + name))) fail('Archive contains unreferenced thumbnails')
   let notices = null
   try {
     notices = await json(join(archive, 'notices.json'))

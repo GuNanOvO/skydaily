@@ -39,8 +39,10 @@ def prepare(root, site, snapshot=None):
     if urlsplit(base).scheme != 'https':
         raise ValueError('site must use HTTPS')
     (root / 'media').mkdir(parents=True, exist_ok=True)
+    (root / 'thumbs').mkdir(parents=True, exist_ok=True)
     (root / 'daily').mkdir(parents=True, exist_ok=True)
     media = {}
+    used_thumbs = set()
     if snapshot:
         data = json.loads(Path(snapshot).read_text())
         date.fromisoformat(data['date'])
@@ -98,6 +100,9 @@ def prepare(root, site, snapshot=None):
                 if item['status'] == 'ok':
                     images.append(base + item['file'])
                     used.add(item['file'])
+                    thumb = compressor.ensure_thumb(root, item['file'].split('/')[-1])
+                    if thumb:
+                        used_thumbs.add(thumb['file'])
                 elif {'section': 'media', 'code': 'image_unavailable'} not in envelope['errors']:
                     envelope['errors'].append({'section': 'media', 'code': 'image_unavailable'})
             images_by_group.append(images)
@@ -114,6 +119,9 @@ def prepare(root, site, snapshot=None):
         entries.append({'date': envelope['date'], 'file': 'daily/' + file.name})
     for file in (root / 'media').glob('*'):
         if 'media/' + file.name not in used:
+            file.unlink()
+    for file in (root / 'thumbs').glob('*'):
+        if 'thumbs/' + file.name not in used_thumbs:
             file.unlink()
     (root / 'index.json').write_text(json.dumps({'from': entries[0]['date'], 'to': entries[-1]['date'], 'date_count': len(entries), 'dates': entries}, indent=2) + '\n')
 
