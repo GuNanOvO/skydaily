@@ -112,6 +112,10 @@ jobs:
       - name: 发布页面
         id: deployment
         uses: actions/deploy-pages@v4
+      - name: 预热边缘缓存
+        env:
+          SITE_URL: ${{ env.SITE_URL }}
+        run: node scripts/warm-cache.mjs || echo "::warning::cache warm incomplete"
       - name: 更新仓库 README 预览
         run: |
           set -eu
