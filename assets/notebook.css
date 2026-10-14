@@ -52,7 +52,7 @@ main:before{top:32px;bottom:32px;left:80px}
 .notice-top{display:flex;align-items:baseline;justify-content:space-between;gap:16px}
 .notice-title{min-width:0;margin:0;font:600 var(--font-md)/32px "Songti SC",Georgia,serif;letter-spacing:1px}
 .notice-time{flex-shrink:0;font-size:var(--font-xs);line-height:32px;color:var(--muted);white-space:nowrap}
-.notice-brief{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin:0;font-size:var(--font-sm);line-height:32px;color:var(--ink)}
+.notice-brief{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;margin:0;font-size:var(--font-sm);line-height:32px;color:var(--ink)}
 .notice-paper .detail-trigger{margin-top:32px;border-top:1px solid #cbc9cc50}
 .notice-dialog .dialog-scroll h2{line-height:32px;margin:0 0 16px}
 .notice-dialog .dialog-scroll p{font-size:var(--font-md);line-height:24px;margin:0 0 16px}

@@ -183,7 +183,7 @@ function noticeBrief(record) {
     .replace(/([：、，。；！？】》）])\s+/g, '$1')
     .replace(/\s+([（【《])/g, '$1')
     .trim()
-    .slice(0, 120))
+    .slice(0, 240))
 }
 
 function renderNoticeText(text) {
