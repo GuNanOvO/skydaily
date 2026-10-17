@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-18",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "在水母上回复能量",
+        "keyword": "水母位置"
+      },
+      {
+        "number": 2,
+        "text": "净化10株黑暗植物",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "收集30点烛火",
+        "keyword": null
+      },
+      {
+        "number": 4,
+        "text": "和朋友击掌",
+        "keyword": null
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "水母位置",
+        "title": "每日任务－在水母上恢复能量",
+        "sections": [
+          {
+            "label": "位置",
+            "text": "密林遗迹(水母图)"
+          },
+          {
+            "label": "步骤",
+            "text": "密林遗迹后往前飞，来到终点图前的雨亭，点亮蜡烛即可召唤出一排水母"
+          },
+          {
+            "label": "注意",
+            "text": "几乎消耗完能量后再跳上水母会更容易完成任务哦"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/20ab602b08dc7bbc7543ab97.webp",
+          "https://skydaily.nankki.com/history/media/4c6c0134eed11351ab03141b.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "位置：密林遗迹(水母图)\n步骤：密林遗迹后往前飞，来到终点图前的雨亭，点亮蜡烛即可召唤出一排水母\n注意：几乎消耗完能量后再跳上水母会更容易完成任务哦"
+      }
+    ],
+    "weather": {
+      "text": "今日将会有灼热碎片坠落在圣岛",
+      "images": [
+        "https://skydaily.nankki.com/history/media/9891340a8b115dde2d8cd22a.webp",
+        "https://skydaily.nankki.com/history/media/9aed9befbc57e44f1014f765.webp",
+        "https://skydaily.nankki.com/history/media/3960eea40a131203663f8f63.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/82635faf378182c0ae1ee30b.webp"
+      ]
+    },
+    "candles": [
+      {
+        "keyword": "大蜡烛",
+        "title": "每日大蜡烛位置",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~"
+          },
+          {
+            "label": "位置分布参考",
+            "text": "大蜡烛堆攻略"
+          },
+          {
+            "label": "小精灵温馨提示",
+            "text": "4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/c37d38160f147e9dc76df94f.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~\n位置分布参考：大蜡烛堆攻略\n小精灵温馨提示：\n4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+      }
+    ],
+    "seasonCandleMap": null
+  },
+  "meta": {
+    "fetched_at": "2026-10-17T16:10:23.779Z",
+    "cached": false,
+    "stale": false
+  },
+  "errors": []
+}
