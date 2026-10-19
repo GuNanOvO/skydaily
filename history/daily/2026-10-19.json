@@ -89,7 +89,7 @@
     },
     "calendar": {
       "images": [
-        "https://skydaily.nankki.com/history/media/82635faf378182c0ae1ee30b.webp"
+        "https://skydaily.nankki.com/history/media/6f6a6b064a38c4b9d549dd3e.webp"
       ]
     },
     "candles": [
@@ -121,7 +121,7 @@
     "seasonCandleMap": null
   },
   "meta": {
-    "fetched_at": "2026-10-18T16:03:46.032Z",
+    "fetched_at": "2026-10-19T04:30:54.587Z",
     "cached": false,
     "stale": false
   },
