@@ -8,8 +8,15 @@ export async function contentVersion(envelope: Envelope): Promise<string> {
   return digest(JSON.stringify({ date: envelope.date, schema_version: envelope.schema_version, data: envelope.data, errors: envelope.errors }))
 }
 
+const BLOCKING_SECTION = (section: string): boolean => section === 'tasks' || section.startsWith('detail:')
+
+/**
+ * 只有任务与任务详情缺失会阻塞发布。天气、日历、季节蜡烛属于可选内容，
+ * 上游当天没有给出时仍然发布，站点与 App 各自显示空态；错误仍会随数据一起记录。
+ */
 export function completeEnvelope(envelope: Envelope): boolean {
-  return envelopeSchema.safeParse(envelope).success && !envelope.errors.length
+  if (envelope.errors.some((error) => BLOCKING_SECTION(error.section))) return false
+  return envelopeSchema.safeParse(envelope).success
     && envelope.data.tasks.length > 0
     && envelope.data.tasks.every((task, index) => task.number === index + 1 && Boolean(task.text.trim())
       && (!task.keyword || envelope.data.taskDetails.some(detail => detail.keyword === task.keyword && Boolean(detail.text.trim() || detail.images.length || detail.sections.some(section => section.text.trim())))))
