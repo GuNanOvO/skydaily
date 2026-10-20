@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-21",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "在云野的锦鲤池旁冥想",
+        "keyword": "锦鲤池冥想"
+      },
+      {
+        "number": 2,
+        "text": "在荧光小菇旁回复能量",
+        "keyword": "荧光小菇"
+      },
+      {
+        "number": 3,
+        "text": "向一位朋友做个动作",
+        "keyword": null
+      },
+      {
+        "number": 4,
+        "text": "帮助苦修行者",
+        "keyword": "苦修行者任务"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "锦鲤池冥想",
+        "title": "每日任务－在云野的锦鲤池旁冥想",
+        "sections": [
+          {
+            "label": "任务",
+            "text": "在云野的锦鲤池旁冥想"
+          },
+          {
+            "label": "位置",
+            "text": "云野－三塔图－锦鲤池"
+          },
+          {
+            "label": "步骤",
+            "text": "进入云野三塔图后往终点方向飞，找到小桥，在小桥旁即可找到\n视频指引"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/afb963579dcdbb4a1c9ed3df.webp",
+          "https://skydaily.nankki.com/history/media/99f9abaf12493ab2531633d7.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "任务： 在云野的锦鲤池旁冥想\n位置： 云野－三塔图－锦鲤池\n步骤： 进入云野三塔图后往终点方向飞，找到小桥，在小桥旁即可找到\n视频指引"
+      },
+      {
+        "keyword": "荧光小菇",
+        "title": "荧光小菇",
+        "sections": [
+          {
+            "label": "小贴士",
+            "text": "旅人们跳到荧光小菇上可补充能量\n(能量几乎消耗完时再跳上去会更容易完成每日任务 哦)"
+          },
+          {
+            "label": "地点",
+            "text": "荧光小菇 是生长在雨林的植物。"
+          },
+          {
+            "label": "特性",
+            "text": "荧光小菇 呈半透明状态并且会发光，旅人们站在荧光蘑菇上可以悬浮起来，极容易辨认。"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/147bcbe5c9be71e5ae7b40c8.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "小贴士： 旅人们跳到荧光小菇上可补充能量\n(能量几乎消耗完时再跳上去会更容易完成每日任务 哦)\n地点： 荧光小菇 是生长在雨林的植物。\n特性： 荧光小菇 呈半透明状态并且会发光，旅人们站在荧光蘑菇上可以悬浮起来，极容易辨认。"
+      },
+      {
+        "keyword": "苦修行者任务",
+        "title": "每日任务－帮助苦修行者",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "请旅人先查看接到的任务名称，然后在下方选择对应指南\n在云峰找到苦修行者 ｜ 苦修行者在云巢需要帮助"
+          },
+          {
+            "label": "小精灵提示",
+            "text": "1、若旅人从未收集过该先祖，任务会显示为：在云峰找到苦修行者 ；\n2、若旅人之前已收集过该先祖，任务会显示为：苦修行者在仙乡需要帮助 。"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "请旅人先查看接到的任务名称，然后在下方选择对应指南\n在云峰找到苦修行者 ｜ 苦修行者在云巢需要帮助\n小精灵提示：\n1、若旅人从未收集过该先祖，任务会显示为：在云峰找到苦修行者 ；\n2、若旅人之前已收集过该先祖，任务会显示为：苦修行者在仙乡需要帮助 。"
+      }
+    ],
+    "weather": {
+      "text": "今日将会有冷却碎片 坠落在远古战场",
+      "images": [
+        "https://skydaily.nankki.com/history/media/169946130d583c5c317de256.webp",
+        "https://skydaily.nankki.com/history/media/e25afa36ad0a8481440cbbee.webp",
+        "https://skydaily.nankki.com/history/media/f49c70413b5012328b63571b.webp",
+        "https://skydaily.nankki.com/history/media/ca9e25347403e45260103700.webp",
+        "https://skydaily.nankki.com/history/media/127d296e70c7da3e9922a264.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/6f6a6b064a38c4b9d549dd3e.webp"
+      ]
+    },
+    "candles": [
+      {
+        "keyword": "大蜡烛",
+        "title": "每日大蜡烛位置",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~"
+          },
+          {
+            "label": "位置分布参考",
+            "text": "大蜡烛堆攻略"
+          },
+          {
+            "label": "小精灵温馨提示",
+            "text": "4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/c37d38160f147e9dc76df94f.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~\n位置分布参考：大蜡烛堆攻略\n小精灵温馨提示：\n4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+      }
+    ],
+    "seasonCandleMap": null
+  },
+  "meta": {
+    "fetched_at": "2026-10-20T16:11:13.701Z",
+    "cached": false,
+    "stale": false
+  },
+  "errors": []
+}
