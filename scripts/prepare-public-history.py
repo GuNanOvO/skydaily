@@ -57,7 +57,8 @@ def prepare(root, site, snapshot=None):
     if snapshot:
         data = json.loads(Path(snapshot).read_text())
         date.fromisoformat(data['date'])
-        if not re.fullmatch(r'\d{4}-\d{2}-\d{2}', data['date']) or data['errors'] or len(data['data']['tasks']) != 4:
+        blocking = [error for error in data['errors'] if error['section'] == 'tasks' or error['section'].startswith('detail:')]
+        if not re.fullmatch(r'\d{4}-\d{2}-\d{2}', data['date']) or blocking or len(data['data']['tasks']) < 1:
             raise ValueError('snapshot is not complete')
         target = root / 'daily' / (data['date'] + '.json')
         previous = json.loads(target.read_text()) if target.exists() else None

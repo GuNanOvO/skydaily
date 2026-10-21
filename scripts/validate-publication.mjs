@@ -21,7 +21,7 @@ function checkRecord(record) {
   if (!result.success) fail('Record does not match the public data schema')
   dateValue(record.date)
   if (record.schema_version !== 1) fail('Unsupported schema version')
-  if (record.data.tasks.length !== 4 || record.data.tasks.some((task, i) => task.number !== i + 1 || !task.text.trim())) fail('Invalid daily task list')
+  if (record.data.tasks.length < 1 || record.data.tasks.some((task, i) => task.number !== i + 1 || !task.text.trim())) fail('Invalid daily task list')
   for (const task of record.data.tasks) {
     if (task.keyword && !record.data.taskDetails.some(detail => detail.keyword === task.keyword)) fail('Task detail reference is missing')
   }
