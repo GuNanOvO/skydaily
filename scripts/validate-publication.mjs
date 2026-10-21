@@ -26,7 +26,7 @@ function checkRecord(record) {
     if (task.keyword && !record.data.taskDetails.some(detail => detail.keyword === task.keyword)) fail('Task detail reference is missing')
   }
   const copy = structuredClone(record)
-  for (const group of [...copy.data.taskDetails, ...copy.data.candles, copy.data.weather, copy.data.calendar]) {
+  for (const group of [...copy.data.taskDetails.flatMap(detail => [detail, ...(detail.variants ?? [])]), ...copy.data.candles, copy.data.weather, copy.data.calendar]) {
     if (!group) continue
     for (const image of group.images) {
       const url = new URL(image)

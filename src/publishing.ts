@@ -10,10 +10,6 @@ export async function contentVersion(envelope: Envelope): Promise<string> {
 
 const BLOCKING_SECTION = (section: string): boolean => section === 'tasks' || section.startsWith('detail:')
 
-/**
- * 只有任务与任务详情缺失会阻塞发布。天气、日历、季节蜡烛属于可选内容，
- * 上游当天没有给出时仍然发布，站点与 App 各自显示空态；错误仍会随数据一起记录。
- */
 export function completeEnvelope(envelope: Envelope): boolean {
   if (envelope.errors.some((error) => BLOCKING_SECTION(error.section))) return false
   return envelopeSchema.safeParse(envelope).success

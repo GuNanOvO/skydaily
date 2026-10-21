@@ -11,6 +11,16 @@ export const detailSectionSchema = z.object({
   text: z.string(),
 })
 
+export const detailVariantSchema = z.object({
+  label: z.string(),
+  title: z.string(),
+  sections: z.array(detailSectionSchema),
+  images: z.array(z.string().url()),
+  videos: z.array(z.string().url()),
+  links: z.array(z.string().url()),
+  text: z.string(),
+})
+
 export const taskDetailSchema = z.object({
   keyword: z.string(),
   title: z.string(),
@@ -19,6 +29,7 @@ export const taskDetailSchema = z.object({
   videos: z.array(z.string().url()),
   links: z.array(z.string().url()),
   text: z.string(),
+  variants: z.array(detailVariantSchema).optional(),
 })
 
 export const weatherSchema = z.object({
@@ -65,6 +76,7 @@ export const envelopeSchema = z.object({
 export type Task = z.infer<typeof taskSchema>
 export type DetailSection = z.infer<typeof detailSectionSchema>
 export type TaskDetail = z.infer<typeof taskDetailSchema>
+export type DetailVariant = z.infer<typeof detailVariantSchema>
 export type Weather = z.infer<typeof weatherSchema>
 export type Calendar = z.infer<typeof calendarSchema>
 export type DailyData = z.infer<typeof dailyDataSchema>

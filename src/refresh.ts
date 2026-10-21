@@ -9,12 +9,12 @@ import {
 } from './config.ts'
 import { fetchToken } from './upstream/token.ts'
 import { queryKnowledge } from './upstream/sprite.ts'
-import { extractDetailKeywords, parseTaskDetail } from './parser/detail.ts'
+import { extractDetailKeywords, parseDetailLinks, parseDetailVariant, parseTaskDetail } from './parser/detail.ts'
 import { parseDailyTasks, parseSeasonCandleMap } from './parser/tasks.ts'
 import { parseWeather } from './parser/weather.ts'
 import { parseCalendar } from './parser/calendar.ts'
 import { registerMedia } from './public-data.ts'
-import { dailyDataSchema, type DailyData, type Envelope, type SectionError } from './schema/types.ts'
+import { dailyDataSchema, type DailyData, type DetailVariant, type Envelope, type SectionError } from './schema/types.ts'
 import { completeEnvelope, requestPublication } from './publishing.ts'
 import { writeDaily, writeRefreshMeta } from './store/kv.ts'
 import type { Env } from './env.ts'
@@ -112,7 +112,22 @@ export async function runRefresh(env: Env, options: RefreshOptions = {}): Promis
     try {
       await pause()
       const res = await queryKnowledge(env, token, kw, 'link', options.signal)
-      data.taskDetails.push(parseTaskDetail(kw, res.answer))
+      const detail = parseTaskDetail(kw, res.answer)
+      const branches = parseDetailLinks(res.answer)
+      if (branches.length > 1) {
+        try {
+          const variants: DetailVariant[] = []
+          for (const branch of branches) {
+            await pause()
+            const sub = await queryKnowledge(env, token, branch.question, 'link', options.signal)
+            variants.push(parseDetailVariant(branch.label, sub.answer))
+          }
+          detail.variants = variants
+        } catch (e) {
+          console.error('refresh: guide branch failed')
+        }
+      }
+      data.taskDetails.push(detail)
     } catch (e) {
       console.error('refresh: detail failed')
       errors.push({ section: `detail:${kw}`, code: 'upstream_error' })

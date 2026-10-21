@@ -332,3 +332,14 @@ body.modal-open main{top:var(--paper-top);left:var(--paper-left);width:var(--pap
 :root[data-theme="dark"] .image-link img{background:#30323d}
 :root[data-theme="dark"] :focus-visible{outline-color:#c5abd9}
 @media(max-width:540px){:root[data-theme="dark"] .binding{background-image:radial-gradient(circle at 2.5px 2.5px,#15171e 0 1px,#454958 1.8px,var(--paper) 2.2px,transparent 2.5px)}}
+.guide-hint{font-size:var(--font-xs);line-height:32px;color:var(--muted);margin:0}
+.guide-variants{display:flex;flex-direction:column;gap:16px;margin:16px 0 0}
+.guide-variant{border:1px solid #c3bec770;background:#fffdf6;border-radius:2px;box-shadow:var(--sticker-shadow)}
+.guide-variant>summary{cursor:pointer;font-size:var(--font-md);line-height:32px;padding:0 16px;list-style:none;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.guide-variant>summary::-webkit-details-marker{display:none}
+.guide-variant>summary::after{content:"＋";color:var(--muted)}
+.guide-variant[open]>summary::after{content:"－"}
+.guide-variant-body{padding:0 16px 16px}
+:root[data-theme="dark"] .guide-variant{background:#26242e;border-color:#4a4453}
+.photo-note-empty{display:flex;align-items:center;justify-content:center;min-height:288px}
+.photo-note-empty .note-empty-text{width:100%;text-align:center;color:var(--muted);font-size:var(--font-sm);line-height:32px}

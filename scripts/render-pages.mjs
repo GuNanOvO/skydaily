@@ -69,7 +69,12 @@ function renderDetailMedia(d) {
 }
 
 export function renderDetailBody(d) {
-  return renderDetailText(d) + renderDetailMedia(d)
+  const branches = d.variants ?? []
+  if (!branches.length) return renderDetailText(d) + renderDetailMedia(d)
+  const items = branches
+    .map((variant) => `<details class="guide-variant"><summary>${escapeHtml(variant.label)}</summary><div class="guide-variant-body">${renderDetailText(variant)}${renderDetailMedia(variant)}</div></details>`)
+    .join('')
+  return `${renderDetailText(d)}<p class="guide-hint">先对照游戏里的任务名称，再展开对应的指南。</p><div class="guide-variants">${items}</div>`
 }
 
 function hasOverviewContent(detail) {
@@ -87,8 +92,8 @@ function overviewDialogId(id, detail) {
 }
 
 function overviewPreview(detail, id, title, emptyText) {
-  if (!detail) return `<p class="empty">${emptyText}</p>`
-  if (!hasOverviewContent(detail)) return `<figure class="photo-note"><div class="photo-window"><span class="image-unavailable">图片暂缺</span></div></figure>`
+  if (!detail) return `<figure class="photo-note photo-note-empty"><figcaption class="note-empty-text">${escapeHtml(emptyText)}</figcaption></figure>`
+  if (!hasOverviewContent(detail)) return `<figure class="photo-note photo-note-empty"><figcaption class="note-empty-text">图片暂缺</figcaption></figure>`
   const text = detail.text ? `<p class="preview-text">${escapeHtml(detail.text)}</p>` : '<div class="preview-text" aria-hidden="true"></div>'
   const firstImage = detail.images[0]
   if (firstImage) {
@@ -112,7 +117,7 @@ function overviewDialogs(data) {
 }
 
 function hasTaskDetail(detail) {
-  return Boolean(detail && (detail.text?.trim() || detail.sections.some(s => s.text?.trim() && !/任务|标题/.test(s.label)) || detail.images.length || detail.videos.length || detail.links.length))
+  return Boolean(detail && (detail.text?.trim() || detail.sections.some(s => s.text?.trim() && !/任务|标题/.test(s.label)) || detail.images.length || detail.videos.length || detail.links.length || (detail.variants?.length ?? 0) > 0))
 }
 
 function taskNotes(data, detailByKeyword) {

@@ -33,6 +33,17 @@ def clean(value):
     return value
 
 
+def detail_groups(envelope):
+    data = envelope['data']
+    groups = []
+    for detail in data['taskDetails']:
+        groups.append(detail)
+        groups.extend(detail.get('variants') or [])
+    groups.extend(data['candles'])
+    groups.extend([data['weather'], data['calendar']])
+    return groups
+
+
 def prepare(root, site, snapshot=None):
     root = Path(root)
     base = site.rstrip('/') + '/history/'
@@ -64,7 +75,7 @@ def prepare(root, site, snapshot=None):
             file.unlink()
             continue
         envelope = json.loads(file.read_text())
-        groups = envelope['data']['taskDetails'] + envelope['data']['candles'] + [envelope['data']['weather'], envelope['data']['calendar']]
+        groups = detail_groups(envelope)
         images_by_group = []
         links_by_group = []
         for group in groups:
@@ -107,7 +118,7 @@ def prepare(root, site, snapshot=None):
                     envelope['errors'].append({'section': 'media', 'code': 'image_unavailable'})
             images_by_group.append(images)
         envelope = clean(envelope)
-        groups = envelope['data']['taskDetails'] + envelope['data']['candles'] + [envelope['data']['weather'], envelope['data']['calendar']]
+        groups = detail_groups(envelope)
         for group, images, links in zip(groups, images_by_group, links_by_group):
             if group is None:
                 continue

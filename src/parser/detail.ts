@@ -1,6 +1,6 @@
 import { isAdKeyword, isNoise, keepImage } from './common.ts'
 import { collectImages, collectUrls, collectVideos, linesOf, plainOf, tokenizeAnswer } from './tokenize.ts'
-import type { DetailSection, TaskDetail } from '../schema/types.ts'
+import type { DetailVariant, DetailSection, TaskDetail } from '../schema/types.ts'
 
 export function extractDetailKeywords(rawAnswer: string): string[] {
   const seen = new Set<string>()
@@ -15,18 +15,36 @@ export function extractDetailKeywords(rawAnswer: string): string[] {
   return out
 }
 
-export function parseTaskDetail(keyword: string, rawAnswer: string): TaskDetail {
+export interface DetailLink {
+  question: string
+  label: string
+}
+
+export function parseDetailLinks(rawAnswer: string): DetailLink[] {
+  const seen = new Set<string>()
+  const out: DetailLink[] = []
+  for (const t of tokenizeAnswer(rawAnswer)) {
+    if (t.kind !== 'link') continue
+    if (isAdKeyword(t.question) || isAdKeyword(t.text)) continue
+    if (!t.text.trim() || seen.has(t.question)) continue
+    seen.add(t.question)
+    out.push({ question: t.question, label: t.text.trim() })
+  }
+  return out
+}
+
+function parseBody(fallbackTitle: string, rawAnswer: string): Omit<DetailVariant, 'label'> {
   const tokens = tokenizeAnswer(rawAnswer)
   const images = collectImages(tokens, keepImage)
   const videos = collectVideos(tokens)
   const links = collectUrls(tokens)
 
-  let title = keyword
+  let title = fallbackTitle
   const body: string[] = []
   for (const line of linesOf(tokens).map(plainOf)) {
     if (!line || isNoise(line)) continue
     const tm = /^【(.+)】$/.exec(line)
-    if (tm && title === keyword && body.length === 0) {
+    if (tm && title === fallbackTitle && body.length === 0) {
       title = tm[1]
       continue
     }
@@ -49,5 +67,13 @@ export function parseTaskDetail(keyword: string, rawAnswer: string): TaskDetail 
   }
   if (intro.length > 0) sections.unshift({ label: '简介', text: intro.join('\n') })
 
-  return { keyword, title, sections, images, videos, links, text: body.join('\n') }
+  return { title, sections, images, videos, links, text: body.join('\n') }
+}
+
+export function parseTaskDetail(keyword: string, rawAnswer: string): TaskDetail {
+  return { keyword, ...parseBody(keyword, rawAnswer) }
+}
+
+export function parseDetailVariant(label: string, rawAnswer: string): DetailVariant {
+  return { label, ...parseBody(label, rawAnswer) }
 }

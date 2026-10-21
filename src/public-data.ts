@@ -32,7 +32,8 @@ function isSourceMedia(value: string): boolean {
 
 function mediaUrls(envelope: Envelope): string[] {
   const urls = new Set<string>()
-  const groups = [...envelope.data.taskDetails, ...envelope.data.candles, envelope.data.weather, envelope.data.calendar]
+  const details = envelope.data.taskDetails.flatMap(detail => [detail, ...(detail.variants ?? [])])
+  const groups = [...details, ...envelope.data.candles, envelope.data.weather, envelope.data.calendar]
   for (const detail of groups) {
     if (!detail) continue
     for (const url of detail.images) urls.add(url)
@@ -83,6 +84,17 @@ export async function publicEnvelope(env: Env, original: Envelope, origin: strin
       detail.sections = detail.sections.map(s => ({ label: cleanText(s.label), text: cleanText(s.text) }))
     }
     if ('text' in d && typeof d.text === 'string') d.text = cleanText(d.text)
+  }
+  for (const detail of copy.data.taskDetails) {
+    for (const variant of detail.variants ?? []) {
+      variant.images = (await Promise.all(variant.images.map(media))).flat()
+      variant.videos = (await Promise.all(variant.videos.map(media))).flat()
+      variant.links = []
+      variant.label = cleanText(variant.label)
+      variant.title = cleanText(variant.title)
+      variant.sections = variant.sections.map(s => ({ label: cleanText(s.label), text: cleanText(s.text) }))
+      variant.text = cleanText(variant.text)
+    }
   }
   return copy
 }
