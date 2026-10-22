@@ -6,7 +6,7 @@
     "tasks": [
       {
         "number": 1,
-        "text": "在雨林的神庙内冥想",
+        "text": "在雨林神殿的栖光雨潭旁冥想",
         "keyword": "雨林神庙冥想"
       },
       {
@@ -212,7 +212,7 @@
     "seasonCandleMap": "雨林"
   },
   "meta": {
-    "fetched_at": "2026-10-22T00:31:13.678Z",
+    "fetched_at": "2026-10-22T04:51:07.683Z",
     "cached": false,
     "stale": false
   },
