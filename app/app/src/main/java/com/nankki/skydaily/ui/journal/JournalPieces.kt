@@ -181,19 +181,11 @@ fun TaskNote(
 ) {
     val palette = LocalPaperPalette.current
     val noteColor = palette.noteColors[index % palette.noteColors.size]
-    val brief = JournalFormat.briefSections(detail)
-    val interaction = remember { MutableInteractionSource() }
-    val pressed by interaction.collectIsPressedAsState()
-    val pressScale by animateFloatAsState(
-        targetValue = if (pressed) 0.992f else 1f,
-        label = "task-press",
-    )
     Box(modifier = modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier
                 .padding(top = 8.dp)
                 .fillMaxWidth()
-                .graphicsLayer { scaleX = pressScale; scaleY = pressScale }
                 .hardShadow(palette.shadow, dx = 1.dp, dy = 2.dp)
                 .background(noteColor, RoundedCornerShape(1.dp))
                 .border(1.dp, palette.outline.copy(alpha = 0.5f), RoundedCornerShape(1.dp))
@@ -201,22 +193,11 @@ fun TaskNote(
                     if (palette.dark) {
                         drawRect(
                             color = palette.noteAccents[index % palette.noteAccents.size],
-                            size = Size(3.dp.toPx(), size.height),
+                            size = Size(2.dp.toPx(), size.height),
                         )
                     }
                 }
-                .clickable(
-                    interactionSource = interaction,
-                    indication = null,
-                    enabled = detail != null,
-                    onClick = onOpenGuide,
-                )
-                .padding(
-                    start = if (compact) 12.dp else 16.dp,
-                    end = if (compact) 12.dp else 16.dp,
-                    top = if (compact) 10.dp else 14.dp,
-                    bottom = if (compact) 10.dp else 12.dp,
-                ),
+                .padding(horizontal = if (compact) 10.dp else 14.dp, vertical = 8.dp),
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Text(
@@ -224,90 +205,36 @@ fun TaskNote(
                     color = palette.muted,
                     fontSize = 11.sp,
                     lineHeight = 20.sp,
-                    letterSpacing = 0.5.sp,
                 )
                 Spacer(Modifier.weight(1f))
                 if (editable) {
                     PaperCheckbox(checked = done, onCheckedChange = onToggle)
                 } else {
-                    Text(if (done) "已完成" else "只读", color = palette.muted, fontSize = 11.sp)
+                    Text("只读", color = palette.muted, fontSize = 11.sp)
                 }
             }
             Text(
                 text = task.text,
                 color = if (done) palette.muted else palette.ink,
-                fontSize = if (compact) 15.sp else 16.sp,
-                lineHeight = 24.sp,
+                fontSize = if (compact) 14.sp else 16.sp,
+                lineHeight = if (compact) 22.sp else 26.sp,
                 fontWeight = FontWeight.Medium,
                 textDecoration = if (done) TextDecoration.LineThrough else TextDecoration.None,
-                modifier = Modifier.padding(top = 2.dp, bottom = 4.dp),
+                modifier = Modifier.padding(bottom = 4.dp),
             )
-            if (brief.isEmpty()) {
-                Text(
-                    text = "暂无更多指引",
-                    color = palette.muted,
-                    fontSize = 12.sp,
-                    lineHeight = 22.sp,
-                    modifier = Modifier.padding(bottom = 2.dp),
+            if (detail != null) {
+                PaperButton(
+                    text = "详情 ↗",
+                    onClick = onOpenGuide,
+                    height = 40.dp,
+                    fontSize = 11,
                 )
-            } else {
-                brief.forEach { (label, text) ->
-                    Row(
-                        modifier = Modifier.padding(vertical = 1.dp),
-                        verticalAlignment = Alignment.Top,
-                    ) {
-                        Text(
-                            text = label,
-                            color = palette.muted,
-                            fontSize = 11.sp,
-                            lineHeight = 21.sp,
-                            modifier = Modifier.width(if (compact) 30.dp else 34.dp),
-                        )
-                        Text(
-                            text = text,
-                            color = palette.ink.copy(alpha = 0.88f),
-                            fontSize = 12.sp,
-                            lineHeight = 21.sp,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,
-                        )
-                    }
-                }
-            }
-            PaperDivider(Modifier.padding(top = 6.dp, bottom = 4.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = if (detail != null) "查看指南 ↗" else "暂无指南",
-                    color = if (detail != null) palette.muted else palette.muted.copy(alpha = 0.7f),
-                    fontSize = 11.sp,
-                    lineHeight = 24.sp,
-                )
-                Spacer(Modifier.weight(1f))
-                AnimatedVisibility(
-                    visible = done,
-                    enter = fadeIn(tween(180)) + scaleIn(initialScale = 1.3f, animationSpec = tween(180)),
-                    exit = fadeOut(tween(120)),
-                ) {
-                    Text(
-                        text = "完成",
-                        color = palette.accent,
-                        fontSize = 11.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        letterSpacing = 1.sp,
-                        modifier = Modifier
-                            .rotate(-10f)
-                            .border(1.dp, palette.accent.copy(alpha = 0.7f), RoundedCornerShape(2.dp))
-                            .padding(horizontal = 6.dp, vertical = 1.dp),
-                    )
-                }
             }
         }
         Tape(
-            modifier = Modifier
-                .align(Alignment.TopCenter)
-                .offset(x = tapeOffset(index)),
-            width = if (compact) 46.dp else 52.dp,
-            height = 14.dp,
+            modifier = Modifier.align(Alignment.TopCenter).offset(x = tapeOffset(index)),
+            width = 46.dp,
+            height = 12.dp,
             rotation = if (index % 2 == 0) -4f else 4f,
             color = palette.noteTapes[index % palette.noteTapes.size],
             edge = palette.noteAccents[index % palette.noteAccents.size].copy(alpha = 0.45f),

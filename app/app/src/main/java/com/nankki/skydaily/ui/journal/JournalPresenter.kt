@@ -89,13 +89,11 @@ class JournalPresenter(
             refreshing = state.envelope != null,
         )
         refreshJob = scope.launch {
-            val result = withContext(Dispatchers.IO) {
-                val today = repository.refreshToday()
-                val notice = repository.refreshNotice()
-                today to notice
-            }
-            apply(result.first)
-            applyNotice(result.second)
+            val todayResult = withContext(Dispatchers.IO) { repository.refreshToday() }
+            apply(todayResult)
+            state = state.copy(loading = false)
+            val noticeResult = withContext(Dispatchers.IO) { repository.refreshNotice() }
+            applyNotice(noticeResult)
             state = state.copy(loading = false, refreshing = false)
         }
     }

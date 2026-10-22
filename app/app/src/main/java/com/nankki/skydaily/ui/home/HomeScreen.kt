@@ -1,11 +1,13 @@
 package com.nankki.skydaily.ui.home
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.Crossfade
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -13,6 +15,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -23,10 +26,14 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.Lifecycle
 import com.nankki.skydaily.AppConfig
 import com.nankki.skydaily.core.ThemeMode
-import com.nankki.skydaily.ui.guides.GuidesPage
+import com.nankki.skydaily.ui.history.ArchivePage
+import com.nankki.skydaily.ui.history.HistoryPage
+import com.nankki.skydaily.ui.journal.DeferredImages
+import com.nankki.skydaily.ui.journal.InformationPage
 import com.nankki.skydaily.ui.journal.JournalPage
 import com.nankki.skydaily.ui.journal.JournalPresenter
 import com.nankki.skydaily.ui.journal.JournalUiState
+import com.nankki.skydaily.ui.paper.PaperButton
 import com.nankki.skydaily.ui.settings.SettingsPage
 import com.nankki.skydaily.ui.theme.LocalPaperPalette
 
@@ -34,10 +41,8 @@ import com.nankki.skydaily.ui.theme.LocalPaperPalette
 fun HomeScreen(
     presenter: JournalPresenter,
     state: JournalUiState,
-    dark: Boolean,
     themeMode: ThemeMode,
     onThemeModeChange: (ThemeMode) -> Unit,
-    onToggleTheme: () -> Unit,
     overlayGranted: Boolean,
     overlayRunning: Boolean,
     onOverlayAction: () -> Unit,
@@ -46,88 +51,63 @@ fun HomeScreen(
     val palette = LocalPaperPalette.current
     val uriHandler = LocalUriHandler.current
     var page by rememberSaveable { mutableIntStateOf(0) }
-    val pageColor by animateColorAsState(palette.page, animationSpec = tween(220), label = "page-color")
-
-    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
-        presenter.refresh()
-    }
-
-    Box(Modifier.fillMaxSize().background(pageColor)) {
-        Column(Modifier.fillMaxSize()) {
-            Box(
-                modifier = Modifier.weight(1f).fillMaxWidth(),
-                contentAlignment = Alignment.TopCenter,
-            ) {
-                Crossfade(
-                    targetState = page,
-                    animationSpec = tween(200),
-                    label = "main-pages",
-                ) { target ->
-                    when (target) {
-                        0 -> JournalPage(
-                            state = state,
-                            onRefresh = presenter::refresh,
-                            onToggleTask = presenter::toggle,
-                            onToggleTheme = onToggleTheme,
-                            darkTheme = dark,
-                            modifier = Modifier
-                                .widthIn(max = 720.dp)
-                                .fillMaxSize()
-                                .padding(horizontal = 8.dp, vertical = 8.dp),
-                            overlayCard = {
-                                OverlayCard(
-                                    granted = overlayGranted,
-                                    running = overlayRunning,
-                                    onAction = onOverlayAction,
-                                )
-                            },
-                            onClearCache = {
-                                presenter.clearCache()
-                                onClearCache()
-                            },
-                        )
-
-                        1 -> GuidesPage(
-                            state = state,
-                            onRefresh = presenter::refresh,
-                            modifier = Modifier
-                                .widthIn(max = 720.dp)
-                                .fillMaxSize()
-                                .padding(horizontal = 8.dp, vertical = 8.dp),
-                        )
-
-                        else -> SettingsPage(
-                            state = state,
-                            themeMode = themeMode,
-                            onThemeModeChange = onThemeModeChange,
-                            overlayGranted = overlayGranted,
-                            overlayRunning = overlayRunning,
-                            onOverlayAction = onOverlayAction,
-                            onClearCache = {
-                                presenter.clearCache()
-                                onClearCache()
-                            },
-                            onOpenSite = { uriHandler.openUri(AppConfig.SITE_URL) },
-                            onOpenFeedback = { uriHandler.openUri(AppConfig.FEEDBACK_URL) },
-                            onRefresh = presenter::refresh,
-                            onOpenToday = { page = 0 },
-                            modifier = Modifier
-                                .widthIn(max = 720.dp)
-                                .fillMaxSize()
-                                .padding(horizontal = 8.dp, vertical = 8.dp),
-                        )
-                    }
+    var route by rememberSaveable { mutableStateOf<String?>(null) }
+    BackHandler(enabled = route != null) { route = null }
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { presenter.refresh() }
+    DeferredImages(state)
+    Box(Modifier.fillMaxSize().background(palette.page), contentAlignment = Alignment.TopCenter) {
+        Column(Modifier.widthIn(max = 720.dp).fillMaxSize()) {
+            if (route != null) {
+                Row(
+                    Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    PaperButton("返回记录", onClick = { route = null }, height = 40.dp)
                 }
             }
-            Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.TopCenter) {
-                PaperBottomNav(
-                    selected = page,
-                    done = state.done.size,
-                    total = state.envelope?.data?.tasks?.size ?: 0,
-                    onSelect = { page = it },
-                    modifier = Modifier.widthIn(max = 720.dp).fillMaxWidth(),
-                )
+            Box(Modifier.weight(1f).fillMaxWidth().padding(horizontal = 4.dp, vertical = 4.dp)) {
+                when (val destination = route) {
+                    "settings" -> SettingsPage(
+                        state = state,
+                        themeMode = themeMode,
+                        onThemeModeChange = onThemeModeChange,
+                        overlayGranted = overlayGranted,
+                        overlayRunning = overlayRunning,
+                        onOverlayAction = onOverlayAction,
+                        onClearCache = {
+                            presenter.clearCache()
+                            onClearCache()
+                        },
+                        onOpenSite = { uriHandler.openUri(AppConfig.SITE_URL) },
+                        onOpenFeedback = { uriHandler.openUri(AppConfig.FEEDBACK_URL) },
+                    )
+                    null -> Crossfade(targetState = page, animationSpec = tween(160), label = "main-pages") { target ->
+                        when (target) {
+                            0 -> JournalPage(state, presenter::refresh, presenter::toggle)
+                            1 -> InformationPage(state, presenter::refresh)
+                            else -> HistoryPage(
+                                onOpenDate = { route = it },
+                                onSettings = { route = "settings" },
+                                onRefresh = presenter::refresh,
+                                overlayRunning = overlayRunning,
+                                onOverlayAction = onOverlayAction,
+                            )
+                        }
+                    }
+                    else -> ArchivePage(
+                        date = destination,
+                        todayState = state,
+                        onToggleTask = presenter::toggle,
+                    )
+                }
             }
+            if (route == null) PaperBottomNav(
+                selected = page,
+                done = state.done.size,
+                total = state.envelope?.data?.tasks?.size ?: 0,
+                onSelect = { page = it },
+            )
         }
     }
 }

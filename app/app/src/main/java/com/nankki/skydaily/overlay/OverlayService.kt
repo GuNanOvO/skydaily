@@ -31,7 +31,6 @@ import com.nankki.skydaily.core.BeijingClock
 import com.nankki.skydaily.core.CheckState
 import com.nankki.skydaily.core.ThemeMode
 import com.nankki.skydaily.core.ThemePreference
-import com.nankki.skydaily.core.ThemeResolver
 import com.nankki.skydaily.data.DirectoryDiskStore
 import com.nankki.skydaily.data.JournalRepository
 import com.nankki.skydaily.data.OkHttpTransport
@@ -93,7 +92,6 @@ class OverlayService : Service() {
         panel = PanelWindow(
             service = this,
             modeState = modeState,
-            onToggleTheme = ::toggleTheme,
             onDismiss = {
                 if (!destroying) {
                     showBall()
@@ -233,16 +231,12 @@ class OverlayService : Service() {
     }
 
     private fun openPanel() {
+        modeState.value = themePreference.mode
         hideBall()
         panel.show()
         refreshProgress()
     }
 
-    private fun toggleTheme() {
-        val next = ThemeResolver.toggle(modeState.value)
-        themePreference.mode = next
-        modeState.value = next
-    }
 
     private fun refreshProgress() {
         scope.launch {

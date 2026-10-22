@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
@@ -128,19 +129,20 @@ fun PaperSheet(
                 style = Stroke(width = 1.dp.toPx()),
             )
 
-            val top = 16.dp.toPx()
-            val bottom = size.height - 16.dp.toPx()
-            var y = top + 30.dp.toPx()
+            val top = 8.dp.toPx()
+            val bottom = size.height - 8.dp.toPx()
+            val pitch = with(density) { 32.sp.toPx() }
+            var y = 12.dp.toPx() + with(density) { 28.sp.toPx() }
             while (y < bottom) {
                 drawRect(
                     color = palette.rule,
-                    topLeft = Offset(16.dp.toPx(), y),
-                    size = Size(size.width - 32.dp.toPx(), 2.dp.toPx()),
+                    topLeft = Offset(10.dp.toPx(), y),
+                    size = Size(size.width - 20.dp.toPx(), 1.dp.toPx()),
                 )
-                y += 32.dp.toPx()
+                y += pitch
             }
 
-            val marginX = 30.dp.toPx()
+            val marginX = 6.dp.toPx()
             drawLine(
                 color = palette.margin,
                 start = Offset(marginX, top),
@@ -150,8 +152,7 @@ fun PaperSheet(
 
             var holeY = top + 40.dp.toPx()
             while (holeY < bottom) {
-                drawCircle(palette.bindingOuter, radius = 4.dp.toPx(), center = Offset(10.dp.toPx(), holeY))
-                drawCircle(palette.bindingHole, radius = 2.2.dp.toPx(), center = Offset(10.dp.toPx(), holeY))
+                drawCircle(palette.bindingHole, radius = 1.2.dp.toPx(), center = Offset(2.dp.toPx(), holeY))
                 holeY += 80.dp.toPx()
             }
         },
@@ -235,7 +236,7 @@ fun PaperButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     tone: Color? = null,
-    height: Dp = 28.dp,
+    height: Dp = 40.dp,
     fontSize: Int = 12,
     enabled: Boolean = true,
 ) {
@@ -245,7 +246,7 @@ fun PaperButton(
     val scale by animateFloatAsState(if (pressed) 0.96f else 1f, label = "paper-button")
     Box(
         modifier = modifier
-            .height(height)
+            .heightIn(min = height)
             .graphicsLayer { scaleX = scale; scaleY = scale }
             .hardShadow(palette.shadow, dx = 1.dp, dy = 2.dp)
             .background(tone ?: palette.paper, RoundedCornerShape(2.dp))
@@ -261,7 +262,11 @@ fun PaperButton(
     ) {
         Text(
             text = text,
-            color = if (enabled) palette.ink else palette.muted,
+            color = when {
+                tone != null -> if (enabled) palette.tabInk else palette.tabMuted
+                enabled -> palette.ink
+                else -> palette.muted
+            },
             fontSize = fontSize.sp,
             lineHeight = 16.sp,
             maxLines = 1,
@@ -328,124 +333,6 @@ fun PaperDivider(modifier: Modifier = Modifier) {
             .height(1.dp)
             .background(palette.outline.copy(alpha = 0.5f)),
     )
-}
-
-@Composable
-fun SectionHeader(
-    title: String,
-    modifier: Modifier = Modifier,
-    trailing: String? = null,
-    @DrawableRes sticker: Int? = null,
-    stickerSize: Dp = 44.dp,
-    stickerRotation: Float = 0f,
-    compact: Boolean = false,
-) {
-    val palette = LocalPaperPalette.current
-    Box(modifier = modifier.fillMaxWidth().height(if (compact) 28.dp else 32.dp)) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(end = if (sticker != null) stickerSize + 6.dp else 0.dp),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Text(
-                text = title,
-                color = palette.ink,
-                fontSize = if (compact) 17.sp else 20.sp,
-                lineHeight = if (compact) 28.sp else 32.sp,
-                fontWeight = FontWeight.SemiBold,
-                letterSpacing = 1.sp,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
-            Spacer(Modifier.weight(1f))
-            if (trailing != null) {
-                Text(
-                    text = trailing,
-                    color = palette.muted,
-                    fontSize = 12.sp,
-                    lineHeight = 24.sp,
-                )
-            }
-        }
-        if (sticker != null) {
-            Sticker(
-                res = sticker,
-                size = stickerSize,
-                rotation = stickerRotation,
-                modifier = Modifier.align(Alignment.CenterEnd).offset(x = 2.dp, y = (-8).dp),
-            )
-        }
-    }
-}
-
-@Composable
-fun DateStamp(
-    date: String,
-    weekday: String,
-    modifier: Modifier = Modifier,
-    compact: Boolean = false,
-) {
-    val palette = LocalPaperPalette.current
-    val month = runCatching { java.time.LocalDate.parse(date) }.getOrNull()
-        ?.let { "%04d / %02d".format(it.year, it.monthValue) }
-        ?: ""
-    val day = runCatching { java.time.LocalDate.parse(date) }.getOrNull()
-        ?.dayOfMonth?.toString()?.padStart(2, '0') ?: "--"
-    Column(
-        modifier = modifier
-            .width(if (compact) 58.dp else 66.dp)
-            .rotate(2f)
-            .hardShadow(palette.shadow, dx = 1.dp, dy = 2.dp)
-            .background(palette.paper, RoundedCornerShape(1.dp))
-            .border(1.dp, palette.outline, RoundedCornerShape(1.dp))
-            .padding(horizontal = 4.dp, vertical = if (compact) 3.dp else 5.dp),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Text(month, color = palette.muted, fontSize = if (compact) 9.sp else 10.sp, lineHeight = 13.sp, letterSpacing = 0.3.sp, maxLines = 1)
-        Text(day, color = palette.ink, fontSize = if (compact) 18.sp else 20.sp, lineHeight = if (compact) 24.sp else 26.sp, fontWeight = FontWeight.Medium, maxLines = 1)
-        Text(weekday, color = palette.muted, fontSize = if (compact) 9.sp else 10.sp, lineHeight = 13.sp, maxLines = 1)
-    }
-}
-
-data class JumpTab(val key: String, val label: String, val count: Int = 0)
-
-@Composable
-fun JumpTabs(
-    tabs: List<JumpTab>,
-    onJump: (String) -> Unit,
-    modifier: Modifier = Modifier,
-    compact: Boolean = false,
-) {
-    val palette = LocalPaperPalette.current
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .horizontalScroll(rememberScrollState()),
-        horizontalArrangement = Arrangement.spacedBy(if (compact) 4.dp else 6.dp),
-    ) {
-        tabs.forEachIndexed { index, tab ->
-            val color = palette.tabColors[index % palette.tabColors.size]
-            Box(
-                modifier = Modifier
-                    .height(if (compact) 30.dp else 32.dp)
-                    .hardShadow(palette.shadow, dx = 1.dp, dy = 2.dp)
-                    .background(color, RoundedCornerShape(topStart = 2.dp, topEnd = 2.dp))
-                    .clickable { onJump(tab.key) }
-                    .padding(horizontal = if (compact) 6.dp else 8.dp),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    text = if (tab.count > 0) "${tab.label} ${tab.count}" else tab.label,
-                    color = palette.tabInk,
-                    fontSize = if (compact) 10.sp else 11.sp,
-                    lineHeight = 16.sp,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
-        }
-    }
 }
 
 /** 悬浮球上的手绘小星星：外圈墨线 + 内层金色。 */

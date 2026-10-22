@@ -90,14 +90,8 @@ private fun Root() {
             HomeScreen(
                 presenter = presenter,
                 state = state,
-                dark = dark,
                 themeMode = mode,
                 onThemeModeChange = { next ->
-                    mode = next
-                    preferences.mode = next
-                },
-                onToggleTheme = {
-                    val next = ThemeResolver.toggle(mode)
                     mode = next
                     preferences.mode = next
                 },

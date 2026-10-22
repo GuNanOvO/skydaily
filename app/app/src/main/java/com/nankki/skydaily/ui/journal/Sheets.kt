@@ -116,7 +116,7 @@ fun GuideSheet(
                             PaperButton(
                                 text = item.label.ifBlank { "情况 ${index + 1}" },
                                 onClick = { variantIndex = if (variantIndex == index) -1 else index },
-                                tone = if (variantIndex == index) palette.noteColors[2] else null,
+                                tone = if (variantIndex == index) palette.tabColors[2] else null,
                                 fontSize = 11,
                             )
                         }

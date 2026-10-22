@@ -38,11 +38,11 @@ private data class NavItem(val label: String, val hint: String)
 
 private val items = listOf(
     NavItem("今日", "任务进度"),
-    NavItem("指南", "任务与蜡烛"),
-    NavItem("设置", "主题与悬浮球"),
+    NavItem("资讯", "天气 · 日历 · 公告"),
+    NavItem("记录", "历史与快捷操作"),
 )
 
-/** 纸面风格的移动端底部分页：今日 / 指南 / 设置。 */
+/** 纸面风格的移动端底部分页。 */
 @Composable
 fun PaperBottomNav(
     selected: Int,

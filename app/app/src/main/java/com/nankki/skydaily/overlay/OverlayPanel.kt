@@ -50,7 +50,6 @@ import kotlinx.coroutines.launch
 @Composable
 fun OverlayPanel(
     modeState: MutableState<ThemeMode>,
-    onToggleTheme: () -> Unit,
     onClose: () -> Unit,
     onOpenApp: () -> Unit,
 ) {
@@ -113,8 +112,6 @@ fun OverlayPanel(
                         state = presenter.state,
                         onRefresh = presenter::refresh,
                         onToggleTask = presenter::toggle,
-                        onToggleTheme = onToggleTheme,
-                        darkTheme = dark,
                         modifier = Modifier.fillMaxSize(),
                         onClose = {
                             if (!closing) {
@@ -138,7 +135,6 @@ fun OverlayPanel(
 class PanelWindow(
     private val service: Service,
     private val modeState: MutableState<ThemeMode>,
-    private val onToggleTheme: () -> Unit,
     private val onDismiss: () -> Unit,
 ) {
     private val windowManager = service.getSystemService(Service.WINDOW_SERVICE) as WindowManager
@@ -151,7 +147,6 @@ class PanelWindow(
         val composeView = composeHost.createView {
             OverlayPanel(
                 modeState = modeState,
-                onToggleTheme = onToggleTheme,
                 onClose = { hide() },
                 onOpenApp = {
                     val intent = Intent(service, MainActivity::class.java)
