@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">光遇每日任务</string>
+    <string name="overlay_channel">悬浮球</string>
+    <string name="overlay_channel_description">显示今日任务的悬浮入口</string>
+    <string name="overlay_notification_title">今日任务悬浮球已开启</string>
+    <string name="overlay_notification_text">点按悬浮球查看今日任务</string>
+</resources>
