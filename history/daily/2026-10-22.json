@@ -1,0 +1,225 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-22",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "在雨林的神庙内冥想",
+        "keyword": "雨林神庙冥想"
+      },
+      {
+        "number": 2,
+        "text": "点亮一位玩家",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "在水母上回复能量",
+        "keyword": "水母位置"
+      },
+      {
+        "number": 4,
+        "text": "帮助天才建筑师",
+        "keyword": "天才建筑师任务"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "雨林神庙冥想",
+        "title": "每日任务－在雨林的神庙内冥想",
+        "sections": [
+          {
+            "label": "任务",
+            "text": "在雨林的神庙内冥想"
+          },
+          {
+            "label": "位置",
+            "text": "在雨林－终点图树后方"
+          },
+          {
+            "label": "步骤",
+            "text": "进入雨林的终点图后，往前走一点点，在右方的树后面"
+          },
+          {
+            "label": "视频指引",
+            "text": ""
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/b487f910a0d17d524e2d3e99.webp",
+          "https://skydaily.nankki.com/history/media/cd2dd76b6ded4b61094bc61e.webp",
+          "https://skydaily.nankki.com/history/media/3ca3e241224ea2a4b784aaab.webp",
+          "https://skydaily.nankki.com/history/media/ac7ba5f9f47bc2d7a123ccd6.webp",
+          "https://skydaily.nankki.com/history/media/a01081dc2333b6490ac3c1e9.webp",
+          "https://skydaily.nankki.com/history/media/c4ea79bbe49bb6effc22af35.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "任务： 在雨林的神庙内冥想\n位置： 在雨林－终点图树后方\n步骤： 进入雨林的终点图后，往前走一点点，在右方的树后面\n视频指引："
+      },
+      {
+        "keyword": "水母位置",
+        "title": "每日任务－在水母上恢复能量",
+        "sections": [
+          {
+            "label": "位置",
+            "text": "密林遗迹(水母图)"
+          },
+          {
+            "label": "步骤",
+            "text": "密林遗迹后往前飞，来到终点图前的雨亭，点亮蜡烛即可召唤出一排水母"
+          },
+          {
+            "label": "注意",
+            "text": "几乎消耗完能量后再跳上水母会更容易完成任务哦"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/20ab602b08dc7bbc7543ab97.webp",
+          "https://skydaily.nankki.com/history/media/4c6c0134eed11351ab03141b.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "位置：密林遗迹(水母图)\n步骤：密林遗迹后往前飞，来到终点图前的雨亭，点亮蜡烛即可召唤出一排水母\n注意：几乎消耗完能量后再跳上水母会更容易完成任务哦"
+      },
+      {
+        "keyword": "天才建筑师任务",
+        "title": "每日任务－帮助天才建筑师",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "请旅人先查看接到的任务名称，然后在下方选择对应指南\n在风行网道找到天才建筑师 ｜ 天才建筑师在风行网道需要帮助"
+          },
+          {
+            "label": "小精灵提示",
+            "text": "1、若旅人从未收集过该先祖，任务会显示为：在风行网道找到天才建筑师 ；\n2、若旅人之前已收集过该先祖，任务会显示为：天才建筑师在风行网道需要帮助"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "请旅人先查看接到的任务名称，然后在下方选择对应指南\n在风行网道找到天才建筑师 ｜ 天才建筑师在风行网道需要帮助\n小精灵提示：\n1、若旅人从未收集过该先祖，任务会显示为：在风行网道找到天才建筑师 ；\n2、若旅人之前已收集过该先祖，任务会显示为：天才建筑师在风行网道需要帮助",
+        "variants": [
+          {
+            "label": "在风行网道找到天才建筑师",
+            "title": "在风行网道找到天才建筑师",
+            "sections": [
+              {
+                "label": "先祖位置",
+                "text": "雨林·风行网道"
+              },
+              {
+                "label": "任务流程",
+                "text": "1、前往风行网道找到并收集天才建筑师先祖\n2、点火完成收集后在风行网道找到先祖\n3、与先祖一同欣赏一段时间他人创作的共享空间即可完成任务"
+              },
+              {
+                "label": "小精灵提醒旅人",
+                "text": "1、若在指南位置找不到先祖，有可能是因为其他旅人正在收集，可重新进入地图再试试看\n2、查看旅人自己放置的共享空间无法完成任务哦~"
+              },
+              {
+                "label": "图片流程",
+                "text": ""
+              },
+              {
+                "label": "视频流程",
+                "text": ""
+              }
+            ],
+            "images": [
+              "https://skydaily.nankki.com/history/media/f270453587a7be07ddb5e71b.webp"
+            ],
+            "videos": [],
+            "links": [],
+            "text": "先祖位置： 雨林·风行网道\n任务流程：\n1、前往风行网道找到并收集天才建筑师先祖\n2、点火完成收集后在风行网道找到先祖\n3、与先祖一同欣赏一段时间他人创作的共享空间即可完成任务\n小精灵提醒旅人：\n1、若在指南位置找不到先祖，有可能是因为其他旅人正在收集，可重新进入地图再试试看\n2、查看旅人自己放置的共享空间无法完成任务哦~\n图片流程：\n视频流程："
+          },
+          {
+            "label": "天才建筑师在风行网道需要帮助",
+            "title": "天才建筑师在风行网道需要帮助",
+            "sections": [
+              {
+                "label": "先祖位置",
+                "text": "雨林·风行网道"
+              },
+              {
+                "label": "任务流程",
+                "text": "1、前往风行网道找到先祖\n2、与先祖一同欣赏一段时间他人创作的共享空间即可完成任务"
+              },
+              {
+                "label": "图片流程",
+                "text": ""
+              },
+              {
+                "label": "视频流程",
+                "text": ""
+              }
+            ],
+            "images": [
+              "https://skydaily.nankki.com/history/media/133f014fa6d63e277ca170bb.webp",
+              "https://skydaily.nankki.com/history/media/aac97d9f64afaf0fed0909ac.webp"
+            ],
+            "videos": [],
+            "links": [],
+            "text": "先祖位置： 雨林·风行网道\n任务流程：\n1、前往风行网道找到先祖\n2、与先祖一同欣赏一段时间他人创作的共享空间即可完成任务\n图片流程：\n视频流程："
+          }
+        ]
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [
+          "https://h5.ds.163.com/v1/6ad585a083a764003172a423/"
+        ],
+        "text": ""
+      }
+    ],
+    "weather": null,
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/6f6a6b064a38c4b9d549dd3e.webp"
+      ]
+    },
+    "candles": [
+      {
+        "keyword": "大蜡烛",
+        "title": "每日大蜡烛位置",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~"
+          },
+          {
+            "label": "位置分布参考",
+            "text": "大蜡烛堆攻略"
+          },
+          {
+            "label": "小精灵温馨提示",
+            "text": "4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/c37d38160f147e9dc76df94f.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~\n位置分布参考：大蜡烛堆攻略\n小精灵温馨提示：\n4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+      }
+    ],
+    "seasonCandleMap": "雨林"
+  },
+  "meta": {
+    "fetched_at": "2026-10-22T00:31:13.678Z",
+    "cached": false,
+    "stale": false
+  },
+  "errors": [
+    {
+      "section": "weather",
+      "code": "empty_result"
+    }
+  ]
+}
