@@ -94,7 +94,7 @@ function overviewDialogId(id, detail) {
 function overviewPreview(detail, id, title, emptyText) {
   if (!detail) return `<figure class="photo-note photo-note-empty"><figcaption class="note-empty-text">${escapeHtml(emptyText)}</figcaption></figure>`
   if (!hasOverviewContent(detail)) return `<figure class="photo-note photo-note-empty"><figcaption class="note-empty-text">图片暂缺</figcaption></figure>`
-  const text = detail.text ? `<p class="preview-text">${escapeHtml(detail.text)}</p>` : '<div class="preview-text" aria-hidden="true"></div>'
+  const text = detail.text ? `<p class="preview-text">${escapeHtml(detail.text)}</p>` : ''
   const firstImage = detail.images[0]
   if (firstImage) {
     return `<a class="overview-trigger" href="#image-${id}" data-dialog="image-${id}" aria-haspopup="dialog" aria-label="查看${title}大图">${text}<figure class="photo-note"><div class="photo-window"><img src="${escapeHtml(thumbUrl(firstImage))}" data-original="${escapeHtml(firstImage)}" alt="${title}首图" loading="lazy" decoding="async"></div><figcaption>查看大图 ↗</figcaption></figure></a>`
