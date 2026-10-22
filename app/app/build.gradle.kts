@@ -46,6 +46,34 @@ android {
     androidResources {
         noCompress += "webp"
     }
+
+}
+
+abstract class GenerateSeasonGuidePolicy : DefaultTask() {
+    @get:InputFile
+    abstract val policyFile: RegularFileProperty
+
+    @get:OutputDirectory
+    abstract val outputDirectory: DirectoryProperty
+
+    @TaskAction
+    fun generate() {
+        val target = outputDirectory.file("policy/link-policy.json").get().asFile
+        target.parentFile.mkdirs()
+        policyFile.get().asFile.copyTo(target, overwrite = true)
+    }
+}
+
+val generateSeasonGuidePolicyAsset = tasks.register<GenerateSeasonGuidePolicy>("generateSeasonGuidePolicyAsset") {
+    policyFile.set(rootProject.layout.projectDirectory.file("../src/link-policy.json"))
+    outputDirectory.set(layout.buildDirectory.dir("generated/seasonGuideAssets"))
+}
+
+androidComponents.onVariants { variant ->
+    variant.sources.assets?.addGeneratedSourceDirectory(
+        generateSeasonGuidePolicyAsset,
+        GenerateSeasonGuidePolicy::outputDirectory,
+    )
 }
 
 dependencies {
