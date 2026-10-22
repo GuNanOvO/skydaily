@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -35,6 +36,7 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -51,6 +53,7 @@ import com.nankki.skydaily.ui.paper.PaperButton
 import com.nankki.skydaily.ui.paper.Tape
 import com.nankki.skydaily.ui.paper.hardShadow
 import com.nankki.skydaily.ui.theme.LocalPaperPalette
+import com.nankki.skydaily.ui.theme.LightPalette
 
 @Composable
 fun RemoteImage(
@@ -167,6 +170,12 @@ fun PhotoNote(
     }
 }
 
+internal val TaskNoteTextStyle = TextStyle(
+    fontSize = 18.sp,
+    lineHeight = 28.sp,
+    fontWeight = FontWeight.Medium,
+)
+
 @Composable
 fun TaskNote(
     task: Task,
@@ -177,68 +186,60 @@ fun TaskNote(
     onToggle: (Boolean) -> Unit,
     onOpenGuide: () -> Unit,
     modifier: Modifier = Modifier,
-    compact: Boolean = false,
+    textLines: Int = 2,
 ) {
-    val palette = LocalPaperPalette.current
-    val noteColor = palette.noteColors[index % palette.noteColors.size]
-    Box(modifier = modifier.fillMaxWidth()) {
-        Column(
-            modifier = Modifier
-                .padding(top = 8.dp)
-                .fillMaxWidth()
-                .hardShadow(palette.shadow, dx = 1.dp, dy = 2.dp)
-                .background(noteColor, RoundedCornerShape(1.dp))
-                .border(1.dp, palette.outline.copy(alpha = 0.5f), RoundedCornerShape(1.dp))
-                .drawBehind {
-                    if (palette.dark) {
-                        drawRect(
-                            color = palette.noteAccents[index % palette.noteAccents.size],
-                            size = Size(2.dp.toPx(), size.height),
-                        )
-                    }
+    CompositionLocalProvider(LocalPaperPalette provides LightPalette) {
+        val palette = LocalPaperPalette.current
+        val noteColor = palette.noteColors[index % palette.noteColors.size]
+        Box(modifier = modifier.fillMaxWidth()) {
+            Row(
+                modifier = Modifier
+                    .padding(top = 8.dp)
+                    .fillMaxWidth()
+                    .hardShadow(palette.shadowStrong, dx = 1.dp, dy = 2.dp)
+                    .background(noteColor, RoundedCornerShape(1.dp))
+                    .border(1.dp, palette.outline.copy(alpha = 0.5f), RoundedCornerShape(1.dp))
+                    .clickable(
+                        enabled = detail != null,
+                        onClickLabel = "查看任务 ${task.number} 指南",
+                        onClick = onOpenGuide,
+                    )
+                    .padding(horizontal = 14.dp, vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Column(Modifier.weight(1f)) {
+                    Text(
+                        text = "任务 ${task.number.toString().padStart(2, '0')}",
+                        color = palette.muted,
+                        fontSize = 11.sp,
+                        lineHeight = 20.sp,
+                    )
+                    Text(
+                        text = task.text,
+                        color = if (done) palette.muted else palette.ink,
+                        style = TaskNoteTextStyle,
+                        minLines = textLines,
+                        textDecoration = if (done) TextDecoration.LineThrough else TextDecoration.None,
+                    )
                 }
-                .padding(horizontal = if (compact) 10.dp else 14.dp, vertical = 8.dp),
-        ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = "任务 ${task.number.toString().padStart(2, '0')}",
-                    color = palette.muted,
-                    fontSize = 11.sp,
-                    lineHeight = 20.sp,
-                )
-                Spacer(Modifier.weight(1f))
+                Spacer(Modifier.width(8.dp))
                 if (editable) {
                     PaperCheckbox(checked = done, onCheckedChange = onToggle)
                 } else {
-                    Text("只读", color = palette.muted, fontSize = 11.sp)
+                    Box(Modifier.size(44.dp), contentAlignment = Alignment.Center) {
+                        Text("只读", color = palette.muted, fontSize = 11.sp)
+                    }
                 }
             }
-            Text(
-                text = task.text,
-                color = if (done) palette.muted else palette.ink,
-                fontSize = if (compact) 14.sp else 16.sp,
-                lineHeight = if (compact) 22.sp else 26.sp,
-                fontWeight = FontWeight.Medium,
-                textDecoration = if (done) TextDecoration.LineThrough else TextDecoration.None,
-                modifier = Modifier.padding(bottom = 4.dp),
+            Tape(
+                modifier = Modifier.align(Alignment.TopCenter).offset(x = tapeOffset(index)),
+                width = 46.dp,
+                height = 12.dp,
+                rotation = if (index % 2 == 0) -4f else 4f,
+                color = palette.noteTapes[index % palette.noteTapes.size],
+                edge = palette.noteAccents[index % palette.noteAccents.size].copy(alpha = 0.45f),
             )
-            if (detail != null) {
-                PaperButton(
-                    text = "详情 ↗",
-                    onClick = onOpenGuide,
-                    height = 40.dp,
-                    fontSize = 11,
-                )
-            }
         }
-        Tape(
-            modifier = Modifier.align(Alignment.TopCenter).offset(x = tapeOffset(index)),
-            width = 46.dp,
-            height = 12.dp,
-            rotation = if (index % 2 == 0) -4f else 4f,
-            color = palette.noteTapes[index % palette.noteTapes.size],
-            edge = palette.noteAccents[index % palette.noteAccents.size].copy(alpha = 0.45f),
-        )
     }
 }
 

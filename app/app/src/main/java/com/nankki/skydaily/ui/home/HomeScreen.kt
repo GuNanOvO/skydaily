@@ -33,6 +33,7 @@ import com.nankki.skydaily.ui.journal.InformationPage
 import com.nankki.skydaily.ui.journal.JournalPage
 import com.nankki.skydaily.ui.journal.JournalPresenter
 import com.nankki.skydaily.ui.journal.JournalUiState
+import com.nankki.skydaily.ui.journal.rememberSeasonGuideSession
 import com.nankki.skydaily.ui.paper.PaperButton
 import com.nankki.skydaily.ui.settings.SettingsPage
 import com.nankki.skydaily.ui.theme.LocalPaperPalette
@@ -50,6 +51,7 @@ fun HomeScreen(
 ) {
     val palette = LocalPaperPalette.current
     val uriHandler = LocalUriHandler.current
+    val guideSession = rememberSeasonGuideSession()
     var page by rememberSaveable { mutableIntStateOf(0) }
     var route by rememberSaveable { mutableStateOf<String?>(null) }
     BackHandler(enabled = route != null) { route = null }
@@ -63,7 +65,7 @@ fun HomeScreen(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    PaperButton("返回记录", onClick = { route = null }, height = 40.dp)
+                    PaperButton("返回记录", onClick = { route = null })
                 }
             }
             Box(Modifier.weight(1f).fillMaxWidth().padding(horizontal = 4.dp, vertical = 4.dp)) {
@@ -84,7 +86,19 @@ fun HomeScreen(
                     )
                     null -> Crossfade(targetState = page, animationSpec = tween(160), label = "main-pages") { target ->
                         when (target) {
-                            0 -> JournalPage(state, presenter::refresh, presenter::toggle)
+                            0 -> JournalPage(
+                                state = state,
+                                onRefresh = {
+                                    presenter.refresh()
+                                    guideSession.refresh()
+                                },
+                                onToggleTask = presenter::toggle,
+                                darkTheme = palette.dark,
+                                guideSession = guideSession,
+                                onToggleTheme = {
+                                    onThemeModeChange(if (palette.dark) ThemeMode.Light else ThemeMode.Dark)
+                                },
+                            )
                             1 -> InformationPage(state, presenter::refresh)
                             else -> HistoryPage(
                                 onOpenDate = { route = it },

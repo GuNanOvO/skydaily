@@ -56,6 +56,7 @@ fun ArchivePage(date: String, todayState: JournalUiState, onToggleTask: (Int, Bo
             onRefresh = { reload++ },
             onToggleTask = onToggleTask,
             archived = true,
+            headerDate = date,
         )
     }
 }

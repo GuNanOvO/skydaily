@@ -10,9 +10,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.sp
 import com.nankki.skydaily.AppConfig
+import com.nankki.skydaily.R
+import com.nankki.skydaily.ui.paper.NotebookHeader
+import com.nankki.skydaily.ui.paper.NotebookSection
 import com.nankki.skydaily.ui.paper.PaperBlock
 import com.nankki.skydaily.ui.paper.PaperScroll
 import com.nankki.skydaily.ui.paper.RuledText
@@ -26,6 +27,15 @@ fun InformationPage(state: JournalUiState, onRefresh: () -> Unit, modifier: Modi
     }
     Box(modifier.fillMaxSize()) {
         PaperScroll {
+            PaperBlock {
+                NotebookHeader(
+                    title = "资讯",
+                    subtitle = "公告 · 天气 · 活动日历",
+                    onRefresh = onRefresh,
+                    refreshing = state.loading || state.refreshing,
+                    sticker = R.drawable.sky_butterfly_handdrawn,
+                )
+            }
             DataStatus(state)
             if (state.envelope == null) {
                 PaperBlock {
@@ -48,7 +58,7 @@ internal fun ColumnScope.InformationContent(
     onOpenNotice: () -> Unit,
 ) {
     val data = state.envelope?.data
-    RuledText("天气预报", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+    NotebookSection(title = "天气预报", sticker = R.drawable.sky_manta_flat)
     val weather = data?.weather
     if (weather == null) {
         RuledText("暂无天气记录", muted = true)
@@ -63,7 +73,7 @@ internal fun ColumnScope.InformationContent(
             )
         }
     }
-    RuledText("本月日历", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+    NotebookSection(title = "本月日历", sticker = R.drawable.sky_butterfly_handdrawn)
     val calendar = data?.calendar
     if (calendar?.images.isNullOrEmpty()) {
         RuledText("暂无日历记录", muted = true)
@@ -76,7 +86,7 @@ internal fun ColumnScope.InformationContent(
         )
     }
     if (state.notice != null) {
-        RuledText("游戏公告", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+        NotebookSection(title = "游戏公告", sticker = R.drawable.sky_candles_handdrawn)
         PaperBlock { NoticeCard(state.notice, onOpenNotice) }
     }
 }

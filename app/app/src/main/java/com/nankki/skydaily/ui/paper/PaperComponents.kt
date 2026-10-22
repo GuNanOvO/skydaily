@@ -30,6 +30,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -236,7 +237,6 @@ fun PaperButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     tone: Color? = null,
-    height: Dp = 40.dp,
     fontSize: Int = 12,
     enabled: Boolean = true,
 ) {
@@ -246,18 +246,21 @@ fun PaperButton(
     val scale by animateFloatAsState(if (pressed) 0.96f else 1f, label = "paper-button")
     Box(
         modifier = modifier
-            .heightIn(min = height)
-            .graphicsLayer { scaleX = scale; scaleY = scale }
-            .hardShadow(palette.shadow, dx = 1.dp, dy = 2.dp)
-            .background(tone ?: palette.paper, RoundedCornerShape(2.dp))
-            .border(1.dp, palette.outline, RoundedCornerShape(2.dp))
+            .widthIn(min = 64.dp)
+            .heightIn(min = 44.dp)
             .clickable(
                 interactionSource = interaction,
                 indication = null,
                 enabled = enabled,
                 onClick = onClick,
             )
-            .padding(horizontal = 12.dp),
+            .padding(vertical = 6.dp)
+            .graphicsLayer { scaleX = scale; scaleY = scale }
+            .hardShadow(palette.shadow, dx = 1.dp, dy = 2.dp)
+            .background(tone ?: palette.paper, RoundedCornerShape(2.dp))
+            .border(1.dp, palette.outline, RoundedCornerShape(2.dp))
+            .heightIn(min = 32.dp)
+            .padding(horizontal = 16.dp),
         contentAlignment = Alignment.Center,
     ) {
         Text(
@@ -284,7 +287,7 @@ fun PaperCheckbox(
     val scale by animateFloatAsState(if (checked) 1.04f else 1f, label = "paper-check")
     Box(
         modifier = modifier
-            .size(40.dp)
+            .size(44.dp)
             .toggleable(
                 value = checked,
                 role = Role.Checkbox,
@@ -294,7 +297,7 @@ fun PaperCheckbox(
     ) {
         androidx.compose.foundation.Canvas(
             Modifier
-                .size(24.dp)
+                .size(18.dp)
                 .graphicsLayer { scaleX = scale; scaleY = scale },
         ) {
             val stroke = 1.5.dp.toPx()

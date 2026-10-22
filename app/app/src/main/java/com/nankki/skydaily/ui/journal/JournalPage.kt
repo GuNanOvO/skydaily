@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,16 +15,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.rememberTextMeasurer
+import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.nankki.skydaily.AppConfig
+import com.nankki.skydaily.R
+import com.nankki.skydaily.core.BeijingClock
 import com.nankki.skydaily.data.TaskDetail
 import com.nankki.skydaily.ui.paper.PaperBlock
 import com.nankki.skydaily.ui.paper.PaperButton
 import com.nankki.skydaily.ui.paper.PaperScroll
 import com.nankki.skydaily.ui.paper.RuledText
+import com.nankki.skydaily.ui.paper.NotebookHeader
+import com.nankki.skydaily.ui.paper.NotebookSection
 
 @Composable
 fun JournalPage(
@@ -36,41 +39,59 @@ fun JournalPage(
     onClose: (() -> Unit)? = null,
     onOpenApp: (() -> Unit)? = null,
     archived: Boolean = false,
+    darkTheme: Boolean = false,
+    onToggleTheme: (() -> Unit)? = null,
+    headerDate: String? = null,
+    guideSession: SeasonGuideSession? = null,
 ) {
     val envelope = state.envelope
     val data = envelope?.data
     val tasks = data?.tasks.orEmpty()
     var guide by remember(envelope?.date) { mutableStateOf<TaskDetail?>(null) }
     var lightbox by remember(envelope?.date) { mutableStateOf<Pair<List<String>, Int>?>(null) }
-    var fullGuideUrl by remember(envelope?.date) { mutableStateOf<String?>(null) }
-    val editable = envelope != null && JournalFormat.canEdit(envelope.date, state.today)
-    if (onClose == null) {
-        BackHandler(enabled = guide != null || lightbox != null || fullGuideUrl != null) {
-            when {
-                lightbox != null -> lightbox = null
-                guide != null -> guide = null
-                else -> fullGuideUrl = null
-            }
+    val updatedAt = remember(state.fetchedAt, state.today, archived) {
+        state.fetchedAt.takeIf { it > 0 && !archived }?.let { timestamp ->
+            val date = BeijingClock.updatedDate(timestamp)
+            val day = if (date == state.today) "" else "${date.takeLast(5)} "
+            "更新于 $day${BeijingClock.updatedAt(timestamp)}"
         }
     }
-    BoxWithConstraints(modifier.fillMaxSize()) {
-        val fontScale = LocalDensity.current.fontScale
-        val compact = maxWidth < 420.dp || maxHeight < 600.dp
-        val columns = when {
-            maxWidth >= (700 * fontScale).dp && maxHeight < 450.dp -> 4
-            maxWidth >= (300 * fontScale).dp -> 2
-            else -> 1
+    val editable = envelope != null && JournalFormat.canEdit(envelope.date, state.today)
+    if (onClose == null) {
+        BackHandler(enabled = guide != null || lightbox != null) {
+            if (lightbox != null) lightbox = null else guide = null
         }
+    }
+    Box(modifier.fillMaxSize()) {
         PaperScroll {
+            PaperBlock {
+                NotebookHeader(
+                    title = if (archived) "历史记录" else "光遇每日任务",
+                    subtitle = if (archived) "当日任务与资讯" else "每日任务 · 季节蜡烛",
+                    updatedAt = updatedAt,
+                    date = when {
+                        onClose != null -> null
+                        archived -> headerDate ?: envelope?.date
+                        else -> envelope?.date ?: state.today
+                    },
+                    onRefresh = if (onClose == null) onRefresh else null,
+                    refreshing = state.loading || state.refreshing,
+                    darkTheme = darkTheme,
+                    onToggleTheme = onToggleTheme,
+                )
+            }
             if (onClose != null || onOpenApp != null) {
                 PaperBlock {
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        onClose?.let { PaperButton("关闭", it, height = 40.dp) }
-                        onOpenApp?.let { PaperButton("打开应用", it, height = 40.dp) }
+                        onClose?.let { PaperButton("关闭", it) }
+                        onOpenApp?.let { PaperButton("打开应用", it) }
                     }
                 }
             }
             DataStatus(state, archived)
+            if (onClose == null && tasks.isNotEmpty()) {
+                NotebookSection("每日任务", R.drawable.sky_jelly_handdrawn)
+            }
             if (tasks.isEmpty()) {
                 PaperBlock {
                     when {
@@ -81,24 +102,33 @@ fun JournalPage(
                 }
             } else {
                 PaperBlock {
-                    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                        tasks.chunked(columns).forEach { row ->
-                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                row.forEach { task ->
-                                    val detail = JournalFormat.taskDetailFor(task.keyword, data?.taskDetails.orEmpty())
-                                    TaskNote(
-                                        task = task,
-                                        detail = detail,
-                                        done = task.number in state.done,
-                                        editable = editable,
-                                        index = tasks.indexOf(task),
-                                        onToggle = { onToggleTask(task.number, it) },
-                                        onOpenGuide = { guide = detail },
-                                        modifier = Modifier.weight(1f),
-                                        compact = compact,
-                                    )
-                                }
-                                repeat(columns - row.size) { Spacer(Modifier.weight(1f)) }
+                    BoxWithConstraints(Modifier.fillMaxWidth()) {
+                        val textMeasurer = rememberTextMeasurer()
+                        val textWidth = with(LocalDensity.current) {
+                            (maxWidth - 80.dp).roundToPx().coerceAtLeast(1)
+                        }
+                        val textLines = remember(tasks, textWidth, textMeasurer) {
+                            tasks.maxOf { task ->
+                                textMeasurer.measure(
+                                    text = task.text,
+                                    style = TaskNoteTextStyle,
+                                    constraints = Constraints(maxWidth = textWidth),
+                                ).lineCount
+                            }
+                        }
+                        Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                            tasks.forEachIndexed { index, task ->
+                                val detail = JournalFormat.taskDetailFor(task.keyword, data?.taskDetails.orEmpty())
+                                TaskNote(
+                                    task = task,
+                                    detail = detail,
+                                    done = task.number in state.done,
+                                    editable = editable,
+                                    index = index,
+                                    onToggle = { onToggleTask(task.number, it) },
+                                    onOpenGuide = { guide = detail },
+                                    textLines = textLines,
+                                )
                             }
                         }
                     }
@@ -113,11 +143,12 @@ fun JournalPage(
                         onOpenNotice = {},
                     )
                 } else {
-                    RuledText("季节蜡烛", fontSize = 18.sp, fontWeight = FontWeight.SemiBold)
+                    NotebookSection("季节蜡烛", R.drawable.sky_candles_handdrawn)
                     PaperBlock {
                         SeasonGuide(
                             data = data,
-                            onOpenGuideFullscreen = if (onClose == null) ({ url -> fullGuideUrl = url }) else null,
+                            date = envelope.date,
+                            session = guideSession,
                         )
                     }
                 }
@@ -133,9 +164,6 @@ fun JournalPage(
         }
         lightbox?.let { (images, index) ->
             ImageLightbox(AppConfig.SITE_URL, images, index, onClose = { lightbox = null })
-        }
-        fullGuideUrl?.let { url ->
-            SeasonGuideFullscreen(url = url, onClose = { fullGuideUrl = null })
         }
     }
 }
