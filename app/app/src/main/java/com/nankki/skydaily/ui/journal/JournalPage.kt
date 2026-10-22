@@ -121,7 +121,7 @@ fun JournalPage(
 
     BoxWithConstraints(modifier = modifier.fillMaxSize()) {
         val compact = maxWidth < 360.dp || maxHeight < 560.dp
-        val wide = maxWidth >= 600.dp
+        val wide = maxWidth >= 640.dp
         val blocks = buildList {
             add(JournalBlock.Header)
             if (tabs.isNotEmpty()) add(JournalBlock.Tabs)
