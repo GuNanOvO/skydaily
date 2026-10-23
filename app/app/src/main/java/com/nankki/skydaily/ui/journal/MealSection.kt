@@ -7,13 +7,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
-import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -35,6 +35,7 @@ import com.nankki.skydaily.ui.paper.Tape
 import com.nankki.skydaily.ui.paper.hardShadow
 import com.nankki.skydaily.ui.paper.rememberMinuteTime
 import com.nankki.skydaily.ui.theme.LocalPaperPalette
+import com.nankki.skydaily.ui.theme.PaperPalette
 
 private val mealHourLabels = MealSchedule.hours.associateWith { it.toString().padStart(2, '0') + ":00" }
 internal fun mealHourLabel(hour: Int): String = mealHourLabels.getValue(hour)
@@ -76,32 +77,64 @@ internal fun ColumnScope.MealSection(onSettings: () -> Unit) {
                 Text(title, color = palette.ink, fontSize = 20.sp, lineHeight = 32.sp, fontWeight = FontWeight.SemiBold)
                 Text(detail, color = palette.muted, fontSize = 12.sp, lineHeight = 24.sp)
                 Spacer(Modifier.height(8.dp))
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    for (hour in MealSchedule.hours) {
-                        val active = current?.hour == hour
-                        val past = status.finishedToday || hour < (current?.hour ?: status.next.hour)
-                        Box(
-                            Modifier.widthIn(min = 64.dp).heightIn(min = 32.dp)
-                                .background(if (active) palette.tabColors[0] else palette.photoPaper, RoundedCornerShape(2.dp))
-                                .border(1.dp, if (active) palette.noteAccents[0] else palette.outline, RoundedCornerShape(2.dp))
-                                .semantics { stateDescription = if (active) "正在开饭" else if (past) "已结束" else "尚未开始" }
-                                .padding(horizontal = 10.dp, vertical = 4.dp),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Text(
-                                mealHourLabel(hour),
-                                color = if (active) palette.tabInk else if (past) palette.muted else palette.ink,
-                                fontSize = 13.sp,
-                                lineHeight = 24.sp,
-                                fontWeight = if (active) FontWeight.SemiBold else FontWeight.Normal,
-                            )
-                        }
-                    }
-                }
+                MealHourRow(
+                    hours = MealSchedule.hours.filter { it <= 12 },
+                    slots = 4,
+                    currentHour = current?.hour,
+                    finishedToday = status.finishedToday,
+                    nextHour = status.next.hour,
+                    palette = palette,
+                )
+                Spacer(Modifier.height(8.dp))
+                MealHourRow(
+                    hours = MealSchedule.hours.filter { it > 12 },
+                    slots = 4,
+                    currentHour = current?.hour,
+                    finishedToday = status.finishedToday,
+                    nextHour = status.next.hour,
+                    palette = palette,
+                )
                 Spacer(Modifier.height(8.dp))
                 PaperButton("提醒设置", onSettings, modifier = Modifier.align(Alignment.End))
             }
             Tape(Modifier.align(Alignment.TopCenter), width = 58.dp, height = 12.dp, rotation = -3f)
         }
+    }
+}
+
+/**
+ * 一行饭点：按固定列数均分宽度，上午只有三个时右侧留空。
+ */
+@Composable
+private fun MealHourRow(
+    hours: List<Int>,
+    slots: Int,
+    currentHour: Int?,
+    finishedToday: Boolean,
+    nextHour: Int,
+    palette: PaperPalette,
+) {
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        for (hour in hours) {
+            val active = currentHour == hour
+            val past = finishedToday || hour < (currentHour ?: nextHour)
+            Box(
+                Modifier.weight(1f).heightIn(min = 32.dp)
+                    .background(if (active) palette.tabColors[0] else palette.photoPaper, RoundedCornerShape(2.dp))
+                    .border(1.dp, if (active) palette.noteAccents[0] else palette.outline, RoundedCornerShape(2.dp))
+                    .semantics { stateDescription = if (active) "正在开饭" else if (past) "已结束" else "尚未开始" }
+                    .padding(horizontal = 6.dp, vertical = 4.dp),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    mealHourLabel(hour),
+                    color = if (active) palette.tabInk else if (past) palette.muted else palette.ink,
+                    fontSize = 13.sp,
+                    lineHeight = 24.sp,
+                    fontWeight = if (active) FontWeight.SemiBold else FontWeight.Normal,
+                )
+            }
+        }
+        repeat((slots - hours.size).coerceAtLeast(0)) { Spacer(Modifier.weight(1f)) }
     }
 }
