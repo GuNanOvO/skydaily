@@ -35,6 +35,7 @@ import androidx.lifecycle.Lifecycle
 import coil3.SingletonImageLoader
 import com.nankki.skydaily.core.AndroidKeyValueStore
 import com.nankki.skydaily.core.ThemePreference
+import com.nankki.skydaily.core.update.UpdateController
 import com.nankki.skydaily.overlay.OverlayService
 import com.nankki.skydaily.overlay.OverlayState
 import com.nankki.skydaily.meals.MealReminderManager
@@ -92,6 +93,7 @@ private fun Root(mealRequest: Long) {
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
         overlayGranted = android.provider.Settings.canDrawOverlays(context)
         mealManager.reconcile()
+        UpdateController.maybeCheck(context.applicationContext)
     }
 
     SideEffect {
