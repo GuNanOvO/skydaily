@@ -90,7 +90,7 @@ fun JournalPage(
             }
             DataStatus(state, archived)
             if (onClose == null && tasks.isNotEmpty()) {
-                NotebookSection("每日任务", R.drawable.sky_jelly_handdrawn)
+                NotebookSection("每日任务", R.drawable.sky_jelly_handdrawn, stickerInset = 64.dp)
             }
             if (tasks.isEmpty()) {
                 PaperBlock {
@@ -143,7 +143,11 @@ fun JournalPage(
                         onOpenNotice = {},
                     )
                 } else {
-                    NotebookSection("季节蜡烛", R.drawable.sky_candles_handdrawn)
+                    NotebookSection(
+                        data.seasonCandleMap?.trim()?.takeIf { it.isNotEmpty() }
+                            ?.let { "季节蜡烛：今日$it" } ?: "季节蜡烛",
+                        R.drawable.sky_candles_handdrawn,
+                    )
                     PaperBlock {
                         SeasonGuide(
                             data = data,

@@ -78,9 +78,6 @@ fun SeasonGuide(
     LaunchedEffect(guideSession, urls) { guideSession.retain(urls) }
 
     Column(modifier = modifier.fillMaxWidth()) {
-        data.seasonCandleMap?.takeIf { it.isNotBlank() }?.let { map ->
-            RuledText("今日季节蜡烛所在地图：$map")
-        }
         when {
             policy == null -> GuideUnavailable("缺少官方指南策略，暂时无法加载季节指南。")
             urls.isEmpty() -> GuideUnavailable("官方指南链接未通过校验，暂时无法加载。")

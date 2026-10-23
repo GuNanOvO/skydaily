@@ -59,7 +59,7 @@ fun HomeScreen(
     DeferredImages(state)
     Box(Modifier.fillMaxSize().background(palette.page), contentAlignment = Alignment.TopCenter) {
         Column(Modifier.widthIn(max = 720.dp).fillMaxSize()) {
-            if (route != null) {
+            if (route != null && route != "settings") {
                 Row(
                     Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 4.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
@@ -83,6 +83,7 @@ fun HomeScreen(
                         },
                         onOpenSite = { uriHandler.openUri(AppConfig.SITE_URL) },
                         onOpenFeedback = { uriHandler.openUri(AppConfig.FEEDBACK_URL) },
+                        onBack = { route = null },
                     )
                     null -> Crossfade(targetState = page, animationSpec = tween(160), label = "main-pages") { target ->
                         when (target) {

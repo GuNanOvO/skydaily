@@ -31,6 +31,7 @@ fun InformationPage(state: JournalUiState, onRefresh: () -> Unit, modifier: Modi
                 NotebookHeader(
                     title = "资讯",
                     subtitle = "公告 · 天气 · 活动日历",
+                    date = state.envelope?.date ?: state.today,
                     onRefresh = onRefresh,
                     refreshing = state.loading || state.refreshing,
                     sticker = R.drawable.sky_butterfly_handdrawn,

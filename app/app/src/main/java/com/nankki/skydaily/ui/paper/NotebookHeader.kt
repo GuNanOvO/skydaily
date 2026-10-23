@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.Row
@@ -28,6 +29,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nankki.skydaily.R
@@ -47,51 +49,56 @@ fun NotebookHeader(
     subtitle: String? = null,
     updatedAt: String? = null,
 ) {
+    val palette = LocalPaperPalette.current
     BoxWithConstraints(Modifier.fillMaxWidth()) {
         val compact = maxWidth < 360.dp
-        Column(Modifier.fillMaxWidth()) {
-            Row(
-                Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.Top,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                Column(Modifier.weight(1f)) {
-                    Row(
-                        Modifier.heightIn(min = with(LocalDensity.current) { 32.sp.toDp() }),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        RuledText(
-                            title,
-                            fontSize = if (compact) 20.sp else 22.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            modifier = Modifier.weight(1f, fill = false),
+        Row(
+            Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.Top,
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Column(Modifier.weight(1f)) {
+                Row(
+                    Modifier.heightIn(min = with(LocalDensity.current) { 32.sp.toDp() }),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    RuledText(
+                        title,
+                        fontSize = if (compact) 20.sp else 22.sp,
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.weight(1f, fill = false),
+                    )
+                    Box(Modifier.size(width = 48.dp, height = 32.dp), contentAlignment = Alignment.Center) {
+                        Sticker(
+                            sticker,
+                            size = 48.dp,
+                            rotation = -8f,
+                            modifier = Modifier.requiredSize(48.dp),
                         )
-                        Box(Modifier.size(width = 48.dp, height = 32.dp), contentAlignment = Alignment.Center) {
-                            Sticker(
-                                sticker,
-                                size = 48.dp,
-                                rotation = -8f,
-                                modifier = Modifier.requiredSize(48.dp),
-                            )
-                        }
-                    }
-                    FlowRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                        subtitle?.let { RuledText(it, fontSize = 12.sp, muted = true) }
-                        updatedAt?.let { RuledText(it, fontSize = 11.sp, muted = true) }
                     }
                 }
-                date?.let { DateSticker(it) }
-            }
-            if (onRefresh != null || onToggleTheme != null) {
-                Row(Modifier.fillMaxWidth().padding(top = 4.dp), verticalAlignment = Alignment.CenterVertically) {
-                    onRefresh?.let {
-                        PaperButton(
-                            text = if (refreshing) "刷新中" else "刷新",
-                            onClick = it,
-                            enabled = !refreshing,
-                        )
+                FlowRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                    subtitle?.let {
+                        Text(it, color = palette.muted, fontSize = 12.sp, lineHeight = 16.sp)
                     }
-                    Spacer(Modifier.weight(1f))
+                    updatedAt?.let {
+                        Text(it, color = palette.muted, fontSize = 11.sp, lineHeight = 16.sp)
+                    }
+                }
+                onRefresh?.let {
+                    PaperButton(
+                        text = if (refreshing) "刷新中" else "刷新",
+                        onClick = it,
+                        enabled = !refreshing,
+                    )
+                }
+            }
+            if (date != null || onToggleTheme != null) {
+                // 主题开关与日期卡并排：日期卡下方留空会把页头撑高整整一行。
+                Row(
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
                     onToggleTheme?.let { toggle ->
                         Box(
                             Modifier.size(44.dp)
@@ -107,6 +114,7 @@ fun NotebookHeader(
                             )
                         }
                     }
+                    date?.let { DateSticker(it) }
                 }
             }
         }
@@ -133,15 +141,22 @@ private fun DateSticker(date: String) {
 }
 
 @Composable
-fun NotebookSection(title: String, @DrawableRes sticker: Int) {
+fun NotebookSection(title: String, @DrawableRes sticker: Int, stickerInset: Dp = 0.dp) {
     PaperBlock {
         Row(
             Modifier.fillMaxWidth().heightIn(min = with(LocalDensity.current) { 32.sp.toDp() }),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            RuledText(title, fontSize = 17.sp, fontWeight = FontWeight.SemiBold)
-            Spacer(Modifier.weight(1f))
-            Box(Modifier.size(width = 48.dp, height = 32.dp), contentAlignment = Alignment.Center) {
+            RuledText(
+                title,
+                fontSize = 17.sp,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.weight(1f),
+            )
+            Box(
+                Modifier.padding(end = stickerInset).size(width = 48.dp, height = 32.dp),
+                contentAlignment = Alignment.Center,
+            ) {
                 Sticker(
                     sticker,
                     size = 48.dp,

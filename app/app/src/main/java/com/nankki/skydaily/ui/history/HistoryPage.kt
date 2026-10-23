@@ -28,8 +28,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nankki.skydaily.AppConfig
@@ -151,16 +153,18 @@ fun HistoryPage(
             )
         }
 
-        HistoryQuickActions(
-            refreshing = refreshing,
-            overlayRunning = overlayRunning,
-            onRefresh = requestRefresh,
-            onOverlayAction = onOverlayAction,
-            onSettings = onSettings,
-        )
+        PaperBlock {
+            HistoryQuickActions(
+                refreshing = refreshing,
+                overlayRunning = overlayRunning,
+                onRefresh = requestRefresh,
+                onOverlayAction = onOverlayAction,
+                onSettings = onSettings,
+            )
+        }
 
         when (val current = state) {
-            is HistoryListState.Loading -> HistoryLoadingCard()
+            is HistoryListState.Loading -> PaperBlock { HistoryLoadingCard() }
 
             is HistoryListState.Failure -> PaperBlock {
                 HistoryErrorCard(
@@ -175,8 +179,10 @@ fun HistoryPage(
                 } else if (current.refreshing) {
                     RuledText(text = "正在读取归档…", fontSize = 12.sp, muted = true)
                 }
-                if (current.reason != null) {
-                    OfflineNotice(reason = current.reason)
+                val reason = current.reason
+                if (reason != null) {
+                    // 离线提示单独占整行区块：换行、字号变化只增加整行，不推动其后的日期。
+                    PaperBlock { OfflineNotice(reason = reason) }
                 }
 
                 if (current.entries.isEmpty() && !current.refreshing) {
@@ -348,13 +354,20 @@ private fun QuickTab(
     }
 }
 
+/**
+ * 列表与纸面横线共用同一节距：32sp 一行。
+ * 与 PaperBlock/PaperSheet 完全一致地随系统字号缩放，而不是写死 dp 像素。
+ */
+@Composable
+private fun ruledLineHeight(): Dp = with(LocalDensity.current) { 32.sp.toPx().toDp() }
+
 @Composable
 private fun HistorySummary(entries: List<HistoryEntry>, refreshing: Boolean) {
     val palette = LocalPaperPalette.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 4.dp),
+            .height(ruledLineHeight()),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         ArchiveTag(
@@ -367,6 +380,8 @@ private fun HistorySummary(entries: List<HistoryEntry>, refreshing: Boolean) {
             color = palette.muted,
             fontSize = 11.sp,
             lineHeight = 20.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
             modifier = Modifier.weight(1f),
         )
         if (refreshing) {
@@ -387,7 +402,7 @@ private fun OfflineNotice(reason: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 2.dp),
+            .heightIn(min = ruledLineHeight()),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         ArchiveTag(text = "离线", tone = palette.tabColors[1])
@@ -397,6 +412,7 @@ private fun OfflineNotice(reason: String) {
             color = palette.muted,
             fontSize = 11.sp,
             lineHeight = 20.sp,
+            modifier = Modifier.weight(1f),
         )
     }
 }
@@ -427,7 +443,7 @@ private fun MonthTab(label: String, tone: Color) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 8.dp, bottom = 1.dp),
+            .height(ruledLineHeight()),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
@@ -449,6 +465,7 @@ private fun MonthTab(label: String, tone: Color) {
     }
 }
 
+/** 日期行至少占一条纸面横线，换行时随文字增高；日期、星期、今天标签与箭头共享基线。 */
 @Composable
 private fun HistoryRow(
     entry: HistoryEntry,
@@ -460,11 +477,12 @@ private fun HistoryRow(
     Row(
         modifier = Modifier
             .fillMaxWidth()
+            .heightIn(min = ruledLineHeight())
             .clickable(onClick = onClick),
-        verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
             Modifier
+                .align(Alignment.CenterVertically)
                 .width(3.dp)
                 .height(22.dp)
                 .background(
@@ -476,7 +494,9 @@ private fun HistoryRow(
         Spacer(Modifier.width(10.dp))
         RuledText(
             text = displayDate(entry.date),
-            modifier = Modifier.weight(1f),
+            modifier = Modifier
+                .weight(1f)
+                .alignByBaseline(),
             fontSize = 14.sp,
             fontWeight = if (isToday) FontWeight.SemiBold else null,
         )
@@ -487,26 +507,34 @@ private fun HistoryRow(
                 color = palette.muted,
                 fontSize = 11.sp,
                 lineHeight = 18.sp,
-                modifier = Modifier.padding(horizontal = 6.dp),
+                maxLines = 1,
+                modifier = Modifier
+                    .alignByBaseline()
+                    .padding(horizontal = 6.dp),
             )
         }
         if (isToday) {
-            Box(
+            Text(
+                text = "今天",
+                color = palette.tabInk,
+                fontSize = 9.sp,
+                lineHeight = 15.sp,
+                maxLines = 1,
                 modifier = Modifier
+                    .alignByBaseline()
                     .background(palette.tabColors[0], RoundedCornerShape(1.dp))
                     .border(1.dp, palette.outline.copy(alpha = 0.5f), RoundedCornerShape(1.dp))
                     .padding(horizontal = 5.dp, vertical = 1.dp),
-            ) {
-                Text(
-                    text = "今天",
-                    color = palette.tabInk,
-                    fontSize = 9.sp,
-                    lineHeight = 15.sp,
-                )
-            }
+            )
             Spacer(Modifier.width(6.dp))
         }
-        Text(text = "›", color = palette.muted, fontSize = 18.sp)
+        Text(
+            text = "›",
+            color = palette.muted,
+            fontSize = 18.sp,
+            lineHeight = 20.sp,
+            modifier = Modifier.alignByBaseline(),
+        )
     }
 }
 
