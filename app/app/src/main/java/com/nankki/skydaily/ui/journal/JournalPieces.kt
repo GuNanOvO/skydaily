@@ -12,6 +12,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -29,6 +30,8 @@ import com.nankki.skydaily.R
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -63,6 +66,7 @@ fun RemoteImage(
     url: String,
     modifier: Modifier = Modifier,
     contentScale: ContentScale = ContentScale.Fit,
+    onRatio: ((Float) -> Unit)? = null,
 ) {
     val palette = LocalPaperPalette.current
     if (url.isBlank()) {
@@ -74,6 +78,10 @@ fun RemoteImage(
         contentDescription = null,
         contentScale = contentScale,
         modifier = modifier,
+        onSuccess = { state ->
+            val image = state.result.image
+            if (image.height > 0) onRatio?.invoke(image.width.toFloat() / image.height.toFloat())
+        },
         loading = {
             Box(
                 modifier = Modifier
@@ -115,6 +123,12 @@ fun PhotoNote(
     val palette = LocalPaperPalette.current
     val first = images.firstOrNull().orEmpty()
     val url = if (first.isBlank()) "" else Media.absolute(baseUrl, Media.thumb(first))
+    var ratio by remember(first) { mutableFloatStateOf(0f) }
+    val imageModifier = if (ratio > 0f) {
+        Modifier.fillMaxWidth().aspectRatio(ratio)
+    } else {
+        Modifier.fillMaxWidth().height(imageHeight)
+    }
     Box(modifier = modifier.fillMaxWidth()) {
         Column(
             modifier = Modifier
@@ -138,17 +152,14 @@ fun PhotoNote(
                 )
             }
             Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(imageHeight)
-                    .clip(RoundedCornerShape(1.dp)),
+                modifier = imageModifier.clip(RoundedCornerShape(1.dp)),
                 contentAlignment = Alignment.Center,
             ) {
                 RemoteImage(
                     url = url,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(imageHeight),
+                    modifier = imageModifier,
+                    contentScale = ContentScale.FillWidth,
+                    onRatio = { ratio = it },
                 )
             }
             Row(
