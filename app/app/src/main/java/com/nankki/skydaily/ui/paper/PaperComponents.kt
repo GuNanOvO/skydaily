@@ -49,16 +49,19 @@ import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.FilterQuality
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.ShaderBrush
 import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -101,7 +104,7 @@ fun rememberTextureBrush(): Brush {
     }
 }
 
-/** 站点同款纸面：纹理 + 32dp 横线 + 左侧红线 + 装订孔。 */
+/** 站点同款纸面：纹理 + 32sp 横线 + 左侧红线 + 装订孔。 */
 @Composable
 fun PaperSheet(
     modifier: Modifier = Modifier,
@@ -132,7 +135,7 @@ fun PaperSheet(
 
             val top = 8.dp.toPx()
             val bottom = size.height - 8.dp.toPx()
-            val pitch = with(density) { 32.sp.toPx() }
+            val pitch = with(density) { 32.sp.roundToPx().toFloat() }
             var y = 12.dp.toPx() + with(density) { 28.sp.toPx() }
             while (y < bottom) {
                 drawRect(
@@ -171,7 +174,8 @@ fun Sticker(
     shadow: Boolean = true,
 ) {
     val palette = LocalPaperPalette.current
-    val painter = painterResource(res)
+    val image = ImageBitmap.imageResource(res)
+    val painter = remember(image) { BitmapPainter(image, filterQuality = FilterQuality.High) }
     Box(modifier = modifier.size(size).graphicsLayer { rotationZ = rotation }) {
         if (shadow) {
             Image(

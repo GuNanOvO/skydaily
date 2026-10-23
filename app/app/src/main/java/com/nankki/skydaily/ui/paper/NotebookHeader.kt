@@ -24,18 +24,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.layout.FirstBaseline
+import androidx.compose.ui.layout.LastBaseline
+import androidx.compose.ui.layout.layout
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.constrainHeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nankki.skydaily.R
 import com.nankki.skydaily.core.BeijingClock
 import com.nankki.skydaily.ui.theme.LocalPaperPalette
 import java.time.LocalDate
+import kotlin.math.roundToInt
 
 @Composable
 fun NotebookHeader(
@@ -66,7 +71,7 @@ fun NotebookHeader(
                         title,
                         fontSize = if (compact) 20.sp else 22.sp,
                         fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.weight(1f, fill = false),
+                        modifier = Modifier.weight(1f, fill = false).alignToPaperRule(),
                     )
                     Box(Modifier.size(width = 48.dp, height = 32.dp), contentAlignment = Alignment.Center) {
                         Sticker(
@@ -82,10 +87,22 @@ fun NotebookHeader(
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     subtitle?.let {
-                        Text(it, color = palette.muted, fontSize = 12.sp, lineHeight = 32.sp)
+                        Text(
+                            it,
+                            modifier = Modifier.alignToPaperRule(),
+                            color = palette.muted,
+                            fontSize = 12.sp,
+                            lineHeight = 32.sp,
+                        )
                     }
                     updatedAt?.let {
-                        Text(it, color = palette.muted, fontSize = 11.sp, lineHeight = 32.sp)
+                        Text(
+                            it,
+                            modifier = Modifier.alignToPaperRule(),
+                            color = palette.muted,
+                            fontSize = 11.sp,
+                            lineHeight = 32.sp,
+                        )
                     }
                 }
                 onRefresh?.let {
@@ -122,6 +139,17 @@ fun NotebookHeader(
             }
         }
     }
+}
+
+/** 首行基线落在纸面的 28sp 横线上，换行仍按整行占位。 */
+private fun Modifier.alignToPaperRule(): Modifier = layout { measurable, constraints ->
+    val placeable = measurable.measure(constraints.copy(minHeight = 0))
+    val firstBaseline = placeable[FirstBaseline]
+    val pitch = 32.sp.roundToPx()
+    val rows = ((placeable[LastBaseline] - firstBaseline).toFloat() / pitch).roundToInt() + 1
+    val height = constraints.constrainHeight(rows * pitch)
+    val offset = 28.sp.roundToPx() - firstBaseline
+    layout(placeable.width, height) { placeable.placeRelative(0, offset) }
 }
 
 @Composable

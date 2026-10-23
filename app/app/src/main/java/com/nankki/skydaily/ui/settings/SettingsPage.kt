@@ -71,8 +71,14 @@ fun SettingsPage(
     PaperScroll(modifier) {
         PaperBlock {
             Column(Modifier.fillMaxWidth()) {
-                PaperButton(text = "返回记录", onClick = onBack)
-                Spacer(Modifier.height(4.dp))
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(with(LocalDensity.current) { (32.sp.roundToPx() * 2).toDp() }),
+                    contentAlignment = Alignment.CenterStart,
+                ) {
+                    PaperButton(text = "返回记录", onClick = onBack)
+                }
                 NotebookHeader(
                     title = "设置",
                     subtitle = "外观 · 悬浮球 · 本地数据",

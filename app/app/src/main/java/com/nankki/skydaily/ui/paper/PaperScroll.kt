@@ -40,11 +40,11 @@ fun PaperScroll(modifier: Modifier = Modifier, content: @Composable ColumnScope.
 /** 不透明便签按整行占位，后续纸面文字不会偏离横线节奏。 */
 @Composable
 fun PaperBlock(modifier: Modifier = Modifier, content: @Composable () -> Unit) {
-    val pitch = with(LocalDensity.current) { 32.sp.toPx() }
+    val pitch = with(LocalDensity.current) { 32.sp.roundToPx() }
     Box(modifier.fillMaxWidth().layout { measurable, constraints ->
         val placeable = measurable.measure(constraints.copy(minHeight = 0))
-        val rows = ceil(placeable.height / pitch).toInt().coerceAtLeast(1)
-        val height = constraints.constrainHeight((rows * pitch).toInt())
+        val rows = ceil(placeable.height.toDouble() / pitch).toInt().coerceAtLeast(1)
+        val height = constraints.constrainHeight(rows * pitch)
         layout(placeable.width, height) { placeable.placeRelative(0, 0) }
     }) { content() }
 }
