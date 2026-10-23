@@ -2,10 +2,10 @@ name: android
 
 on:
   pull_request:
-    paths: ['app/**', 'src/link-policy.json', 'src/link-policy.mjs', '.github/workflows/android.yml']
+    paths: ['app/**', 'src/link-policy.json', 'src/link-policy.mjs', 'scripts/compress-apk.mjs', '.github/workflows/android.yml']
   push:
     branches: [main]
-    paths: ['app/**', 'src/link-policy.json', 'src/link-policy.mjs', '.github/workflows/android.yml']
+    paths: ['app/**', 'src/link-policy.json', 'src/link-policy.mjs', 'scripts/compress-apk.mjs', '.github/workflows/android.yml']
   workflow_dispatch:
 
 permissions:
@@ -143,6 +143,14 @@ jobs:
           VERSION_NAME: ${{ steps.version.outputs.name }}
           VERSION_CODE: ${{ steps.version.outputs.code }}
         run: ./gradlew :app:testDebugUnitTest :app:assembleRelease "-PappVersionName=$VERSION_NAME" "-PappVersionCode=$VERSION_CODE"
+      - name: 极限压缩并重新签名
+        if: steps.version.outputs.release == 'true' && steps.version.outputs.reuse != 'true'
+        env:
+          ANDROID_KEYSTORE_PATH: ${{ runner.temp }}/release.jks
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: node scripts/compress-apk.mjs app/app/build/outputs/apk/release/app-release.apk
       - name: 校验构建产物
         if: steps.version.outputs.release == 'true' && steps.version.outputs.reuse != 'true'
         id: build_apk

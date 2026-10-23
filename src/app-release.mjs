@@ -95,6 +95,7 @@ const APP_BUILD_INPUTS = new Set([
   'app/gradlew.bat',
   'app/app/build.gradle.kts',
   'app/app/proguard-rules.pro',
+  'scripts/compress-apk.mjs',
 ])
 
 /**

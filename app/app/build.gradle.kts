@@ -64,6 +64,16 @@ android {
         noCompress += "webp"
     }
 
+    packaging {
+        // 发行包以 APK 体积优先：DEX 与 JNI 库压缩存放，由系统安装时解压。
+        dex {
+            useLegacyPackaging = true
+        }
+        jniLibs {
+            useLegacyPackaging = true
+        }
+    }
+
 }
 
 abstract class GenerateSeasonGuidePolicy : DefaultTask() {
