@@ -2,10 +2,10 @@ name: pages
 
 on:
   repository_dispatch:
-    types: [daily-updated, notice-updated]
+    types: [daily-updated, notice-updated, app-released]
   push:
     branches: [main]
-    paths: ['src/link-policy.*', 'src/schema/**', 'scripts/**', 'assets/**', 'history/**', 'package.json', 'package-lock.json', '.github/workflows/pages.yml']
+    paths: ['src/link-policy.*', 'src/schema/**', 'src/app-release.*', 'src/apk-inspect.mjs', 'scripts/**', 'assets/**', 'history/**', 'package.json', 'package-lock.json', '.github/workflows/pages.yml']
   workflow_dispatch:
 
 permissions:
@@ -28,6 +28,23 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
       - uses: actions/checkout@v4
+      - name: 解析 App 发布标签
+        id: app_release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ github.event.client_payload.app_release_tag }}
+        run: |
+          set -eu
+          TAG="${RELEASE_TAG:-}"
+          if [ -n "$TAG" ]; then
+            if ! [[ "$TAG" =~ ^app-v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+              echo "::error::app_released 事件携带的标签无效"
+              exit 1
+            fi
+          else
+            TAG=$(gh release list --limit 100 --json tagName,isDraft,publishedAt --jq '[.[] | select(.isDraft == false) | select(.tagName | startswith("app-v"))] | sort_by(.publishedAt) | reverse | .[0].tagName // ""')
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -37,6 +54,18 @@ jobs:
       - run: pip install --quiet Pillow==11.3.0
       - run: npm ci --silent --no-audit --no-fund
       - run: npm run typecheck
+      - uses: android-actions/setup-android@v4
+      - name: 安装安装包校验工具
+        run: sdkmanager --install "build-tools;37.0.0"
+      - name: 暂存 App 发布文件
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ steps.app_release.outputs.tag }}
+        run: |
+          set -eu
+          ARGS=(--stage "$RUNNER_TEMP/app-release")
+          if [ -n "${RELEASE_TAG:-}" ]; then ARGS+=(--tag "$RELEASE_TAG"); fi
+          node scripts/prepare-app-release.mjs "${ARGS[@]}"
       - run: npx playwright install --with-deps chromium
       - name: 取回公开归档
         run: |
@@ -56,7 +85,7 @@ jobs:
         env:
           WORKER_URL: ${{ secrets.WORKER_URL }}
           ADMIN_SECRET: ${{ secrets.ADMIN_SECRET }}
-          VERSION: ${{ github.event.client_payload.version }}
+          VERSION: ${{ github.event.client_payload.app_release_tag && '' || github.event.client_payload.version }}
         run: |
           set -eu
           VERSION="${VERSION:-}"
@@ -83,9 +112,12 @@ jobs:
       - name: 渲染页面与历史记录
         env:
           PUBLISH_HISTORY: '1'
+          APP_RELEASE_JSON: ${{ runner.temp }}/app-release/release.json
         run: |
           RECORD=$(node -e 'const fs=require("fs");const x=JSON.parse(fs.readFileSync("history/index.json"));process.stdout.write(x.dates.at(-1).file)')
           node scripts/render-pages.mjs --file "history/$RECORD"
+      - name: 合并 App 发布文件
+        run: node scripts/prepare-app-release.mjs --stage "$RUNNER_TEMP/app-release" --integrate out
       - name: 生成每日页面预览图
         run: node scripts/capture-preview.mjs
       - name: 生成分享卡
@@ -130,11 +162,11 @@ jobs:
             git -C readme-store push -q "$(git remote get-url origin)" HEAD:refs/heads/main
           fi
       - name: 确认版本发布成功
-        if: github.event_name == 'repository_dispatch'
+        if: github.event_name == 'repository_dispatch' && !github.event.client_payload.app_release_tag
         env:
           WORKER_URL: ${{ secrets.WORKER_URL }}
           ADMIN_SECRET: ${{ secrets.ADMIN_SECRET }}
-          VERSION: ${{ github.event.client_payload.version }}
+          VERSION: ${{ github.event.client_payload.app_release_tag && '' || github.event.client_payload.version }}
           NOTICE: ${{ github.event.client_payload.notice }}
         run: |
           set -eu

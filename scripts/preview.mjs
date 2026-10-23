@@ -1,5 +1,5 @@
 import { createServer } from 'node:http'
-import { watch } from 'node:fs'
+import { existsSync, watch } from 'node:fs'
 import { cp, mkdir, readFile, writeFile } from 'node:fs/promises'
 import { resolve, extname, sep } from 'node:path'
 
@@ -16,7 +16,7 @@ async function rebuild() {
   if (rebuilding) { pending = true; return }
   rebuilding = true
   try {
-    const { renderPage, renderApiGuide, loadNotices } = await import('./render-pages.mjs?preview=' + Date.now())
+    const { renderPage, renderApiGuide, integrateAppRelease, loadNotices } = await import('./render-pages.mjs?preview=' + Date.now())
     const index = JSON.parse(await readFile('history/index.json', 'utf8'))
     const dates = index.dates.map(entry => entry.date)
     const notices = await loadNotices(process.env.NOTICES_FILE ?? 'history/notices.json')
@@ -34,6 +34,7 @@ async function rebuild() {
     await writeFile(resolve(root, 'index.html'), renderPage(latest, { dates, notices }))
     await writeFile(resolve(root, 'data.json'), JSON.stringify(latest, null, 2))
     await writeFile(resolve(root, 'api.html'), renderApiGuide(latest.date))
+    await integrateAppRelease({ root, bundle: process.env.APP_RELEASE_JSON })
     for (const client of clients) client.write('event: refresh\ndata: ready\n\n')
     console.log('Local preview updated: ' + latest.date)
   } catch (error) {
@@ -71,6 +72,7 @@ server.listen(port, '127.0.0.1', () => console.log(`Local preview: http://127.0.
 const noticesPath = process.env.NOTICES_FILE ?? 'history/notices.json'
 const watchPaths = ['assets', 'scripts/render-pages.mjs', 'scripts/date-navigation.mjs', 'history/index.json', 'history/daily']
 watchPaths.push(noticesPath)
+if (process.env.APP_RELEASE_JSON && existsSync(process.env.APP_RELEASE_JSON)) watchPaths.push(process.env.APP_RELEASE_JSON)
 const watchers = watchPaths.map(path => watch(path, schedule))
 const heartbeat = setInterval(() => { for (const client of clients) client.write(': heartbeat\n\n') }, 15000)
 function shutdown() {

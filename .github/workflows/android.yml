@@ -1,0 +1,273 @@
+name: android
+
+on:
+  pull_request:
+    paths: ['app/**', 'src/link-policy.json', 'src/link-policy.mjs', '.github/workflows/android.yml']
+  push:
+    branches: [main]
+    paths: ['app/**', 'src/link-policy.json', 'src/link-policy.mjs', '.github/workflows/android.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: android-actions/setup-android@v4
+      - run: sdkmanager --install "platforms;android-37.0" "build-tools;37.0.0"
+      - uses: gradle/actions/setup-gradle@v4
+      - name: 运行单元测试并构建调试包
+        working-directory: app
+        run: ./gradlew :app:testDebugUnitTest :app:assembleDebug
+
+  release:
+    if: github.event_name != 'pull_request' && (github.event_name != 'workflow_dispatch' || github.ref == 'refs/heads/main')
+    runs-on: ubuntu-latest
+    concurrency:
+      group: android-release
+      cancel-in-progress: false
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: android-actions/setup-android@v4
+      - run: sdkmanager --install "platforms;android-37.0" "build-tools;37.0.0"
+      - uses: gradle/actions/setup-gradle@v4
+      - name: 读取上一发布
+        id: previous
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -eu
+          TAG=$(gh release list --limit 100 --json tagName,isDraft,publishedAt --jq '[.[] | select(.isDraft == false) | select(.tagName | startswith("app-v"))] | sort_by(.publishedAt) | reverse | .[0].tagName // ""')
+          NAME=''
+          CODE=0
+          COMMIT=''
+          if [ -n "$TAG" ]; then
+            rm -rf "$RUNNER_TEMP/previous"
+            mkdir -p "$RUNNER_TEMP/previous"
+            gh release download "$TAG" --pattern app-release.json --dir "$RUNNER_TEMP/previous"
+            test -f "$RUNNER_TEMP/previous/app-release.json"
+            node --input-type=module -e 'import { readFileSync } from "node:fs"; import { releaseObject } from "./src/app-release.mjs"; if (!releaseObject(JSON.parse(readFileSync(process.argv[1], "utf8")))) process.exit(1)' "$RUNNER_TEMP/previous/app-release.json"
+            NAME=$(jq -r '.versionName' "$RUNNER_TEMP/previous/app-release.json")
+            CODE=$(jq -r '.versionCode' "$RUNNER_TEMP/previous/app-release.json")
+            COMMIT=$(jq -r '.commit' "$RUNNER_TEMP/previous/app-release.json")
+            if [ "app-v$NAME" != "$TAG" ]; then
+              echo "::error::最新发布的标签与清单版本不一致"
+              exit 1
+            fi
+          fi
+          {
+            echo "tag=$TAG"
+            echo "name=$NAME"
+            echo "code=$CODE"
+            echo "commit=$COMMIT"
+          } >> "$GITHUB_OUTPUT"
+      - name: 计算版本
+        id: version
+        env:
+          PREVIOUS_NAME: ${{ steps.previous.outputs.name }}
+          PREVIOUS_CODE: ${{ steps.previous.outputs.code }}
+          PREVIOUS_COMMIT: ${{ steps.previous.outputs.commit }}
+        run: |
+          set -euo pipefail
+          BASE=$(git describe --tags --abbrev=0 --match 'app-v*' HEAD 2>/dev/null || true)
+          # 以上一份已发布提交为基准，避免标签缺失或滞后时重复计算已发布改动。
+          if [ -n "${PREVIOUS_COMMIT:-}" ] && git cat-file -e "${PREVIOUS_COMMIT}^{commit}" 2>/dev/null; then
+            # 重跑更早提交的失败运行会构建旧代码：此时发布只会把用户更新回旧版本。
+            if ! git merge-base --is-ancestor "$PREVIOUS_COMMIT" HEAD; then
+              echo "::error::当前提交不包含已发布的 ${PREVIOUS_COMMIT}，拒绝发布旧代码"
+              exit 1
+            fi
+            RANGE="$PREVIOUS_COMMIT..HEAD"
+          elif [ -n "$BASE" ]; then
+            RANGE="$BASE..HEAD"
+          else
+            RANGE="HEAD"
+          fi
+          git log --format='%H%x09%s%x09%b' "$RANGE" > "$RUNNER_TEMP/commits.txt"
+          git log --format='COMMIT %H' --name-only "$RANGE" | awk '/^COMMIT /{sha=$2;next} NF{printf "%s\t%s\n", sha, $0}' > "$RUNNER_TEMP/paths.txt"
+          ARGS=(--commits "$RUNNER_TEMP/commits.txt" --paths "$RUNNER_TEMP/paths.txt" --count "$(git rev-list --count HEAD)" --previous-code "${PREVIOUS_CODE:-0}")
+          if [ -n "${PREVIOUS_NAME:-}" ]; then ARGS+=(--previous-name "$PREVIOUS_NAME"); fi
+          if [ -n "${PREVIOUS_COMMIT:-}" ]; then
+            ARGS+=(--same-commit "$GITHUB_SHA" --published-commit "$PREVIOUS_COMMIT" --published-name "${PREVIOUS_NAME:-}" --published-code "${PREVIOUS_CODE:-0}")
+          fi
+          node scripts/app-version.mjs "${ARGS[@]}" > "$RUNNER_TEMP/version.json"
+          jq -r '"release=\(.release)\nname=\(.versionName // "")\ncode=\(.versionCode // "")\nreuse=\(.reuse // false)\nlevel=\(.level // "")\ntag=app-v\(.versionName // "")"' "$RUNNER_TEMP/version.json" >> "$GITHUB_OUTPUT"
+      - name: 确认发布条件
+        if: steps.version.outputs.release != 'true'
+        run: echo "没有影响安装包的提交，本次不发布新版本。"
+      - name: 准备签名密钥
+        if: steps.version.outputs.release == 'true' && steps.version.outputs.reuse != 'true'
+        env:
+          KEYSTORE: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          STORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          set -eu
+          for name in KEYSTORE STORE_PASSWORD KEY_ALIAS KEY_PASSWORD; do
+            if [ -z "${!name:-}" ]; then
+              echo "::error::缺少签名密钥 $name"
+              exit 1
+            fi
+          done
+          umask 077
+          printf '%s' "$KEYSTORE" | base64 --decode > "$RUNNER_TEMP/release.jks"
+      - name: 构建签名版本
+        if: steps.version.outputs.release == 'true' && steps.version.outputs.reuse != 'true'
+        working-directory: app
+        env:
+          ANDROID_KEYSTORE_PATH: ${{ runner.temp }}/release.jks
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+          VERSION_NAME: ${{ steps.version.outputs.name }}
+          VERSION_CODE: ${{ steps.version.outputs.code }}
+        run: ./gradlew :app:testDebugUnitTest :app:assembleRelease "-PappVersionName=$VERSION_NAME" "-PappVersionCode=$VERSION_CODE"
+      - name: 校验构建产物
+        if: steps.version.outputs.release == 'true' && steps.version.outputs.reuse != 'true'
+        id: build_apk
+        env:
+          VERSION_NAME: ${{ steps.version.outputs.name }}
+          VERSION_CODE: ${{ steps.version.outputs.code }}
+        run: |
+          set -euo pipefail
+          APK="app/app/build/outputs/apk/release/app-release.apk"
+          test -f "$APK"
+          BUILD_TOOLS="$ANDROID_HOME/build-tools/37.0.0"
+          BADGING=$("$BUILD_TOOLS/aapt2" dump badging "$APK")
+          PACKAGE_LINE=$(printf '%s\n' "$BADGING" | grep '^package: ')
+          PACKAGE=$(awk -F"'" '{print $2}' <<< "$PACKAGE_LINE")
+          CODE=$(awk -F"'" '{print $4}' <<< "$PACKAGE_LINE")
+          NAME=$(awk -F"'" '{print $6}' <<< "$PACKAGE_LINE")
+          SDK=$(printf '%s\n' "$BADGING" | sed -n "s/^minSdkVersion:'\([0-9]*\)'.*/\1/p")
+          [ "$PACKAGE" = "com.nankki.skydaily" ] || { echo "::error::安装包包名不符"; exit 1; }
+          [ "$CODE" = "$VERSION_CODE" ] || { echo "::error::安装包版本号不符"; exit 1; }
+          [ "$NAME" = "$VERSION_NAME" ] || { echo "::error::安装包版本名不符"; exit 1; }
+          case "$SDK" in ''|*[!0-9]*) echo "::error::安装包 minSdk 无效"; exit 1;; esac
+          [ "$SDK" -ge 28 ] || { echo "::error::安装包 minSdk 低于项目基线"; exit 1; }
+          CERTS=$("$BUILD_TOOLS/apksigner" verify --print-certs "$APK")
+          DIGEST=$(printf '%s\n' "$CERTS" | awk '/certificate SHA-256 digest:/{value=$NF} END{print value}')
+          [ "$DIGEST" = "9463bb1d8ad40eda6f358716449fd6646c1dac28fea817ce425b579b8f05820a" ] || { echo "::error::签名证书与既有安装包不一致"; exit 1; }
+          cp "$APK" "$RUNNER_TEMP/skydaily-$VERSION_NAME.apk"
+          echo "min_sdk=$SDK" >> "$GITHUB_OUTPUT"
+      - name: 生成发布元数据
+        if: steps.version.outputs.release == 'true' && steps.version.outputs.reuse != 'true'
+        env:
+          VERSION_NAME: ${{ steps.version.outputs.name }}
+          VERSION_CODE: ${{ steps.version.outputs.code }}
+          MIN_SDK: ${{ steps.build_apk.outputs.min_sdk }}
+        run: |
+          set -eu
+          APK="$RUNNER_TEMP/skydaily-$VERSION_NAME.apk"
+          SIZE=$(stat -c%s "$APK")
+          SHA=$(sha256sum "$APK" | awk '{print $1}')
+          PUBLISHED_AT=$(date -u +%Y-%m-%dT%H:%M:%S.000Z)
+          NOTES=$(jq -c '.notes // []' "$RUNNER_TEMP/version.json")
+          jq -n \
+            --argjson schemaVersion 1 \
+            --arg packageName "com.nankki.skydaily" \
+            --arg versionName "$VERSION_NAME" \
+            --argjson versionCode "$VERSION_CODE" \
+            --arg commit "$GITHUB_SHA" \
+            --arg publishedAt "$PUBLISHED_AT" \
+            --argjson minSdk "$MIN_SDK" \
+            --argjson size "$SIZE" \
+            --arg sha256 "$SHA" \
+            --arg apkPath "/app/releases/$VERSION_CODE/skydaily-$VERSION_NAME.apk" \
+            --argjson notes "$NOTES" \
+            '{schemaVersion: $schemaVersion, packageName: $packageName, versionName: $versionName, versionCode: $versionCode, commit: $commit, publishedAt: $publishedAt, minSdk: $minSdk, size: $size, sha256: $sha256, apkPath: $apkPath, notes: $notes}' > "$RUNNER_TEMP/app-release.json"
+          # 由 APK 本体复核包名、版本、minSdk、签名证书，再允许进入发布步骤。
+          node scripts/verify-app-release.mjs --apk "$APK" --manifest "$RUNNER_TEMP/app-release.json" --commit "$GITHUB_SHA"
+          jq -r '.notes[]?' "$RUNNER_TEMP/app-release.json" > "$RUNNER_TEMP/notes.md"
+          if [ ! -s "$RUNNER_TEMP/notes.md" ]; then echo '本次发布没有额外说明。' > "$RUNNER_TEMP/notes.md"; fi
+      - name: 发布或复用 Release
+        if: steps.version.outputs.release == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION_NAME: ${{ steps.version.outputs.name }}
+          VERSION_CODE: ${{ steps.version.outputs.code }}
+          REUSE: ${{ steps.version.outputs.reuse }}
+        run: |
+          set -euo pipefail
+          BUILD_TOOLS="$ANDROID_HOME/build-tools/37.0.0"
+          EXPECTED_CERT="9463bb1d8ad40eda6f358716449fd6646c1dac28fea817ce425b579b8f05820a"
+          TAG="app-v$VERSION_NAME"
+          APK="$RUNNER_TEMP/skydaily-$VERSION_NAME.apk"
+          MANIFEST="$RUNNER_TEMP/app-release.json"
+          NOTES_FILE="$RUNNER_TEMP/notes.md"
+          verify_assets() {
+            local dir="$1"
+            node scripts/verify-app-release.mjs --apk "$dir/skydaily-$VERSION_NAME.apk" --manifest "$dir/app-release.json" --commit "$GITHUB_SHA" --name "$VERSION_NAME" --code "$VERSION_CODE" || return 1
+            local digest
+            digest=$("$BUILD_TOOLS/apksigner" verify --print-certs "$dir/skydaily-$VERSION_NAME.apk" | awk '/certificate SHA-256 digest:/{value=$NF} END{print value}') || return 1
+            [ "$digest" = "$EXPECTED_CERT" ] || return 1
+          }
+          download_assets() {
+            local dir="$1"
+            rm -rf "$dir" || return 1
+            mkdir -p "$dir" || return 1
+            gh release download "$TAG" --pattern app-release.json --pattern "skydaily-$VERSION_NAME.apk" --dir "$dir" || return 1
+            test -f "$dir/app-release.json" || return 1
+            test -f "$dir/skydaily-$VERSION_NAME.apk" || return 1
+          }
+          PUBLISHED=0
+          if gh release view "$TAG" > /dev/null 2>&1; then
+            DRAFT=$(gh release view "$TAG" --json isDraft --jq '.isDraft')
+            if [ "$DRAFT" = "true" ]; then
+              # 完整且仍对应当前提交的草稿可以直接完成；任何不完整或过期的草稿都删除后重建。
+              if download_assets "$RUNNER_TEMP/draft" && verify_assets "$RUNNER_TEMP/draft"; then
+                gh release edit "$TAG" --draft=false --notes-file "$NOTES_FILE"
+                PUBLISHED=1
+              else
+                echo "::warning::已有草稿不完整或不可复用，删除后重新发布"
+                gh release delete "$TAG" --yes
+              fi
+            elif download_assets "$RUNNER_TEMP/existing" && verify_assets "$RUNNER_TEMP/existing"; then
+              # 已发布的同一提交保持原样，不替换任何已发布资产。
+              PUBLISHED=1
+            else
+              echo "::error::同名发布已存在但无法验证，停止发布"
+              exit 1
+            fi
+          fi
+          if [ "$PUBLISHED" -ne 1 ]; then
+            if [ "$REUSE" = "true" ]; then
+              echo "::error::应复用已发布版本，但发布不存在或不可验证"
+              exit 1
+            fi
+            gh release create "$TAG" --draft --target "$GITHUB_SHA" --title "SkyDaily $VERSION_NAME" --notes-file "$NOTES_FILE"
+            gh release upload "$TAG" "$APK#skydaily-$VERSION_NAME.apk" "$MANIFEST#app-release.json"
+            gh release edit "$TAG" --draft=false --notes-file "$NOTES_FILE"
+          fi
+      - name: 触发站点发布
+        if: steps.version.outputs.release == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.version.outputs.tag }}
+        run: |
+          set -eu
+          jq -n --arg tag "$TAG" '{event_type: "app-released", client_payload: {app_release_tag: $tag}}' > "$RUNNER_TEMP/dispatch.json"
+          gh api --method POST "repos/$GITHUB_REPOSITORY/dispatches" --input "$RUNNER_TEMP/dispatch.json"
+      - name: 清理签名密钥
+        if: always()
+        run: rm -f "$RUNNER_TEMP/release.jks"

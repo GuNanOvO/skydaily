@@ -1,8 +1,11 @@
 import { readFile, stat, readdir } from 'node:fs/promises'
+import { createHash } from 'node:crypto'
 import { resolve, join } from 'node:path'
 import { envelopeSchema } from '../src/schema/types.ts'
 import { completeEnvelope } from '../src/publishing.ts'
 import { normalizeNoticeLink, normalizeSeasonGuideLink, seasonGuidePolicy } from '../src/link-policy.mjs'
+import { APP_SCREENSHOT_FILES, releaseObject } from '../src/app-release.mjs'
+import { assertApkMatchesRelease } from '../src/apk-inspect.mjs'
 
 const root = resolve(process.argv.find(arg => arg.startsWith('--directory='))?.split('=')[1] ?? 'out')
 const site = new URL(process.env.SITE_URL ?? 'https://skydaily.nankki.com')
@@ -49,6 +52,70 @@ function checkRecord(record) {
     }
   }
   inspect(record)
+}
+
+// 下载页存在时校验清单、安装包与页面三者一致；未发布时页面不得出现下载地址。
+async function checkAppRelease() {
+  let page
+  try {
+    page = await readFile(join(root, 'app/index.html'), 'utf8')
+  } catch (error) {
+    if (error?.code === 'ENOENT') return
+    throw error
+  }
+  if (/github\.com|raw\.githubusercontent\.com/i.test(page)) fail('App page links to GitHub')
+  if (/http:\/\//i.test(page)) fail('App page contains an insecure link')
+  const readOrFail = async (file, message) => {
+    try {
+      return await readFile(file)
+    } catch (error) {
+      if (error?.code === 'ENOENT') fail(message)
+      throw error
+    }
+  }
+  // 下载页始终展示三张真实截图；缺图或占位图会阻止发布，即使尚未有 release。
+  for (const file of APP_SCREENSHOT_FILES) {
+    const bytes = await readOrFail(join(root, 'assets/app', file), `App screenshot ${file} is missing`)
+    if (bytes.length < 4096) fail(`App screenshot ${file} is too small to be a real capture`)
+    if (bytes.toString('ascii', 0, 4) !== 'RIFF' || bytes.toString('ascii', 8, 12) !== 'WEBP') fail(`App screenshot ${file} is not WebP`)
+    if (!page.includes(`app/${file}`)) fail(`App page is missing screenshot ${file}`)
+  }
+  let raw
+  try {
+    raw = JSON.parse(await readFile(join(root, 'app/latest.json'), 'utf8'))
+  } catch (error) {
+    if (error?.code !== 'ENOENT') fail('App update manifest is not valid JSON')
+    if (page.includes('/app/releases/')) fail('App page offers a download without a published release')
+    return
+  }
+  const release = releaseObject(raw)
+  if (!release) fail('App update manifest failed validation')
+  const apk = await readOrFail(join(root, release.apkPath), 'App update manifest points at a missing APK')
+  if (apk.length !== release.size) fail('App APK size does not match its manifest')
+  if (createHash('sha256').update(apk).digest('hex') !== release.sha256) fail('App APK checksum does not match its manifest')
+  assertApkMatchesRelease(join(root, release.apkPath), release)
+  const codes = (await readdir(join(root, 'app/releases')).catch(() => [])).filter((name) => /^\d+$/.test(name))
+  if (codes.length === 0) fail('App release directory is empty')
+  if (codes.length > 3) fail('App release directory keeps more than three versions')
+  if (Math.max(...codes.map(Number)) !== release.versionCode) fail('App latest manifest is not the newest retained release')
+  for (const code of codes) {
+    const manifest = await readOrFail(join(root, 'app/releases', code, 'release.json'), `App release ${code} is missing its manifest`)
+    let kept = null
+    try {
+      kept = releaseObject(JSON.parse(manifest.toString('utf8')))
+    } catch {
+      kept = null
+    }
+    if (!kept || String(kept.versionCode) !== code) fail(`App release ${code} does not match its manifest`)
+    const bytes = await readOrFail(join(root, kept.apkPath), `App release ${code} is missing its APK`)
+    if (bytes.length !== kept.size) fail(`App release ${code} APK size does not match its manifest`)
+    if (createHash('sha256').update(bytes).digest('hex') !== kept.sha256) fail(`App release ${code} APK checksum does not match its manifest`)
+    assertApkMatchesRelease(join(root, kept.apkPath), kept)
+  }
+  if (JSON.stringify(JSON.parse((await readOrFail(join(root, 'app/latest.json'), 'App latest manifest is missing')).toString('utf8'))) !== JSON.stringify(release)) fail('App latest manifest is inconsistent')
+  if (!page.includes(release.versionName)) fail('App page is missing the current version')
+  if (!page.includes(String(release.size))) fail('App page is missing the APK size')
+  if (!page.includes(`href="${release.apkPath}"`)) fail('App page download link does not match the manifest')
 }
 
 try {
@@ -122,6 +189,7 @@ try {
     const html = await readFile(file, 'utf8')
     if (/https?:\/\/(?:ok\.166\.net|raw\.githubusercontent\.com)/i.test(html) || /(?:authorization|admin_secret|access_token)\s*[:=]/i.test(html)) fail('Published HTML contains a private source or credential')
   }
+  await checkAppRelease()
   if (process.argv.includes('--preview')) {
     const bytes = await readFile(join(root, 'preview/daily.webp'))
     if (bytes.toString('ascii', 0, 4) !== 'RIFF' || bytes.toString('ascii', 8, 12) !== 'WEBP') fail('README preview is missing or is not WebP')

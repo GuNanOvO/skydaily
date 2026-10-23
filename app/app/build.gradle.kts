@@ -12,8 +12,25 @@ android {
         applicationId = "com.nankki.skydaily"
         minSdk = 28
         targetSdk = 32
-        versionCode = 1
-        versionName = "0.1.0"
+        // 版本号由发布流程通过 -P 传入；本地构建沿用首个版本。
+        versionCode = providers.gradleProperty("appVersionCode").map(String::toInt).getOrElse(1)
+        versionName = providers.gradleProperty("appVersionName").getOrElse("0.1.0")
+    }
+
+    // 四项签名参数齐全时使用正式签名，否则本地构建继续沿用 debug 签名。
+    val envKeystorePath = System.getenv("ANDROID_KEYSTORE_PATH")
+    val envKeystorePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
+    val envKeyAlias = System.getenv("ANDROID_KEY_ALIAS")
+    val envKeyPassword = System.getenv("ANDROID_KEY_PASSWORD")
+    val releaseSigning = if (!envKeystorePath.isNullOrBlank() && !envKeystorePassword.isNullOrBlank() && !envKeyAlias.isNullOrBlank() && !envKeyPassword.isNullOrBlank()) {
+        signingConfigs.create("release") {
+            storeFile = file(envKeystorePath)
+            storePassword = envKeystorePassword
+            keyAlias = envKeyAlias
+            keyPassword = envKeyPassword
+        }
+    } else {
+        null
     }
 
     buildTypes {
@@ -24,8 +41,8 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro",
             )
-            // 本地侧载产物：沿用 debug 签名，避免额外分发密钥。
-            signingConfig = signingConfigs.getByName("debug")
+            // 本地侧载产物：没有签名密钥时沿用 debug 签名，避免额外分发密钥。
+            signingConfig = releaseSigning ?: signingConfigs.getByName("debug")
         }
     }
 
