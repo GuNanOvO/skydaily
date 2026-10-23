@@ -7,12 +7,16 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.PixelFormat
+import android.hardware.display.DisplayManager
 import android.net.Uri
+import android.os.Build
 import android.os.Handler
 import android.os.IBinder
 import android.os.Looper
 import android.provider.Settings
+import android.view.Display
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
@@ -26,6 +30,7 @@ import com.nankki.skydaily.AppConfig
 import com.nankki.skydaily.MainActivity
 import com.nankki.skydaily.R
 import com.nankki.skydaily.core.AndroidKeyValueStore
+import com.nankki.skydaily.core.BallArea
 import com.nankki.skydaily.core.BallGeometry
 import com.nankki.skydaily.core.BeijingClock
 import com.nankki.skydaily.core.CheckState
@@ -62,14 +67,26 @@ class OverlayService : Service() {
     private lateinit var repository: JournalRepository
     private lateinit var checks: CheckState
     private lateinit var panel: PanelWindow
+    private var displayManager: DisplayManager? = null
     private var ballView: ComposeView? = null
     private var ballHost: WindowComposeHost? = null
     private var ballParams: WindowManager.LayoutParams? = null
-    private var lastTouch = 0L
     private var destroying = false
 
-    private val sizePx: Int by lazy {
-        (BALL_DP * resources.displayMetrics.density).toInt()
+    private val idleRunnable = Runnable {
+        if (!destroying) alphaState.floatValue = IDLE_ALPHA
+    }
+
+    private val fitRunnable = Runnable { fitBallToDisplay() }
+
+    private val displayListener = object : DisplayManager.DisplayListener {
+        override fun onDisplayAdded(displayId: Int) = Unit
+
+        override fun onDisplayRemoved(displayId: Int) = Unit
+
+        override fun onDisplayChanged(displayId: Int) {
+            if (displayId == Display.DEFAULT_DISPLAY) requestFitBall()
+        }
     }
 
     override fun onBind(intent: Intent?): IBinder? = null
@@ -89,6 +106,9 @@ class OverlayService : Service() {
         repository = JournalRepository(OkHttpTransport(AppConfig.SITE_URL), DirectoryDiskStore(this))
         checks = CheckState(store)
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
+        displayManager = (getSystemService(DISPLAY_SERVICE) as DisplayManager).also {
+            it.registerDisplayListener(displayListener, handler)
+        }
         panel = PanelWindow(
             service = this,
             modeState = modeState,
@@ -100,9 +120,7 @@ class OverlayService : Service() {
             },
         )
         showBall()
-        lastTouch = System.currentTimeMillis()
         refreshProgress()
-        handler.post(ticker)
         OverlayState.running = true
     }
 
@@ -119,21 +137,21 @@ class OverlayService : Service() {
                 )
             }
         }
-        val metrics = resources.displayMetrics
-        val defaultX = metrics.widthPixels - sizePx - dp(10)
-        val defaultY = (metrics.heightPixels * 0.38f).toInt()
-        val (snappedX, snappedY) = BallGeometry.snap(
+        val size = ballSizePx()
+        val area = displayArea()
+        val defaultX = area.right - size - dp(10)
+        val defaultY = area.top + (area.height * 0.38f).toInt()
+        val (snappedX, snappedY) = BallGeometry.snapInArea(
             x = preferences.x ?: defaultX,
             y = preferences.y ?: defaultY,
-            screenWidth = metrics.widthPixels,
-            viewWidth = sizePx,
+            area = area,
+            viewWidth = size,
+            viewHeight = size,
             margin = dp(2),
-            screenHeight = metrics.heightPixels,
-            viewHeight = sizePx,
         )
         val params = WindowManager.LayoutParams(
-            sizePx,
-            sizePx,
+            size,
+            size,
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
@@ -152,7 +170,7 @@ class OverlayService : Service() {
         view.setOnTouchListener { _, event ->
             when (event.actionMasked) {
                 MotionEvent.ACTION_DOWN -> {
-                    lastTouch = System.currentTimeMillis()
+                    noteInteraction()
                     pressedState.value = true
                     downRawX = event.rawX
                     downRawY = event.rawY
@@ -161,7 +179,7 @@ class OverlayService : Service() {
                 }
 
                 MotionEvent.ACTION_MOVE -> {
-                    lastTouch = System.currentTimeMillis()
+                    noteInteraction()
                     val dx = event.rawX - downRawX
                     val dy = event.rawY - downRawY
                     if (!dragging && (abs(dx) > touchSlop || abs(dy) > touchSlop)) {
@@ -178,7 +196,7 @@ class OverlayService : Service() {
                 }
 
                 MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-                    lastTouch = System.currentTimeMillis()
+                    noteInteraction()
                     pressedState.value = false
                     if (dragging) {
                         snapAndPersist(params)
@@ -202,9 +220,11 @@ class OverlayService : Service() {
         ballView = view
         ballHost = host
         ballParams = params
+        noteInteraction()
     }
 
     private fun hideBall() {
+        handler.removeCallbacks(idleRunnable)
         ballView?.let { runCatching { windowManager.removeView(it) } }
         ballView = null
         ballHost?.destroy()
@@ -213,21 +233,87 @@ class OverlayService : Service() {
     }
 
     private fun snapAndPersist(params: WindowManager.LayoutParams) {
-        val metrics = resources.displayMetrics
-        val (x, y) = BallGeometry.snap(
+        val size = ballSizePx()
+        val (x, y) = BallGeometry.snapInArea(
             x = params.x,
             y = params.y,
-            screenWidth = metrics.widthPixels,
-            viewWidth = sizePx,
+            area = displayArea(),
+            viewWidth = size,
+            viewHeight = size,
             margin = dp(2),
-            screenHeight = metrics.heightPixels,
-            viewHeight = sizePx,
         )
         params.x = x
         params.y = y
         ballView?.let { windowManager.updateViewLayout(it, params) }
         preferences.x = x
         preferences.y = y
+    }
+
+    /** 触摸或拖拽后恢复不透明，并把闲置变淡重新计时；只在到期时执行一次。 */
+    private fun noteInteraction() {
+        alphaState.floatValue = 1f
+        handler.removeCallbacks(idleRunnable)
+        handler.postDelayed(idleRunnable, IDLE_AFTER_MS)
+    }
+
+    private fun ballSizePx(): Int = (BALL_DP * resources.displayMetrics.density).toInt()
+
+    /**
+     * 安全显示区域。Android 11+ 使用窗口指标扣除系统栏与刘海；
+     * Android 9/10 没有该 API，退回整个显示区域（旧行为），不会崩溃。
+     */
+    private fun displayArea(): BallArea {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            val area = runCatching {
+                val metrics = windowManager.currentWindowMetrics
+                val insets = metrics.windowInsets.getInsetsIgnoringVisibility(
+                    android.view.WindowInsets.Type.systemBars() or
+                        android.view.WindowInsets.Type.displayCutout(),
+                )
+                BallArea(
+                    left = insets.left,
+                    top = insets.top,
+                    right = metrics.bounds.width() - insets.right,
+                    bottom = metrics.bounds.height() - insets.bottom,
+                )
+            }.getOrNull()
+            if (area != null) return area
+        }
+        val metrics = resources.displayMetrics
+        return BallArea(0, 0, metrics.widthPixels, metrics.heightPixels)
+    }
+
+    private fun requestFitBall() {
+        handler.removeCallbacks(fitRunnable)
+        handler.post(fitRunnable)
+    }
+
+    /** 旋转、折叠或显示参数变化后，按新尺寸/安全区重新贴合，并写回位置。 */
+    private fun fitBallToDisplay() {
+        if (destroying) return
+        val params = ballParams ?: return
+        val view = ballView ?: return
+        val size = ballSizePx()
+        params.width = size
+        params.height = size
+        val (x, y) = BallGeometry.snapInArea(
+            x = params.x,
+            y = params.y,
+            area = displayArea(),
+            viewWidth = size,
+            viewHeight = size,
+            margin = dp(2),
+        )
+        params.x = x
+        params.y = y
+        runCatching { windowManager.updateViewLayout(view, params) }
+        preferences.x = x
+        preferences.y = y
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        requestFitBall()
     }
 
     private fun openPanel() {
@@ -248,13 +334,6 @@ class OverlayService : Service() {
                 done.toFloat() / total
             }
             progressState.floatValue = BallGeometry.clamp01(progress)
-        }
-    }
-
-    private val ticker = object : Runnable {
-        override fun run() {
-            alphaState.floatValue = BallGeometry.idleAlpha(System.currentTimeMillis(), lastTouch)
-            handler.postDelayed(this, TICK_MS)
         }
     }
 
@@ -292,7 +371,10 @@ class OverlayService : Service() {
 
     override fun onDestroy() {
         destroying = true
-        handler.removeCallbacks(ticker)
+        handler.removeCallbacks(idleRunnable)
+        handler.removeCallbacks(fitRunnable)
+        runCatching { displayManager?.unregisterDisplayListener(displayListener) }
+        displayManager = null
         if (::panel.isInitialized) panel.hide()
         hideBall()
         scope.cancel()
@@ -306,7 +388,8 @@ class OverlayService : Service() {
         private const val CHANNEL_ID = "skydaily-overlay"
         private const val NOTIFICATION_ID = 1001
         private const val BALL_DP = 60
-        private const val TICK_MS = 1_000L
+        private const val IDLE_AFTER_MS = 4_000L
+        private const val IDLE_ALPHA = 0.55f
 
         fun start(context: Context) {
             context.startForegroundService(Intent(context, OverlayService::class.java))

@@ -9,9 +9,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.selection.selectable
@@ -62,10 +62,11 @@ fun PaperBottomNav(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(60.dp)
+                .heightIn(min = 60.dp)
                 .selectableGroup()
                 .padding(horizontal = 8.dp, vertical = 5.dp),
             horizontalArrangement = Arrangement.spacedBy(6.dp),
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             items.forEachIndexed { index, item ->
                 val active = index == selected
@@ -82,7 +83,7 @@ fun PaperBottomNav(
                 Box(
                     modifier = Modifier
                         .weight(1f)
-                        .fillMaxHeight()
+                        .heightIn(min = 50.dp)
                         .graphicsLayer { scaleX = scale; scaleY = scale }
                         .hardShadow(if (active) palette.shadow else Color.Transparent, dx = 1.dp, dy = 2.dp)
                         .background(background)

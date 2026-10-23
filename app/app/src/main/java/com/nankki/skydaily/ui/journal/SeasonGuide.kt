@@ -1,6 +1,9 @@
 package com.nankki.skydaily.ui.journal
 
 import android.content.Context
+import android.view.ViewGroup
+import android.webkit.WebView
+import android.widget.FrameLayout
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -155,11 +158,32 @@ private fun GuideWebView(
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     AndroidView(
-                        factory = { context -> session.acquire(entry, context) },
+                        factory = { context ->
+                            // 用真实容器承接 WebView：系统 WebView 缺失/被停用时取得 null，
+                            // 容器不挂任何伪造内容；状态转成原生失败卡片后整块画布会被移除。
+                            val container = FrameLayout(context)
+                            val webView = session.acquire(entry, context)
+                            if (webView != null) {
+                                container.tag = webView
+                                container.addView(
+                                    webView,
+                                    FrameLayout.LayoutParams(
+                                        ViewGroup.LayoutParams.MATCH_PARENT,
+                                        ViewGroup.LayoutParams.MATCH_PARENT,
+                                    ),
+                                )
+                            }
+                            container
+                        },
                         modifier = Modifier
                             .fillMaxSize()
                             .background(Color.White),
-                        onRelease = { view -> session.release(entry, view) },
+                        onRelease = { container ->
+                            val webView = container.tag as? WebView
+                            container.tag = null
+                            container.removeAllViews()
+                            if (webView != null) session.release(entry, webView)
+                        },
                     )
                 }
             }

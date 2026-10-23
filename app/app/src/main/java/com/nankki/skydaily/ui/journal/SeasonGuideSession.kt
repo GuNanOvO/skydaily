@@ -87,14 +87,17 @@ class SeasonGuideSession internal constructor(context: Context) {
             existing.evictAfterRelease = false
             return existing
         }
-        return GuideEntry(url, policy).also { entries[url] = it }
+        val initialStatus =
+            if (providerAvailable()) GuideStatus.Loading else GuideStatus.Failed(WEBVIEW_UNAVAILABLE_MESSAGE)
+        return GuideEntry(url, policy, initialStatus).also { entries[url] = it }
     }
 
     /**
      * 取得该 entry 的 WebView。新页面才 loadUrl；已有视图直接复用并通过
      * onResume 恢复，保证底部 Tab 往返不会重新加载官方 H5。
+     * 系统 WebView 缺失、被停用或初始化失败时返回 null，由界面显示原生失败卡片。
      */
-    internal fun acquire(entry: GuideEntry, context: Context): WebView {
+    internal fun acquire(entry: GuideEntry, context: Context): WebView? {
         check(!disposed) { "SeasonGuideSession already disposed" }
         val cached = entry.view
         if (cached == null || entry.retryRequested || entry.status is GuideStatus.Failed) {
@@ -103,6 +106,10 @@ class SeasonGuideSession internal constructor(context: Context) {
             entry.status = GuideStatus.Loading
             entry.autoMapAttempts = 0
             val created = createGuideWebView(context, entry)
+            if (created == null) {
+                reportUnavailable(entry)
+                return null
+            }
             entry.view = created
             entry.hostCount = 1
             entry.destroyed = false
@@ -374,45 +381,72 @@ class SeasonGuideSession internal constructor(context: Context) {
         }
     }
 
-    @Suppress("DEPRECATION")
-    private fun createGuideWebView(context: Context, entry: GuideEntry): WebView {
-        val view = WebView(context)
-        // WebView 默认 wrap_content 会让滚动纸面内的 H5 视口高度为 0。
-        view.layoutParams = ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT,
-        )
-        view.setBackgroundColor(android.graphics.Color.WHITE)
-        view.isVerticalScrollBarEnabled = true
-        view.settings.apply {
-            javaScriptEnabled = true
-            // 官方 H5 依赖 localStorage；不启用数据库、文件或内容访问。
-            domStorageEnabled = true
-            databaseEnabled = false
-            allowFileAccess = false
-            allowContentAccess = false
-            allowFileAccessFromFileURLs = false
-            allowUniversalAccessFromFileURLs = false
-            javaScriptCanOpenWindowsAutomatically = false
-            setSupportMultipleWindows(false)
-            mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
-            mediaPlaybackRequiresUserGesture = true
-            setGeolocationEnabled(false)
-            setSaveFormData(false)
-            builtInZoomControls = false
-            displayZoomControls = false
-            // 显式 refresh 也走服务器校验；不绕过 no-cache / ETag。
-            cacheMode = WebSettings.LOAD_DEFAULT
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                // 保留官方原始配色，不跟随 App 深色主题。
-                setAlgorithmicDarkeningAllowed(false)
-            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                setForceDark(WebSettings.FORCE_DARK_OFF)
+    private fun reportUnavailable(entry: GuideEntry) {
+        if (disposed) return
+        // 视图工厂运行在应用阶段，延迟到下一次消息循环再改状态，避免组合期间写状态。
+        handler.post {
+            if (!disposed && entry.view == null && entry.status !is GuideStatus.Failed) {
+                entry.status = GuideStatus.Failed(WEBVIEW_INIT_FAILED_MESSAGE)
+                cancelAutoMap(entry)
             }
         }
-        view.webChromeClient = GuideChromeClient()
-        view.webViewClient = GuideWebClient(this, entry)
-        return view
+    }
+
+    /**
+     * 系统 WebView 提供方存在且未被停用。提供方查询失败按不可用处理；
+     * 包启用状态无法查询时仍交给构造检查，避免正常 ROM 被误判。
+     */
+    private fun providerAvailable(): Boolean {
+        val packageInfo = runCatching { WebView.getCurrentWebViewPackage() }.getOrNull() ?: return false
+        return runCatching {
+            appContext.packageManager.getApplicationInfo(packageInfo.packageName, 0).enabled
+        }.getOrDefault(true)
+    }
+
+    @Suppress("DEPRECATION")
+    private fun createGuideWebView(context: Context, entry: GuideEntry): WebView? {
+        val view = runCatching { WebView(context) }.getOrNull() ?: return null
+        return runCatching {
+            // WebView 默认 wrap_content 会让滚动纸面内的 H5 视口高度为 0。
+            view.layoutParams = ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT,
+            )
+            view.setBackgroundColor(android.graphics.Color.WHITE)
+            view.isVerticalScrollBarEnabled = true
+            view.settings.apply {
+                javaScriptEnabled = true
+                // 官方 H5 依赖 localStorage；不启用数据库、文件或内容访问。
+                domStorageEnabled = true
+                databaseEnabled = false
+                allowFileAccess = false
+                allowContentAccess = false
+                allowFileAccessFromFileURLs = false
+                allowUniversalAccessFromFileURLs = false
+                javaScriptCanOpenWindowsAutomatically = false
+                setSupportMultipleWindows(false)
+                mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
+                mediaPlaybackRequiresUserGesture = true
+                setGeolocationEnabled(false)
+                setSaveFormData(false)
+                builtInZoomControls = false
+                displayZoomControls = false
+                // 显式 refresh 也走服务器校验；不绕过 no-cache / ETag。
+                cacheMode = WebSettings.LOAD_DEFAULT
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    // 保留官方原始配色，不跟随 App 深色主题。
+                    setAlgorithmicDarkeningAllowed(false)
+                } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    setForceDark(WebSettings.FORCE_DARK_OFF)
+                }
+            }
+            view.webChromeClient = GuideChromeClient()
+            view.webViewClient = GuideWebClient(this, entry)
+            view
+        }.getOrElse {
+            runCatching { view.destroy() }
+            null
+        }
     }
 
     private fun isMainThread(): Boolean = Looper.myLooper() == Looper.getMainLooper()
@@ -470,6 +504,10 @@ class SeasonGuideSession internal constructor(context: Context) {
         const val AUTO_MAP_INITIAL_DELAY_MS = 120L
         const val AUTO_MAP_RETRY_DELAY_MS = 250L
         const val AUTO_MAP_MAX_ATTEMPTS = 10
+        const val WEBVIEW_UNAVAILABLE_MESSAGE =
+            "系统 WebView 不可用，请安装或启用 Android System WebView 后重试。"
+        const val WEBVIEW_INIT_FAILED_MESSAGE =
+            "系统 WebView 初始化失败，请检查 Android System WebView 后重试。"
     }
 }
 
@@ -477,8 +515,9 @@ class SeasonGuideSession internal constructor(context: Context) {
 internal class GuideEntry internal constructor(
     val url: String,
     val policy: SeasonGuidePolicy,
+    initialStatus: GuideStatus = GuideStatus.Loading,
 ) {
-    var status by mutableStateOf<GuideStatus>(GuideStatus.Loading)
+    var status by mutableStateOf<GuideStatus>(initialStatus)
     var view: WebView? = null
     var hostCount: Int = 0
     val attached: Boolean get() = hostCount > 0
