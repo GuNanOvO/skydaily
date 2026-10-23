@@ -87,14 +87,10 @@ internal fun MealReminderSettings(manager: MealReminderManager) {
         else problem = "请输入 0–60 的整数"
     }
     Column {
-        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Text("每天提醒", color = palette.ink, fontSize = 14.sp, lineHeight = 24.sp, modifier = Modifier.weight(1f))
-            PaperButton(if (preferences.enabled) "关闭" else "开启", onClick = {
-                if (!preferences.enabled && preferences.hours.isEmpty()) problem = "请先选择要提醒的饭点"
-                else persist(preferences.copy(enabled = !preferences.enabled))
-            })
+        val toggleEnabled: () -> Unit = {
+            if (!preferences.enabled && preferences.hours.isEmpty()) problem = "请先选择要提醒的饭点"
+            else persist(preferences.copy(enabled = !preferences.enabled))
         }
-        Spacer(Modifier.height(8.dp))
         val toggleHour: (Int) -> Unit = { hour ->
             val hours = if (hour in preferences.hours) preferences.hours - hour else preferences.hours + hour
             persist(preferences.copy(hours = hours, enabled = preferences.enabled && hours.isNotEmpty()))
@@ -105,6 +101,9 @@ internal fun MealReminderSettings(manager: MealReminderManager) {
             selectedHours = preferences.hours,
             palette = palette,
             onToggle = toggleHour,
+            trailing = {
+                EnableChip(enabled = preferences.enabled, palette = palette, onClick = toggleEnabled)
+            },
         )
         Spacer(Modifier.height(8.dp))
         HourRow(
@@ -172,6 +171,7 @@ private fun HourRow(
     selectedHours: Set<Int>,
     palette: PaperPalette,
     onToggle: (Int) -> Unit,
+    trailing: (@Composable () -> Unit)? = null,
 ) {
     Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
         for (hour in hours) {
@@ -183,7 +183,32 @@ private fun HourRow(
                 modifier = Modifier.weight(1f),
             )
         }
-        repeat((slots - hours.size).coerceAtLeast(0)) { Spacer(Modifier.weight(1f)) }
+        if (trailing != null) Box(Modifier.weight(1f)) { trailing() }
+        val rest = slots - hours.size - if (trailing != null) 1 else 0
+        repeat(rest.coerceAtLeast(0)) { Spacer(Modifier.weight(1f)) }
+    }
+}
+
+/** 与时间格同宽的提醒开关；放在第一行空出的列里。 */
+@Composable
+private fun EnableChip(enabled: Boolean, palette: PaperPalette, onClick: () -> Unit) {
+    val tone = if (enabled) palette.tabColors[1] else palette.paper
+    Box(
+        Modifier.fillMaxWidth().heightIn(min = 44.dp)
+            .background(tone, RoundedCornerShape(2.dp))
+            .border(1.dp, if (enabled) palette.noteAccents[1] else palette.outline, RoundedCornerShape(2.dp))
+            .toggleable(value = enabled, role = Role.Switch, onValueChange = { onClick() })
+            .padding(horizontal = 6.dp, vertical = 8.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = if (enabled) "关闭" else "开启",
+            color = palette.tabInk,
+            fontSize = 13.sp,
+            lineHeight = 24.sp,
+            fontWeight = FontWeight.Medium,
+            maxLines = 1,
+        )
     }
 }
 
