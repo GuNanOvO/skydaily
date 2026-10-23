@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
@@ -32,6 +33,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
@@ -114,6 +116,7 @@ internal fun MealReminderSettings(manager: MealReminderManager) {
             onToggle = toggleHour,
         )
         Spacer(Modifier.height(12.dp))
+        val controlHeight = with(LocalDensity.current) { maxOf(44.dp, 24.sp.toDp() + 12.dp) }
         Text("提前提醒（分钟）", color = palette.muted, fontSize = 11.sp, lineHeight = 20.sp)
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
             BasicTextField(
@@ -124,16 +127,27 @@ internal fun MealReminderSettings(manager: MealReminderManager) {
                         problem = null
                     }
                 },
-                modifier = Modifier.weight(1f).heightIn(min = 44.dp)
+                modifier = Modifier.weight(1f).height(controlHeight)
+                    .padding(vertical = 6.dp)
                     .background(palette.paper, RoundedCornerShape(2.dp))
-                    .border(1.dp, palette.outline, RoundedCornerShape(2.dp))
-                    .padding(horizontal = 12.dp, vertical = 10.dp),
+                    .border(1.dp, palette.outline, RoundedCornerShape(2.dp)),
                 textStyle = TextStyle(color = palette.ink, fontSize = 14.sp, lineHeight = 24.sp),
                 singleLine = true,
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number, imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = { saveLead() }),
+                decorationBox = { innerTextField ->
+                    Box(
+                        modifier = Modifier.fillMaxSize().padding(horizontal = 12.dp),
+                        contentAlignment = Alignment.CenterStart,
+                    ) { innerTextField() }
+                },
             )
-            PaperButton("保存", onClick = saveLead, enabled = validLead && lead != preferences.leadMinutes)
+            PaperButton(
+                text = "保存",
+                onClick = saveLead,
+                enabled = validLead && lead != preferences.leadMinutes,
+                modifier = Modifier.height(controlHeight),
+            )
         }
         Spacer(Modifier.height(8.dp))
         val status = problem ?: if (!validLead) "请输入 0–60 的整数" else when (readiness) {
