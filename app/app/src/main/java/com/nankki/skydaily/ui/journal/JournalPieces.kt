@@ -122,7 +122,9 @@ fun PhotoNote(
 ) {
     val palette = LocalPaperPalette.current
     val first = images.firstOrNull().orEmpty()
-    val url = if (first.isBlank()) "" else Media.absolute(baseUrl, Media.thumb(first))
+    val thumbUrl = if (first.isBlank()) "" else Media.absolute(baseUrl, Media.thumb(first))
+    val originalUrl = if (first.isBlank()) "" else Media.absolute(baseUrl, first)
+    val showOriginal = rememberOriginalImageAllowed(thumbUrl, originalUrl)
     var ratio by remember(first) { mutableFloatStateOf(0f) }
     val imageModifier = if (ratio > 0f) {
         Modifier.fillMaxWidth().aspectRatio(ratio)
@@ -156,11 +158,18 @@ fun PhotoNote(
                 contentAlignment = Alignment.Center,
             ) {
                 RemoteImage(
-                    url = url,
+                    url = thumbUrl,
                     modifier = imageModifier,
                     contentScale = ContentScale.FillWidth,
                     onRatio = { ratio = it },
                 )
+                if (showOriginal) {
+                    UpgradedImage(
+                        url = originalUrl,
+                        modifier = imageModifier,
+                        contentScale = ContentScale.FillWidth,
+                    )
+                }
             }
             Row(
                 modifier = Modifier.fillMaxWidth().padding(top = 4.dp, start = 4.dp, end = 4.dp),
