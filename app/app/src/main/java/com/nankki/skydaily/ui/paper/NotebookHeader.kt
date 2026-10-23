@@ -77,12 +77,15 @@ fun NotebookHeader(
                         )
                     }
                 }
-                FlowRow(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                FlowRow(
+                    modifier = Modifier.heightIn(min = with(LocalDensity.current) { 32.sp.toDp() }),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
                     subtitle?.let {
-                        Text(it, color = palette.muted, fontSize = 12.sp, lineHeight = 16.sp)
+                        Text(it, color = palette.muted, fontSize = 12.sp, lineHeight = 32.sp)
                     }
                     updatedAt?.let {
-                        Text(it, color = palette.muted, fontSize = 11.sp, lineHeight = 16.sp)
+                        Text(it, color = palette.muted, fontSize = 11.sp, lineHeight = 32.sp)
                     }
                 }
                 onRefresh?.let {

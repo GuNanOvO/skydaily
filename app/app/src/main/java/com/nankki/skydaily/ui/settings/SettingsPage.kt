@@ -294,7 +294,7 @@ private fun SettingsSection(
     val palette = LocalPaperPalette.current
     Box(Modifier.fillMaxWidth()) {
         Column(Modifier.fillMaxWidth()) {
-            Spacer(Modifier.height(with(LocalDensity.current) { 32.sp.toDp() }))
+            Spacer(Modifier.height(12.dp))
             PaperBlock {
                 Box(Modifier.fillMaxWidth()) {
                     Column(
