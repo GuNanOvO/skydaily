@@ -62,8 +62,8 @@ object JournalFormat {
     }
 
     fun imageCountLabel(count: Int): String = when {
-        count <= 1 -> "查看大图 ↗"
-        else -> "查看 $count 张图 ↗"
+        count <= 1 -> "查看大图"
+        else -> "查看 $count 张图"
     }
 
     fun countLabel(count: Int): String = if (count > 0) " $count" else ""

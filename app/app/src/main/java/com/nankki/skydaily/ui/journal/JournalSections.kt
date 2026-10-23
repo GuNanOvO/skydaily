@@ -10,8 +10,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.ui.res.painterResource
+import com.nankki.skydaily.R
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -66,7 +70,16 @@ fun NoticeCard(notice: NoticeVersion, onOpen: () -> Unit, modifier: Modifier = M
                 modifier = Modifier.padding(top = 4.dp),
             )
             PaperDivider(Modifier.padding(top = 10.dp, bottom = 6.dp))
-            Text("查看全文 ↗", color = palette.muted, fontSize = 11.sp, lineHeight = 22.sp)
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text("查看全文", color = palette.muted, fontSize = 11.sp, lineHeight = 22.sp)
+                Spacer(Modifier.width(4.dp))
+                Icon(
+                    painter = painterResource(R.drawable.ic_arrow_up_right),
+                    contentDescription = null,
+                    tint = palette.muted,
+                    modifier = Modifier.size(12.dp),
+                )
+            }
         }
         Tape(Modifier.align(Alignment.TopCenter), width = 58.dp, height = 16.dp, rotation = 3f)
     }

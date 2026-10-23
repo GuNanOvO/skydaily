@@ -14,13 +14,16 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import com.nankki.skydaily.R
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +32,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -97,6 +101,7 @@ internal fun MealReminderSettings(manager: MealReminderManager) {
         }
         HourRow(
             hours = MealSchedule.hours.filter { it <= 12 },
+            slots = 4,
             selectedHours = preferences.hours,
             palette = palette,
             onToggle = toggleHour,
@@ -104,6 +109,7 @@ internal fun MealReminderSettings(manager: MealReminderManager) {
         Spacer(Modifier.height(8.dp))
         HourRow(
             hours = MealSchedule.hours.filter { it > 12 },
+            slots = 4,
             selectedHours = preferences.hours,
             palette = palette,
             onToggle = toggleHour,
@@ -157,11 +163,12 @@ internal fun MealReminderSettings(manager: MealReminderManager) {
 }
 
 /**
- * 一行饭点：行内按钮均分整行宽度，上午三个、下午四个各自占满一行。
+ * 一行饭点：按固定列数均分宽度，两行同名按钮同宽；上午只有三个时右侧留空。
  */
 @Composable
 private fun HourRow(
     hours: List<Int>,
+    slots: Int,
     selectedHours: Set<Int>,
     palette: PaperPalette,
     onToggle: (Int) -> Unit,
@@ -176,6 +183,7 @@ private fun HourRow(
                 modifier = Modifier.weight(1f),
             )
         }
+        repeat((slots - hours.size).coerceAtLeast(0)) { Spacer(Modifier.weight(1f)) }
     }
 }
 
@@ -196,13 +204,24 @@ private fun HourChip(
             .padding(horizontal = 6.dp, vertical = 8.dp),
         contentAlignment = Alignment.Center,
     ) {
-        Text(
-            text = if (selected) "✓ ${mealHourLabel(hour)}" else mealHourLabel(hour),
-            color = if (selected) palette.tabInk else palette.ink,
-            fontSize = 13.sp,
-            lineHeight = 24.sp,
-            fontWeight = if (selected) FontWeight.Medium else FontWeight.Normal,
-            maxLines = 1,
-        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            if (selected) {
+                Icon(
+                    painter = painterResource(R.drawable.ic_check),
+                    contentDescription = null,
+                    tint = palette.tabInk,
+                    modifier = Modifier.size(14.dp),
+                )
+                Spacer(Modifier.width(4.dp))
+            }
+            Text(
+                text = mealHourLabel(hour),
+                color = if (selected) palette.tabInk else palette.ink,
+                fontSize = 13.sp,
+                lineHeight = 24.sp,
+                fontWeight = if (selected) FontWeight.Medium else FontWeight.Normal,
+                maxLines = 1,
+            )
+        }
     }
 }

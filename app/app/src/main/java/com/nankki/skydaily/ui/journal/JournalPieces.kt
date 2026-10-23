@@ -22,7 +22,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.ui.res.painterResource
+import com.nankki.skydaily.R
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
@@ -158,6 +161,13 @@ fun PhotoNote(
                     color = palette.muted,
                     fontSize = 11.sp,
                     lineHeight = 20.sp,
+                )
+                Spacer(Modifier.width(4.dp))
+                Icon(
+                    painter = painterResource(R.drawable.ic_arrow_up_right),
+                    contentDescription = null,
+                    tint = palette.muted,
+                    modifier = Modifier.size(12.dp),
                 )
             }
         }
