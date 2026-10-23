@@ -13,21 +13,24 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.compose.LifecycleEventEffect
-import androidx.lifecycle.Lifecycle
 import com.nankki.skydaily.AppConfig
+import com.nankki.skydaily.meals.MealReminderManager
 import com.nankki.skydaily.core.ThemeMode
+import com.nankki.skydaily.core.openWebLink
 import com.nankki.skydaily.ui.history.ArchivePage
 import com.nankki.skydaily.ui.history.HistoryPage
+import com.nankki.skydaily.ui.history.rememberHistoryRepository
 import com.nankki.skydaily.ui.journal.DeferredImages
 import com.nankki.skydaily.ui.journal.InformationPage
 import com.nankki.skydaily.ui.journal.JournalPage
@@ -48,14 +51,24 @@ fun HomeScreen(
     overlayRunning: Boolean,
     onOverlayAction: () -> Unit,
     onClearCache: () -> Unit,
+    mealManager: MealReminderManager,
+    mealRequest: Long,
 ) {
     val palette = LocalPaperPalette.current
-    val uriHandler = LocalUriHandler.current
+    val context = LocalContext.current
     val guideSession = rememberSeasonGuideSession()
+    val historyRepository = rememberHistoryRepository()
     var page by rememberSaveable { mutableIntStateOf(0) }
     var route by rememberSaveable { mutableStateOf<String?>(null) }
+    var consumedMealRequest by rememberSaveable { mutableLongStateOf(0L) }
+    LaunchedEffect(mealRequest) {
+        if (mealRequest > 0 && mealRequest != consumedMealRequest) {
+            route = null
+            page = 1
+            consumedMealRequest = mealRequest
+        }
+    }
     BackHandler(enabled = route != null) { route = null }
-    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { presenter.refresh() }
     DeferredImages(state)
     Box(Modifier.fillMaxSize().background(palette.page), contentAlignment = Alignment.TopCenter) {
         Column(Modifier.widthIn(max = 720.dp).fillMaxSize()) {
@@ -81,9 +94,10 @@ fun HomeScreen(
                             presenter.clearCache()
                             onClearCache()
                         },
-                        onOpenSite = { uriHandler.openUri(AppConfig.SITE_URL) },
-                        onOpenFeedback = { uriHandler.openUri(AppConfig.FEEDBACK_URL) },
+                        onOpenSite = { openWebLink(context, AppConfig.SITE_URL) },
+                        onOpenFeedback = { openWebLink(context, AppConfig.FEEDBACK_URL) },
                         onBack = { route = null },
+                        mealManager = mealManager,
                     )
                     null -> Crossfade(targetState = page, animationSpec = tween(160), label = "main-pages") { target ->
                         when (target) {
@@ -100,8 +114,9 @@ fun HomeScreen(
                                     onThemeModeChange(if (palette.dark) ThemeMode.Light else ThemeMode.Dark)
                                 },
                             )
-                            1 -> InformationPage(state, presenter::refresh)
+                            1 -> InformationPage(state, presenter::refresh, onMealSettings = { route = "settings" })
                             else -> HistoryPage(
+                                repository = historyRepository,
                                 onOpenDate = { route = it },
                                 onSettings = { route = "settings" },
                                 onRefresh = presenter::refresh,
@@ -111,6 +126,7 @@ fun HomeScreen(
                         }
                     }
                     else -> ArchivePage(
+                        repository = historyRepository,
                         date = destination,
                         todayState = state,
                         onToggleTask = presenter::toggle,

@@ -1,6 +1,10 @@
 package com.nankki.skydaily
 
 import android.app.Activity
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -17,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -30,9 +35,10 @@ import androidx.lifecycle.Lifecycle
 import coil3.SingletonImageLoader
 import com.nankki.skydaily.core.AndroidKeyValueStore
 import com.nankki.skydaily.core.ThemePreference
-import com.nankki.skydaily.core.ThemeResolver
 import com.nankki.skydaily.overlay.OverlayService
 import com.nankki.skydaily.overlay.OverlayState
+import com.nankki.skydaily.meals.MealReminderManager
+import com.nankki.skydaily.ui.settings.openSystemSettings
 import com.nankki.skydaily.ui.home.HomeScreen
 import com.nankki.skydaily.ui.journal.rememberJournalPresenter
 import com.nankki.skydaily.ui.theme.LocalPaperPalette
@@ -42,15 +48,29 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
+    private var mealRequest by mutableLongStateOf(0L)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        mealRequest = mealRequestFrom(intent)
         enableEdgeToEdge()
-        setContent { Root() }
+        setContent { Root(mealRequest) }
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        setIntent(intent)
+        mealRequest = mealRequestFrom(intent)
+    }
+
+    private fun mealRequestFrom(value: Intent?): Long {
+        if (value == null || value.action != MealReminderManager.OPEN_MEALS_ACTION) return 0L
+        return value.getLongExtra(MealReminderManager.EXTRA_MEAL_START, 0L)
     }
 }
 
 @Composable
-private fun Root() {
+private fun Root(mealRequest: Long) {
     val context = LocalContext.current
     val view = LocalView.current
     val preferences = remember { ThemePreference(AndroidKeyValueStore(context)) }
@@ -59,6 +79,7 @@ private fun Root() {
     val presenter = rememberJournalPresenter(context)
     val state = presenter.state
     val scope = rememberCoroutineScope()
+    val mealManager = remember(context.applicationContext) { MealReminderManager(context.applicationContext) }
 
     var overlayGranted by remember {
         mutableStateOf(android.provider.Settings.canDrawOverlays(context))
@@ -70,6 +91,7 @@ private fun Root() {
     }
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
         overlayGranted = android.provider.Settings.canDrawOverlays(context)
+        mealManager.reconcile()
     }
 
     SideEffect {
@@ -91,6 +113,8 @@ private fun Root() {
                 presenter = presenter,
                 state = state,
                 themeMode = mode,
+                mealManager = mealManager,
+                mealRequest = mealRequest,
                 onThemeModeChange = { next ->
                     mode = next
                     preferences.mode = next
@@ -99,7 +123,15 @@ private fun Root() {
                 overlayRunning = OverlayState.running,
                 onOverlayAction = {
                     if (!overlayGranted) {
-                        permissionLauncher.launch(OverlayService.permissionIntent(context))
+                        try {
+                            permissionLauncher.launch(OverlayService.permissionIntent(context))
+                        } catch (error: RuntimeException) {
+                            if (error !is ActivityNotFoundException && error !is SecurityException) throw error
+                            openSystemSettings(
+                                context,
+                                Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:${context.packageName}")),
+                            )
+                        }
                     } else if (OverlayState.running) {
                         OverlayService.stop(context)
                     } else {

@@ -47,12 +47,13 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.nankki.skydaily.core.BeijingClock
+import com.nankki.skydaily.core.openWebLink
 import com.nankki.skydaily.data.Media
 import com.nankki.skydaily.data.NoticeVersion
 import com.nankki.skydaily.data.TaskDetail
@@ -70,7 +71,7 @@ fun GuideSheet(
     onOpenImage: (List<String>, Int) -> Unit,
 ) {
     val palette = LocalPaperPalette.current
-    val uriHandler = LocalUriHandler.current
+    val context = LocalContext.current
     var variantIndex by remember(detail) { mutableIntStateOf(-1) }
     val variant = detail.variants.getOrNull(variantIndex)
     val sections = variant?.sections ?: detail.sections
@@ -188,7 +189,7 @@ fun GuideSheet(
                         links.forEachIndexed { index, link ->
                             PaperButton(
                                 text = if (links.size == 1) "打开相关链接" else "链接 ${index + 1}",
-                                onClick = { uriHandler.openUri(link) },
+                                onClick = { openWebLink(context, link) },
                             )
                         }
                     }

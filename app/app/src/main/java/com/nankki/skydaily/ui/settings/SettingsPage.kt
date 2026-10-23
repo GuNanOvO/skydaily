@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -35,6 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nankki.skydaily.R
 import com.nankki.skydaily.core.BeijingClock
+import com.nankki.skydaily.meals.MealReminderManager
 import com.nankki.skydaily.core.ThemeMode
 import com.nankki.skydaily.ui.journal.JournalUiState
 import com.nankki.skydaily.ui.paper.NotebookHeader
@@ -60,6 +62,7 @@ fun SettingsPage(
     onOpenSite: () -> Unit,
     onOpenFeedback: () -> Unit,
     onBack: () -> Unit,
+    mealManager: MealReminderManager,
     modifier: Modifier = Modifier,
 ) {
     val palette = LocalPaperPalette.current
@@ -92,6 +95,15 @@ fun SettingsPage(
                 fontSize = 11.sp,
                 lineHeight = 18.sp,
             )
+        }
+
+        SettingsSection(
+            title = "饭点提醒",
+            note = "北京时间",
+            tone = palette.tabColors[1],
+            tape = palette.noteTapes[1],
+        ) {
+            MealReminderSettings(mealManager)
         }
 
         SettingsSection(
@@ -213,6 +225,16 @@ fun SettingsPage(
                 lineHeight = 16.sp,
             )
             Spacer(Modifier.height(8.dp))
+            Text(
+                text = "Android 9 及以上 · Kotlin / Jetpack Compose\n" +
+                    "数据来源 · skydaily 静态归档\n" +
+                    "图片缓存 · Coil\n" +
+                    "时间与换天 · 北京时间",
+                color = palette.muted,
+                fontSize = 11.sp,
+                lineHeight = 20.sp,
+            )
+            Spacer(Modifier.height(8.dp))
             PaperDivider()
             Spacer(Modifier.height(8.dp))
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -271,50 +293,62 @@ private fun SettingsSection(
 ) {
     val palette = LocalPaperPalette.current
     Box(Modifier.fillMaxWidth()) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 10.dp)
-                .hardShadow(palette.shadow, dx = 1.dp, dy = 2.dp)
-                .background(palette.photoPaper, RoundedCornerShape(1.dp))
-                .border(1.dp, palette.outline, RoundedCornerShape(1.dp))
-                .padding(12.dp),
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                SectionTag(text = title, tone = tone)
-                Spacer(Modifier.weight(1f))
-                if (!note.isNullOrBlank()) {
-                    Text(
-                        text = note,
-                        color = palette.muted,
-                        fontSize = 10.sp,
-                        lineHeight = 16.sp,
-                        maxLines = 1,
-                        overflow = TextOverflow.Ellipsis,
+        Column(Modifier.fillMaxWidth()) {
+            Spacer(Modifier.height(with(LocalDensity.current) { 32.sp.toDp() }))
+            PaperBlock {
+                Box(Modifier.fillMaxWidth()) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .hardShadow(palette.shadow, dx = 1.dp, dy = 2.dp)
+                            .background(palette.photoPaper, RoundedCornerShape(1.dp))
+                            .border(1.dp, palette.outline, RoundedCornerShape(1.dp))
+                            .padding(horizontal = 16.dp)
+                            .padding(bottom = 12.dp),
+                    ) {
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .heightIn(min = with(LocalDensity.current) { 32.sp.toDp() }),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            SectionTag(
+                                text = title,
+                                tone = tone,
+                                modifier = Modifier.offset(x = (-8).dp),
+                            )
+                            Spacer(Modifier.weight(1f))
+                            if (!note.isNullOrBlank()) {
+                                Text(
+                                    text = note,
+                                    color = palette.muted,
+                                    fontSize = 10.sp,
+                                    lineHeight = 16.sp,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                            }
+                        }
+                        content()
+                    }
+                    Tape(
+                        modifier = Modifier.align(Alignment.TopCenter),
+                        width = 48.dp,
+                        height = 12.dp,
+                        rotation = 3f,
+                        color = tape ?: palette.noteTapes[0],
                     )
                 }
             }
-            Spacer(Modifier.height(10.dp))
-            content()
         }
-        Tape(
-            modifier = Modifier.align(Alignment.TopCenter),
-            width = 48.dp,
-            height = 12.dp,
-            rotation = 3f,
-            color = tape ?: palette.noteTapes[0],
-        )
     }
 }
 
 @Composable
-private fun SectionTag(text: String, tone: Color) {
+private fun SectionTag(text: String, tone: Color, modifier: Modifier = Modifier) {
     val palette = LocalPaperPalette.current
     Box(
-        modifier = Modifier
+        modifier = modifier
             .hardShadow(palette.shadow, dx = 1.dp, dy = 1.dp)
             .background(tone, RoundedCornerShape(1.dp))
             .border(1.dp, palette.outline.copy(alpha = 0.55f), RoundedCornerShape(1.dp))

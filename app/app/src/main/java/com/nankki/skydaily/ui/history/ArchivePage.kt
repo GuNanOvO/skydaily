@@ -12,20 +12,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import com.nankki.skydaily.data.Envelope
 import com.nankki.skydaily.data.HistoryRecordLoad
+import com.nankki.skydaily.data.HistoryRepository
 import com.nankki.skydaily.ui.journal.JournalPage
 import com.nankki.skydaily.ui.journal.JournalUiState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 @Composable
-fun ArchivePage(date: String, todayState: JournalUiState, onToggleTask: (Int, Boolean) -> Unit) {
-    val repository = rememberHistoryRepository()
+fun ArchivePage(
+    repository: HistoryRepository,
+    date: String,
+    todayState: JournalUiState,
+    onToggleTask: (Int, Boolean) -> Unit,
+) {
     var envelope by remember(date) { mutableStateOf<Envelope?>(null) }
     var loading by remember(date) { mutableStateOf(true) }
     var error by remember(date) { mutableStateOf<String?>(null) }
     var offline by remember(date) { mutableStateOf(false) }
     var reload by remember(date) { mutableIntStateOf(0) }
-    LaunchedEffect(date, reload) {
+    LaunchedEffect(date, reload, repository) {
         loading = true
         envelope = withContext(Dispatchers.IO) { repository.cachedDate(date)?.envelope }
         when (val result = withContext(Dispatchers.IO) { repository.loadDate(date) }) {

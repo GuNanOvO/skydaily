@@ -72,7 +72,8 @@ private sealed interface HistoryListState {
 }
 
 /**
- * 记录页与归档详情共用的仓库实例：同一份磁盘缓存与 ETag。
+ * 记录页与归档详情共用的仓库实例：同一份磁盘缓存、ETag 与共享连接池。
+ * 调用方应在列表/详情路由之外 hoist 一次，并把同一实例传给 [HistoryPage] 与归档详情。
  * 单日归档由调用方通过 [HistoryRepository.loadDate] 在 IO 调度器读取。
  */
 @Composable
@@ -92,6 +93,7 @@ fun rememberHistoryRepository(): HistoryRepository {
  */
 @Composable
 fun HistoryPage(
+    repository: HistoryRepository,
     onOpenDate: (String) -> Unit,
     onSettings: () -> Unit,
     onRefresh: () -> Unit,
@@ -100,7 +102,6 @@ fun HistoryPage(
     modifier: Modifier = Modifier,
 ) {
     val palette = LocalPaperPalette.current
-    val repository = rememberHistoryRepository()
     var reloadKey by remember { mutableIntStateOf(0) }
     var state by remember { mutableStateOf<HistoryListState>(HistoryListState.Loading) }
 
@@ -109,7 +110,7 @@ fun HistoryPage(
         onRefresh()
     }
 
-    LaunchedEffect(reloadKey) {
+    LaunchedEffect(reloadKey, repository) {
         val cached = withContext(Dispatchers.IO) { repository.cachedIndex() }
         if (cached != null) {
             state = HistoryListState.Ready(cached.index.entries, refreshing = true)

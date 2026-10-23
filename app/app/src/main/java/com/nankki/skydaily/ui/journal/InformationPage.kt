@@ -19,7 +19,12 @@ import com.nankki.skydaily.ui.paper.PaperScroll
 import com.nankki.skydaily.ui.paper.RuledText
 
 @Composable
-fun InformationPage(state: JournalUiState, onRefresh: () -> Unit, modifier: Modifier = Modifier) {
+fun InformationPage(
+    state: JournalUiState,
+    onRefresh: () -> Unit,
+    onMealSettings: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
     var images by remember { mutableStateOf<List<String>?>(null) }
     var noticeOpen by remember { mutableStateOf(false) }
     BackHandler(enabled = images != null || noticeOpen) {
@@ -37,6 +42,7 @@ fun InformationPage(state: JournalUiState, onRefresh: () -> Unit, modifier: Modi
                     sticker = R.drawable.sky_butterfly_handdrawn,
                 )
             }
+            MealSection(onSettings = onMealSettings)
             DataStatus(state)
             if (state.envelope == null) {
                 PaperBlock {
