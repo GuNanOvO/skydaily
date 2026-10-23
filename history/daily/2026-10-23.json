@@ -119,7 +119,7 @@
     },
     "calendar": {
       "images": [
-        "https://skydaily.nankki.com/history/media/6f6a6b064a38c4b9d549dd3e.webp"
+        "https://skydaily.nankki.com/history/media/5a7afa8abe7bf94d4688c40d.webp"
       ]
     },
     "candles": [
@@ -151,7 +151,7 @@
     "seasonCandleMap": "霞谷"
   },
   "meta": {
-    "fetched_at": "2026-10-22T16:10:21.572Z",
+    "fetched_at": "2026-10-23T12:21:29.267Z",
     "cached": false,
     "stale": false
   },
