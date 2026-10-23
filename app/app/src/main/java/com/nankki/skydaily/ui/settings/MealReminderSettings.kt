@@ -48,6 +48,7 @@ import com.nankki.skydaily.ui.journal.mealHourLabel
 import com.nankki.skydaily.ui.paper.PaperButton
 import com.nankki.skydaily.ui.paper.rememberMinuteTime
 import com.nankki.skydaily.ui.theme.LocalPaperPalette
+import com.nankki.skydaily.ui.theme.PaperPalette
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
@@ -90,30 +91,23 @@ internal fun MealReminderSettings(manager: MealReminderManager) {
             })
         }
         Spacer(Modifier.height(8.dp))
-        FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            for (hour in MealSchedule.hours) {
-                val selected = hour in preferences.hours
-                Box(
-                    Modifier.widthIn(min = 76.dp).heightIn(min = 44.dp)
-                        .background(if (selected) palette.tabColors[0] else palette.paper, RoundedCornerShape(2.dp))
-                        .border(1.dp, if (selected) palette.noteAccents[0] else palette.outline, RoundedCornerShape(2.dp))
-                        .toggleable(value = selected, role = Role.Checkbox, onValueChange = {
-                            val hours = if (selected) preferences.hours - hour else preferences.hours + hour
-                            persist(preferences.copy(hours = hours, enabled = preferences.enabled && hours.isNotEmpty()))
-                        })
-                        .padding(horizontal = 10.dp, vertical = 8.dp),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = if (selected) "✓ ${mealHourLabel(hour)}" else mealHourLabel(hour),
-                        color = if (selected) palette.tabInk else palette.ink,
-                        fontSize = 13.sp,
-                        lineHeight = 24.sp,
-                        fontWeight = if (selected) FontWeight.Medium else FontWeight.Normal,
-                    )
-                }
-            }
+        val toggleHour: (Int) -> Unit = { hour ->
+            val hours = if (hour in preferences.hours) preferences.hours - hour else preferences.hours + hour
+            persist(preferences.copy(hours = hours, enabled = preferences.enabled && hours.isNotEmpty()))
         }
+        HourRow(
+            hours = MealSchedule.hours.filter { it <= 12 },
+            selectedHours = preferences.hours,
+            palette = palette,
+            onToggle = toggleHour,
+        )
+        Spacer(Modifier.height(8.dp))
+        HourRow(
+            hours = MealSchedule.hours.filter { it > 12 },
+            selectedHours = preferences.hours,
+            palette = palette,
+            onToggle = toggleHour,
+        )
         Spacer(Modifier.height(12.dp))
         Text("提前提醒（分钟）", color = palette.muted, fontSize = 11.sp, lineHeight = 20.sp)
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -159,5 +153,56 @@ internal fun MealReminderSettings(manager: MealReminderManager) {
                 })
             }
         }
+    }
+}
+
+/**
+ * 一行饭点：行内按钮均分整行宽度，上午三个、下午四个各自占满一行。
+ */
+@Composable
+private fun HourRow(
+    hours: List<Int>,
+    selectedHours: Set<Int>,
+    palette: PaperPalette,
+    onToggle: (Int) -> Unit,
+) {
+    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        for (hour in hours) {
+            HourChip(
+                hour = hour,
+                selected = hour in selectedHours,
+                palette = palette,
+                onClick = { onToggle(hour) },
+                modifier = Modifier.weight(1f),
+            )
+        }
+    }
+}
+
+@Composable
+private fun HourChip(
+    hour: Int,
+    selected: Boolean,
+    palette: PaperPalette,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier
+            .heightIn(min = 44.dp)
+            .background(if (selected) palette.tabColors[0] else palette.paper, RoundedCornerShape(2.dp))
+            .border(1.dp, if (selected) palette.noteAccents[0] else palette.outline, RoundedCornerShape(2.dp))
+            .toggleable(value = selected, role = Role.Checkbox, onValueChange = { onClick() })
+            .padding(horizontal = 6.dp, vertical = 8.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = if (selected) "✓ ${mealHourLabel(hour)}" else mealHourLabel(hour),
+            color = if (selected) palette.tabInk else palette.ink,
+            fontSize = 13.sp,
+            lineHeight = 24.sp,
+            fontWeight = if (selected) FontWeight.Medium else FontWeight.Normal,
+            maxLines = 1,
+        )
     }
 }
