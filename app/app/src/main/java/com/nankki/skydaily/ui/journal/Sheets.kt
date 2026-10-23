@@ -3,9 +3,16 @@ package com.nankki.skydaily.ui.journal
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.awaitEachGesture
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.calculateCentroidSize
+import androidx.compose.foundation.gestures.calculatePan
+import androidx.compose.foundation.gestures.calculateZoom
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -23,15 +30,23 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.pointer.PointerInputScope
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.input.pointer.positionChanged
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -45,6 +60,7 @@ import com.nankki.skydaily.ui.paper.PaperButton
 import com.nankki.skydaily.ui.paper.PaperDivider
 import com.nankki.skydaily.ui.paper.hardShadow
 import com.nankki.skydaily.ui.theme.LocalPaperPalette
+import kotlin.math.abs
 
 @Composable
 fun GuideSheet(
@@ -273,6 +289,10 @@ fun NoticeSheet(
     }
 }
 
+/**
+ * 全屏图片灯箱：双指捏合或双击放大，放大后可拖动查看细节。
+ * 未放大时点击图片关闭；放大后点击复位，避免误关。
+ */
 @Composable
 fun ImageLightbox(
     baseUrl: String,
@@ -286,6 +306,11 @@ fun ImageLightbox(
         initialPage = initialIndex.coerceIn(0, images.lastIndex),
         pageCount = { images.size },
     )
+    var zoom by remember { mutableStateOf(ZoomState()) }
+    // 翻页后回到原尺寸，避免上一张的缩放带到下一张。
+    LaunchedEffect(pagerState.currentPage) { zoom = ZoomState() }
+    val resetZoom: () -> Unit = { zoom = ZoomState() }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -298,20 +323,66 @@ fun ImageLightbox(
     ) {
         HorizontalPager(
             state = pagerState,
+            // 放大后横向拖动用于平移图片，翻页留给未放大状态。
+            userScrollEnabled = !zoom.zoomed,
             modifier = Modifier.fillMaxSize(),
         ) { page ->
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center,
-            ) {
-                AsyncImage(
-                    model = Media.absolute(baseUrl, images[page]),
-                    contentDescription = null,
-                    contentScale = ContentScale.Fit,
+            BoxWithConstraints(Modifier.fillMaxSize()) {
+                val density = LocalDensity.current
+                val viewportWidth = with(density) { maxWidth.toPx() }
+                val viewportHeight = with(density) { maxHeight.toPx() }
+                val applyTransform: (Float, Offset) -> Unit = { zoomChange, panChange ->
+                    val current = zoom
+                    val scale = ZoomGeometry.clampScale(current.scale * zoomChange)
+                    // 以视口中心为基准缩放，再叠加平移，最后夹进平移边界。
+                    val ratio = if (current.scale > 0f) scale / current.scale else 1f
+                    val (offsetX, offsetY) = ZoomGeometry.clampOffset(
+                        (current.offsetX + panChange.x) * ratio,
+                        (current.offsetY + panChange.y) * ratio,
+                        scale,
+                        viewportWidth,
+                        viewportHeight,
+                    )
+                    zoom = ZoomState(scale = scale, offsetX = offsetX, offsetY = offsetY)
+                }
+                Box(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp),
-                )
+                        .fillMaxSize()
+                        .pointerInput(viewportWidth, viewportHeight) {
+                            detectPhotoTransform(
+                                isZoomed = { zoom.zoomed },
+                                onTransform = applyTransform,
+                            )
+                        }
+                        .pointerInput(Unit) {
+                            detectTapGestures(
+                                onTap = { if (zoom.zoomed) resetZoom() else onClose() },
+                                onDoubleTap = {
+                                    zoom = if (zoom.zoomed) {
+                                        ZoomState()
+                                    } else {
+                                        ZoomState(scale = ZoomGeometry.DoubleTapScale)
+                                    }
+                                },
+                            )
+                        },
+                    contentAlignment = Alignment.Center,
+                ) {
+                    AsyncImage(
+                        model = Media.absolute(baseUrl, images[page]),
+                        contentDescription = null,
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp)
+                            .graphicsLayer {
+                                scaleX = zoom.scale
+                                scaleY = zoom.scale
+                                translationX = zoom.offsetX
+                                translationY = zoom.offsetY
+                            },
+                    )
+                }
             }
         }
         Row(
@@ -322,13 +393,60 @@ fun ImageLightbox(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "${pagerState.currentPage + 1} / ${images.size}",
+                text = buildString {
+                    append("${pagerState.currentPage + 1} / ${images.size}")
+                    if (zoom.zoomed) append(" · 双指或双击缩放")
+                },
                 color = palette.paper,
                 fontSize = 12.sp,
                 lineHeight = 24.sp,
             )
             Spacer(Modifier.weight(1f))
             PaperButton("关闭", onClose)
+        }
+    }
+}
+
+/**
+ * 缩放与平移识别，识别逻辑对齐 androidx 的 detectTransformGestures，
+ * 区别只在“何时消费事件”：未放大时只消费真正的双指缩放，单指拖动留给灯箱翻页；
+ * 放大后拖动用于平移图片。
+ */
+private suspend fun PointerInputScope.detectPhotoTransform(
+    isZoomed: () -> Boolean,
+    onTransform: (zoomChange: Float, panChange: Offset) -> Unit,
+) {
+    awaitEachGesture {
+        var pastTouchSlop = false
+        var accumulatedZoom = 1f
+        var accumulatedPan = Offset.Zero
+        val touchSlop = viewConfiguration.touchSlop
+        awaitFirstDown(requireUnconsumed = false)
+        var canceled = false
+        while (!canceled) {
+            val event = awaitPointerEvent()
+            canceled = event.changes.any { it.isConsumed }
+            if (!canceled) {
+                val zoomChange = event.calculateZoom()
+                val panChange = event.calculatePan()
+                if (!pastTouchSlop) {
+                    accumulatedZoom *= zoomChange
+                    accumulatedPan += panChange
+                    val centroidSize = event.calculateCentroidSize(useCurrent = false)
+                    val zoomMotion = abs(1 - accumulatedZoom) * centroidSize
+                    if (zoomMotion > touchSlop || accumulatedPan.getDistance() > touchSlop) {
+                        pastTouchSlop = true
+                    }
+                }
+                if (pastTouchSlop) {
+                    val zooming = zoomChange != 1f
+                    if (isZoomed() || zooming) {
+                        if (zooming || panChange != Offset.Zero) onTransform(zoomChange, panChange)
+                        event.changes.forEach { if (it.positionChanged()) it.consume() }
+                    }
+                }
+                canceled = event.changes.none { it.pressed }
+            }
         }
     }
 }
