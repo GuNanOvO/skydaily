@@ -221,7 +221,6 @@ private fun EnableChip(enabled: Boolean, palette: PaperPalette, onClick: () -> U
             fontSize = 13.sp,
             lineHeight = 24.sp,
             fontWeight = FontWeight.Medium,
-            maxLines = 1,
         )
     }
 }
@@ -259,7 +258,6 @@ private fun HourChip(
                 fontSize = 13.sp,
                 lineHeight = 24.sp,
                 fontWeight = if (selected) FontWeight.Medium else FontWeight.Normal,
-                maxLines = 1,
             )
         }
     }
