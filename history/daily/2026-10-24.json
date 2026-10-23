@@ -1,0 +1,110 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-24",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "在荧光小菇旁回复能量",
+        "keyword": "荧光小菇"
+      },
+      {
+        "number": 2,
+        "text": "收集30点烛火",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "接受一位朋友的礼物",
+        "keyword": null
+      },
+      {
+        "number": 4,
+        "text": "和陌生人一起坐在长凳上",
+        "keyword": null
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "荧光小菇",
+        "title": "荧光小菇",
+        "sections": [
+          {
+            "label": "小贴士",
+            "text": "旅人们跳到荧光小菇上可补充能量\n(能量几乎消耗完时再跳上去会更容易完成每日任务 哦)"
+          },
+          {
+            "label": "地点",
+            "text": "荧光小菇 是生长在雨林的植物。"
+          },
+          {
+            "label": "特性",
+            "text": "荧光小菇 呈半透明状态并且会发光，旅人们站在荧光蘑菇上可以悬浮起来，极容易辨认。"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/147bcbe5c9be71e5ae7b40c8.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "小贴士： 旅人们跳到荧光小菇上可补充能量\n(能量几乎消耗完时再跳上去会更容易完成每日任务 哦)\n地点： 荧光小菇 是生长在雨林的植物。\n特性： 荧光小菇 呈半透明状态并且会发光，旅人们站在荧光蘑菇上可以悬浮起来，极容易辨认。"
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [
+          "https://h5.ds.163.com/v1/6ad585a083a764003172a423/"
+        ],
+        "text": ""
+      }
+    ],
+    "weather": {
+      "text": "今日无碎片降落",
+      "images": [
+        "https://skydaily.nankki.com/history/media/0788e49012847d24e4cc0a91.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/5a7afa8abe7bf94d4688c40d.webp"
+      ]
+    },
+    "candles": [
+      {
+        "keyword": "大蜡烛",
+        "title": "每日大蜡烛位置",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~"
+          },
+          {
+            "label": "位置分布参考",
+            "text": "大蜡烛堆攻略"
+          },
+          {
+            "label": "小精灵温馨提示",
+            "text": "4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/c37d38160f147e9dc76df94f.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~\n位置分布参考：大蜡烛堆攻略\n小精灵温馨提示：\n4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+      }
+    ],
+    "seasonCandleMap": "暮土"
+  },
+  "meta": {
+    "fetched_at": "2026-10-23T16:11:14.806Z",
+    "cached": false,
+    "stale": false
+  },
+  "errors": []
+}
