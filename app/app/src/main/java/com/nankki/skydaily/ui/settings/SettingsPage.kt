@@ -34,8 +34,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.nankki.skydaily.AppConfig
 import com.nankki.skydaily.R
 import com.nankki.skydaily.core.BeijingClock
+import com.nankki.skydaily.core.openWebLink
 import com.nankki.skydaily.meals.MealReminderManager
 import com.nankki.skydaily.core.ThemeMode
 import com.nankki.skydaily.ui.journal.JournalUiState
@@ -232,10 +234,31 @@ fun SettingsPage(
             )
             Spacer(Modifier.height(8.dp))
             Text(
+                text = "作者 · ${AppConfig.AUTHOR}\n" +
+                    "源码仓库 · GuNanOvO/skydaily\n" +
+                    "项目许可证 · 未指定",
+                color = palette.muted,
+                fontSize = 11.sp,
+                lineHeight = 20.sp,
+            )
+            Spacer(Modifier.height(8.dp))
+            UpdateSection()
+            Spacer(Modifier.height(8.dp))
+            PaperDivider()
+            Spacer(Modifier.height(8.dp))
+            Text(
                 text = "Android 9 及以上 · Kotlin / Jetpack Compose\n" +
                     "数据来源 · skydaily 静态归档\n" +
                     "图片缓存 · Coil\n" +
                     "时间与换天 · 北京时间",
+                color = palette.muted,
+                fontSize = 11.sp,
+                lineHeight = 20.sp,
+            )
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = "主要开源组件 · AndroidX / Jetpack Compose、Coil3、OkHttp\n" +
+                    "组件许可证 · Apache License 2.0",
                 color = palette.muted,
                 fontSize = 11.sp,
                 lineHeight = 20.sp,
@@ -261,6 +284,8 @@ fun SettingsPage(
                 horizontalArrangement = Arrangement.spacedBy(6.dp),
             ) {
                 PaperButton("打开网站", onOpenSite, tone = palette.tabColors[3])
+                PaperButton("源代码", { openWebLink(context, AppConfig.SOURCE_URL) })
+                PaperButton("组件许可", { openWebLink(context, AppConfig.COMPONENT_LICENSE_URL) })
                 PaperButton("反馈", onOpenFeedback)
             }
             Spacer(Modifier.height(8.dp))
