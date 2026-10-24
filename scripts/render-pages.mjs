@@ -436,7 +436,7 @@ export function renderAppPage(release, options = {}) {
 <div><dt>版本</dt><dd>${escapeHtml(release.versionName)}（${release.versionCode}）</dd></div>
 <div><dt>更新于</dt><dd>${escapeHtml(beijingStamp(release.publishedAt))} ${escapeHtml(beijingTime(release.publishedAt))}（北京时间）</dd></div>
 <div><dt>安装包</dt><dd>${release.size} 字节（约 ${(release.size / 1048576).toFixed(2)} MB）</dd></div>
-<div><dt>校验值</dt><dd><code>${escapeHtml(release.sha256.slice(0, 12))}…</code>（SHA-256）</dd></div>
+<div><dt>校验值</dt><dd><code>${escapeHtml(release.sha256)}</code>（SHA-256）</dd></div>
 <div><dt>系统要求</dt><dd>${escapeHtml(androidRequirement(release.minSdk))}</dd></div>
 </dl>
 <a class="app-download" href="${escapeHtml(release.apkPath)}" download>下载 APK</a>`
