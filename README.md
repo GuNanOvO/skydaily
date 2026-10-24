@@ -25,6 +25,6 @@ curl https://skydaily.nankki.com/v1/notice/history
 
 ## 版权与反馈
 
-游戏图文来源于游戏内「小精灵」，版权归原权利人所有。本站内容仅供学习与交流；获取最新资讯与完整攻略，请优先使用游戏内「小精灵」。
+游戏图文来源于游戏内「小精灵」，版权归原权利人所有。
 
 版权问题、侵权删除请求及其他反馈，请提交至 [仓库 Issues](https://github.com/GuNanOvO/skydaily/issues)，附相关内容链接与权利说明。

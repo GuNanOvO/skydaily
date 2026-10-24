@@ -303,7 +303,7 @@ function renderFooter({ archive = false, date, api = false, app = false } = {}) 
   const share = archive || app ? '' : `<div class="footer-share"><div class="share-qr" aria-hidden="true">${SHARE_QR}</div><div class="share-copy"><p>扫码打开今日任务</p><div class="share-actions"><button type="button" class="share-button" data-share-url="${SITE_URL}/">分享本页</button><button type="button" class="share-button share-image" data-share-image="${SITE_URL}/preview/share.jpg${date ? `?v=${date}` : ''}">分享图片</button></div></div></div>`
   // 下载页不引用 GitHub，保持页面内只有同源下载地址。
   const feedback = app ? '' : '<p>版权问题反馈：<a href="https://github.com/GuNanOvO/skydaily/issues" target="_blank" rel="noopener noreferrer">仓库 Issues ↗</a></p>'
-  return `<footer class="journal-footer"><div class="footer-info"><div class="footer-copyright"><p>图文来源于游戏内小精灵，版权归原权利人所有；本站内容仅供学习与交流。</p><p>获取最新资讯与完整攻略，请优先使用游戏内「小精灵」。</p>${feedback}</div>${share}<nav aria-label="页脚导航"><div>${home}<a href="${dataHref}">完整数据</a></div>${guide}<a class="back-top" href="#page-top">回到页首 ↑</a></nav></div><div class="footer-folio">${folio}</div></footer>`
+  return `<footer class="journal-footer"><div class="footer-info"><div class="footer-copyright"><p>图文来源于游戏内「小精灵」，版权归原权利人所有。</p>${feedback}</div>${share}<nav aria-label="页脚导航"><div>${home}<a href="${dataHref}">完整数据</a></div>${guide}<a class="back-top" href="#page-top">回到页首 ↑</a></nav></div><div class="footer-folio">${folio}</div></footer>`
 }
 
 export function renderApiGuide(date) {
@@ -323,7 +323,7 @@ export function renderApiGuide(date) {
 <main id="page-top" class="api-guide">${themeToggle()}<div class="binding" aria-hidden="true"></div>
 <header class="page-header"><h1>API 使用说明</h1><p class="api-meta">GET · JSON · 北京时间</p></header>
 <nav class="jump" aria-label="页面导航"><a href="index.html">返回每日任务</a><a href="#endpoints">接口</a><a href="#example">示例</a><a href="#response">返回数据</a><a href="app/">下载 App</a></nav>
-<section><h2>服务地址</h2><p><code>${SITE_URL}</code></p><p>接口提供光遇国服数据，无需密钥，支持跨域请求。</p><p>同一 IP 每分钟约 30 次；超限返回 429，请按 Retry-After 等待后重试。查询不触发数据采集。</p></section>
+<section><h2>服务地址</h2><p><code>${SITE_URL}</code></p><p>接口提供光遇国服数据，无需密钥，支持跨域请求。</p><p>同一 IP 每分钟约 30 次；超限返回 429，请按 Retry-After 等待后重试。</p></section>
 <section id="endpoints"><h2>接口</h2><dl class="api-endpoints">${endpoints.map(([path, text]) => `<div><dt><code>${path}</code></dt><dd>${text}</dd></div>`).join('')}</dl></section>
 <section id="example"><h2>调用示例</h2><pre class="api-example"><code>curl ${SITE_URL}/v1/daily/tasks
 
@@ -439,8 +439,7 @@ export function renderAppPage(release, options = {}) {
 <div><dt>校验值</dt><dd><code>${escapeHtml(release.sha256.slice(0, 12))}…</code>（SHA-256）</dd></div>
 <div><dt>系统要求</dt><dd>${escapeHtml(androidRequirement(release.minSdk))}</dd></div>
 </dl>
-<a class="app-download" href="${escapeHtml(release.apkPath)}" download>下载 APK</a>
-<p class="app-hint">下载后按系统提示安装；安装包来自本站，不跳转到其他站点。</p>`
+<a class="app-download" href="${escapeHtml(release.apkPath)}" download>下载 APK</a>`
     : '<p class="app-empty">还没有发布可下载的版本。发布完成后，这里会显示当前安装包、更新说明和界面预览。</p>'
   const notes = release && release.notes.length > 0
     ? `<section id="notes" aria-labelledby="h-notes"><h2 id="h-notes">更新内容</h2><ul class="app-notes">${release.notes.map((note) => `<li>${escapeHtml(note)}</li>`).join('')}</ul></section>`
@@ -466,10 +465,11 @@ ${faviconLinks(assets)}
 .app-page .app-facts>div{display:flex;gap:12px;line-height:32px;font-size:var(--font-sm);min-height:32px}
 .app-page .app-facts dt{flex:0 0 5em;color:var(--muted)}
 .app-page .app-facts dd{margin:0;min-width:0;overflow-wrap:anywhere}
+.app-page .app-facts code{font:inherit}
 .app-page .app-download{display:flex;width:max-content;align-items:center;justify-content:center;margin-top:16px;padding:0 32px;height:64px;font-size:var(--font-sm);text-decoration:none;background:#f4e7bd;border-radius:2px;box-shadow:var(--sticker-shadow)}
 .app-page .app-download:hover{filter:brightness(.96)}
 .app-page .app-hint{margin:0;color:var(--muted);font-size:var(--font-xs);line-height:32px;overflow-wrap:anywhere}
-.app-page .app-download+.app-hint,.app-page .app-qr+.app-hint{margin-top:32px}
+.app-page .app-qr+.app-hint{margin-top:32px}
 .app-page .app-empty{margin:32px 0 0;padding:0 24px;background:#f4f2f6;border-left:2px solid #c9c3ce;color:var(--muted);font-size:var(--font-sm)}
 .app-page .app-shots{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px 24px;margin:32px 0 0}
 .app-page .app-shot{margin:0;padding:0 8px;background:#fffefc;outline:1px solid #d7d4db66;box-shadow:var(--sticker-shadow)}
