@@ -27,7 +27,7 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: 解析 App 发布标签
         id: app_release
         env:
@@ -45,10 +45,10 @@ jobs:
             TAG=$(gh release list --limit 100 --json tagName,isDraft,publishedAt --jq '[.[] | select(.isDraft == false) | select(.tagName | startswith("app-v"))] | sort_by(.publishedAt) | reverse | .[0].tagName // ""')
           fi
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: '3.12'
       - run: pip install --quiet Pillow==11.3.0
@@ -136,13 +136,13 @@ jobs:
             git -C data-store commit -q -m 'data: update rolling journal archive'
             git -C data-store push -q "$(git remote get-url origin)" HEAD:refs/heads/data
           fi
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: out
       - name: 发布页面
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
       - name: 预热边缘缓存
         env:
           SITE_URL: ${{ env.SITE_URL }}
