@@ -1,4 +1,4 @@
-[![光遇每日任务 · 2026-10-24](https://skydaily.nankki.com/preview/daily.webp?v=2026-10-24-9cd72fc0f0f26240)](https://skydaily.nankki.com/)
+[![光遇每日任务 · 2026-10-24](https://skydaily.nankki.com/preview/daily.webp?v=2026-10-24-c311950325a4c388)](https://skydaily.nankki.com/)
 
 # 光遇每日任务
 
