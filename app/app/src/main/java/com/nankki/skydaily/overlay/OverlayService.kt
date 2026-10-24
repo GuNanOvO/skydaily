@@ -149,15 +149,25 @@ class OverlayService : Service() {
             viewHeight = size,
             margin = dp(2),
         )
+        val layoutFlag = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+        } else {
+            WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS
+        }
         val params = WindowManager.LayoutParams(
             size,
             size,
             WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
             WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE or
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL or
-                WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS,
+                layoutFlag,
             PixelFormat.TRANSLUCENT,
         ).apply {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                // 与 displayArea() 共用完整显示坐标，系统栏和刘海只扣除一次。
+                layoutInDisplayCutoutMode = WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
+                setFitInsetsTypes(0)
+            }
             gravity = Gravity.TOP or Gravity.START
             x = snappedX
             y = snappedY
