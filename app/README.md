@@ -62,6 +62,8 @@ node scripts/compress-apk.mjs app/app/build/outputs/apk/release/app-release.apk
 
 命令会覆盖原 APK，签名密钥须与现有安装包一致。
 
-## 内容来源
+## 许可证与内容来源
+
+客户端代码采用 [MIT License](../LICENSE)。
 
 游戏图文来自游戏内「小精灵」，版权归原权利人所有。

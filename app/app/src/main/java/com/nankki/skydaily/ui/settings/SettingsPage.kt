@@ -236,7 +236,7 @@ fun SettingsPage(
             Text(
                 text = "作者 · ${AppConfig.AUTHOR}\n" +
                     "源码仓库 · GuNanOvO/skydaily\n" +
-                    "项目许可证 · 未指定",
+                    "项目许可证 · MIT",
                 color = palette.muted,
                 fontSize = 11.sp,
                 lineHeight = 20.sp,
@@ -247,17 +247,7 @@ fun SettingsPage(
             PaperDivider()
             Spacer(Modifier.height(8.dp))
             Text(
-                text = "Android 9 及以上 · Kotlin / Jetpack Compose\n" +
-                    "数据来源 · skydaily 静态归档\n" +
-                    "图片缓存 · Coil\n" +
-                    "时间与换天 · 北京时间",
-                color = palette.muted,
-                fontSize = 11.sp,
-                lineHeight = 20.sp,
-            )
-            Spacer(Modifier.height(8.dp))
-            Text(
-                text = "主要开源组件 · AndroidX / Jetpack Compose、Coil3、OkHttp\n" +
+                text = "开源组件 · AndroidX / Jetpack Compose、Coil、OkHttp\n" +
                     "组件许可证 · Apache License 2.0",
                 color = palette.muted,
                 fontSize = 11.sp,
@@ -265,17 +255,6 @@ fun SettingsPage(
             )
             Spacer(Modifier.height(8.dp))
             PaperDivider()
-            Spacer(Modifier.height(8.dp))
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                PastelTag(text = "skydaily 公开归档", tone = palette.tabColors[3])
-                Spacer(Modifier.width(8.dp))
-                Text(
-                    text = "最近 30 天归档",
-                    color = palette.muted,
-                    fontSize = 10.sp,
-                    lineHeight = 16.sp,
-                )
-            }
             Spacer(Modifier.height(8.dp))
             Row(
                 modifier = Modifier
@@ -285,7 +264,7 @@ fun SettingsPage(
             ) {
                 PaperButton("打开网站", onOpenSite, tone = palette.tabColors[3])
                 PaperButton("源代码", { openWebLink(context, AppConfig.SOURCE_URL) })
-                PaperButton("组件许可", { openWebLink(context, AppConfig.COMPONENT_LICENSE_URL) })
+                PaperButton("组件许可证", { openWebLink(context, AppConfig.COMPONENT_LICENSE_URL) })
                 PaperButton("反馈", onOpenFeedback)
             }
             Spacer(Modifier.height(8.dp))
@@ -391,24 +370,6 @@ private fun SectionTag(text: String, tone: Color, modifier: Modifier = Modifier)
             fontSize = 12.sp,
             lineHeight = 17.sp,
             fontWeight = FontWeight.SemiBold,
-        )
-    }
-}
-
-@Composable
-private fun PastelTag(text: String, tone: Color) {
-    val palette = LocalPaperPalette.current
-    Box(
-        modifier = Modifier
-            .background(tone, RoundedCornerShape(1.dp))
-            .border(1.dp, palette.outline.copy(alpha = 0.5f), RoundedCornerShape(1.dp))
-            .padding(horizontal = 6.dp, vertical = 2.dp),
-    ) {
-        Text(
-            text = text,
-            color = palette.tabInk,
-            fontSize = 10.sp,
-            lineHeight = 16.sp,
         )
     }
 }

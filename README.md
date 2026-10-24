@@ -23,7 +23,9 @@ curl https://skydaily.nankki.com/v1/notice/history
 
 返回 JSON，包含日期、结构化内容与数据更新时间。历史记录保留最近 30 天。服务支持跨域访问。
 
-## 版权与反馈
+## 许可证、版权与反馈
+
+本项目代码采用 [MIT License](LICENSE)。
 
 游戏图文来源于游戏内「小精灵」，版权归原权利人所有。
 
