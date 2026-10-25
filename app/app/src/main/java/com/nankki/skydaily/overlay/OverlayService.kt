@@ -50,6 +50,8 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.FileDescriptor
+import java.io.PrintWriter
 import kotlin.math.abs
 
 /**
@@ -77,6 +79,7 @@ class OverlayService : Service() {
     private var destroying = false
     private var overlayAllowed = false
     private var visibilityJob: Job? = null
+    private var appliedOnlyInGame: Boolean? = null
 
     private val idleRunnable = Runnable {
         if (!destroying) alphaState.floatValue = IDLE_ALPHA
@@ -125,6 +128,7 @@ class OverlayService : Service() {
             },
         )
         refreshProgress()
+        updateVisibilityMode()
         OverlayState.running = true
     }
 
@@ -331,9 +335,14 @@ class OverlayService : Service() {
     }
 
     private fun updateVisibilityMode() {
+        val onlyInGame = preferences.onlyInGame
+        if (appliedOnlyInGame == onlyInGame &&
+            (!onlyInGame || visibilityJob?.isActive == true)
+        ) return
+        appliedOnlyInGame = onlyInGame
         visibilityJob?.cancel()
         visibilityJob = null
-        if (!preferences.onlyInGame) {
+        if (!onlyInGame) {
             setOverlayVisible(true)
             return
         }
@@ -414,6 +423,13 @@ class OverlayService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (!destroying && ::panel.isInitialized) updateVisibilityMode()
         return START_STICKY
+    }
+
+    override fun dump(fd: FileDescriptor, writer: PrintWriter, args: Array<out String>) {
+        writer.println("running=${OverlayState.running} destroying=$destroying scopeActive=${scope.isActive}")
+        writer.println("onlyInGame=${if (::preferences.isInitialized) preferences.onlyInGame else null} appliedOnlyInGame=$appliedOnlyInGame")
+        writer.println("allowed=$overlayAllowed ball=${ballView != null} panel=${::panel.isInitialized && panel.isShowing}")
+        writer.println("jobActive=${visibilityJob?.isActive} jobCancelled=${visibilityJob?.isCancelled}")
     }
 
     override fun onDestroy() {
