@@ -168,6 +168,7 @@ fun SettingsPage(
                 fontSize = 11.sp,
                 lineHeight = 18.sp,
             )
+            OverlayVisibilitySettings()
         }
 
         SettingsSection(

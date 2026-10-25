@@ -140,6 +140,8 @@ class PanelWindow(
     private val windowManager = service.getSystemService(Service.WINDOW_SERVICE) as WindowManager
     private var host: WindowComposeHost? = null
     private var view: ComposeView? = null
+    val isShowing: Boolean
+        get() = view != null
 
     fun show() {
         if (view != null) return

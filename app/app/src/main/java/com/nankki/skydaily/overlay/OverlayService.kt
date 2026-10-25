@@ -44,7 +44,10 @@ import com.nankki.skydaily.ui.theme.rememberDarkMode
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.cancel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.math.abs
@@ -72,6 +75,8 @@ class OverlayService : Service() {
     private var ballHost: WindowComposeHost? = null
     private var ballParams: WindowManager.LayoutParams? = null
     private var destroying = false
+    private var overlayAllowed = false
+    private var visibilityJob: Job? = null
 
     private val idleRunnable = Runnable {
         if (!destroying) alphaState.floatValue = IDLE_ALPHA
@@ -113,19 +118,18 @@ class OverlayService : Service() {
             service = this,
             modeState = modeState,
             onDismiss = {
-                if (!destroying) {
+                if (!destroying && overlayAllowed) {
                     showBall()
                     refreshProgress()
                 }
             },
         )
-        showBall()
         refreshProgress()
         OverlayState.running = true
     }
 
     private fun showBall() {
-        if (ballView != null) return
+        if (destroying || !overlayAllowed || ballView != null) return
         val host = WindowComposeHost(this)
         val view = host.createView {
             val mode = modeState.value
@@ -326,7 +330,37 @@ class OverlayService : Service() {
         requestFitBall()
     }
 
+    private fun updateVisibilityMode() {
+        visibilityJob?.cancel()
+        visibilityJob = null
+        if (!preferences.onlyInGame) {
+            setOverlayVisible(true)
+            return
+        }
+        setOverlayVisible(false)
+        val monitor = GameForegroundMonitor(this)
+        visibilityJob = scope.launch {
+            while (isActive) {
+                val visible = withContext(Dispatchers.IO) { monitor.isGameInForeground() }
+                setOverlayVisible(visible)
+                delay(GAME_CHECK_INTERVAL_MS)
+            }
+        }
+    }
+
+    private fun setOverlayVisible(visible: Boolean) {
+        if (overlayAllowed == visible) return
+        overlayAllowed = visible
+        if (visible) {
+            if (!panel.isShowing) showBall()
+        } else {
+            if (panel.isShowing) panel.hide()
+            hideBall()
+        }
+    }
+
     private fun openPanel() {
+        if (destroying || !overlayAllowed) return
         modeState.value = themePreference.mode
         hideBall()
         panel.show()
@@ -377,7 +411,10 @@ class OverlayService : Service() {
             .build()
     }
 
-    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int = START_STICKY
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (!destroying && ::panel.isInitialized) updateVisibilityMode()
+        return START_STICKY
+    }
 
     override fun onDestroy() {
         destroying = true
@@ -400,6 +437,7 @@ class OverlayService : Service() {
         private const val BALL_DP = 60
         private const val IDLE_AFTER_MS = 4_000L
         private const val IDLE_ALPHA = 0.55f
+        private const val GAME_CHECK_INTERVAL_MS = 750L
 
         fun start(context: Context) {
             context.startForegroundService(Intent(context, OverlayService::class.java))
@@ -407,6 +445,12 @@ class OverlayService : Service() {
 
         fun stop(context: Context) {
             context.stopService(Intent(context, OverlayService::class.java))
+        }
+
+        fun settingsChanged(context: Context) {
+            if (OverlayState.running) {
+                context.startService(Intent(context, OverlayService::class.java))
+            }
         }
 
         fun permissionIntent(context: Context): Intent =
