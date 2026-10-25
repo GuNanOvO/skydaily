@@ -39,6 +39,40 @@ class GameForegroundStateTest {
     }
 
     @Test
+    fun `verified channel clients obey foreground permission and screen requirements`() {
+        for (packageName in listOf(
+            "com.netease.sky.huawei",
+            "com.netease.sky.vivo",
+            "com.netease.sky.bilibili",
+            "com.netease.sky.aligames",
+            "com.tencent.tmgp.eyou.eygy",
+        )) {
+            val state = GameForegroundState()
+            state.onResumed(packageName, "GameActivity")
+            assertTrue(packageName, state.shouldShow(usageAccessGranted = true, screenAvailable = true))
+            assertFalse(packageName, state.shouldShow(usageAccessGranted = false, screenAvailable = true))
+            assertFalse(packageName, state.shouldShow(usageAccessGranted = true, screenAvailable = false))
+
+            state.onPaused(packageName, "GameActivity")
+            assertFalse(packageName, state.shouldShow(usageAccessGranted = true, screenAvailable = true))
+        }
+    }
+
+    @Test
+    fun `lookalike packages do not inherit a previously visible game`() {
+        for (packageName in listOf(
+            "com.netease.sky.huawei.clone",
+            "com.tencent.tmgp.eyou.eygy.clone",
+        )) {
+            val state = GameForegroundState()
+            state.onResumed("com.netease.sky", "GameActivity")
+            state.onResumed(packageName, "GameActivity")
+
+            assertFalse(packageName, state.shouldShow(usageAccessGranted = true, screenAvailable = true))
+        }
+    }
+
+    @Test
     fun `international sky and other apps do not enable the overlay`() {
         val state = GameForegroundState()
         state.onResumed("com.netease.sky", "GameActivity")

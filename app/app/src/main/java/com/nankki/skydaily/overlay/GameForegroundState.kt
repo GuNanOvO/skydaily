@@ -24,5 +24,13 @@ internal class GameForegroundState {
     }
 
     fun shouldShow(usageAccessGranted: Boolean, screenAvailable: Boolean): Boolean =
-        usageAccessGranted && screenAvailable && foregroundPackage == "com.netease.sky"
+        usageAccessGranted && screenAvailable && when (foregroundPackage) {
+            "com.netease.sky",
+            "com.netease.sky.huawei",
+            "com.netease.sky.vivo",
+            "com.netease.sky.bilibili",
+            "com.netease.sky.aligames",
+            "com.tencent.tmgp.eyou.eygy" -> true
+            else -> false
+        }
 }
