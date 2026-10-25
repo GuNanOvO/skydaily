@@ -2,31 +2,30 @@
 
 # 光遇每日任务
 
-每日任务、天气与日历，提供最近 30 天的历史记录。安卓客户端见 [下载页](https://skydaily.nankki.com/app/)。
+查看《光·遇》国服的每日任务、季节蜡烛、天气、日历和公告，支持查看最近 30 天的历史记录。
 
-## API
+[打开网页](https://skydaily.nankki.com/) · [下载安卓客户端](https://skydaily.nankki.com/app/)
 
-服务地址：`https://skydaily.nankki.com`。详见 [API 使用说明](https://skydaily.nankki.com/api.html)。
+## 使用方式
 
-```sh
-curl https://skydaily.nankki.com/v1/daily
+- **网页**：在浏览器中查看任务与攻略，勾选完成进度，按日期查阅历史内容。
+- **安卓客户端**：支持 Android 9 及以上版本，提供任务查看、悬浮任务面板、饭点提醒和离线缓存。
 
-curl https://skydaily.nankki.com/v1/daily/2026-10-03
+## 使用文档
 
-curl https://skydaily.nankki.com/v1/daily/tasks
-curl https://skydaily.nankki.com/v1/daily/weather
-curl https://skydaily.nankki.com/v1/daily/calendar
-curl https://skydaily.nankki.com/v1/daily/candles
-curl https://skydaily.nankki.com/v1/notice
-curl https://skydaily.nankki.com/v1/notice/history
-```
+- [网页使用指南](docs/website.md)：任务勾选、历史日期、图片查看与主题切换。
+- [安卓客户端说明](app/README.md)：安装、更新与常用功能入口。
+- [API 使用说明](https://skydaily.nankki.com/api.html)：需要将内容用于其他工具时，可查阅接口说明。
 
-返回 JSON，包含日期、结构化内容与数据更新时间。历史记录保留最近 30 天。服务支持跨域访问。
+## 问题反馈
 
-## 许可证、版权与反馈
+内容或显示问题可提交至 [仓库 Issues](https://github.com/GuNanOvO/skydaily/issues)，附上页面链接或应用版本、操作步骤和相关截图。
 
-本项目代码采用 [MIT License](LICENSE)。
+涉及版权的反馈，请附相关内容链接与权利说明。
+
+## 许可证与内容来源
+
+项目代码采用 [MIT License](LICENSE)。
 
 游戏图文来源于游戏内「小精灵」，版权归原权利人所有。
 
-版权问题、侵权删除请求及其他反馈，请提交至 [仓库 Issues](https://github.com/GuNanOvO/skydaily/issues)，附相关内容链接与权利说明。
