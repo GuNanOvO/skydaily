@@ -100,4 +100,69 @@ class GameForegroundStateTest {
 
         assertFalse(state.shouldShow(usageAccessGranted = true, screenAvailable = true))
     }
+
+    @Test
+    fun `closing a foreground window restores a game that is still resumed`() {
+        val state = GameForegroundState()
+        state.onResumed("com.netease.sky", "GameActivity")
+        state.onResumed("com.nankki.skydaily", "MainActivity")
+        assertFalse(state.shouldShow(usageAccessGranted = true, screenAvailable = true))
+
+        state.onPaused("com.nankki.skydaily", "MainActivity")
+        assertTrue(state.shouldShow(usageAccessGranted = true, screenAvailable = true))
+
+        state.onPaused("com.nankki.skydaily", "MainActivity")
+        assertTrue(state.shouldShow(usageAccessGranted = true, screenAvailable = true))
+    }
+
+    @Test
+    fun `closing a foreground window does not restore a game that already paused`() {
+        val state = GameForegroundState()
+        state.onResumed("com.netease.sky", "GameActivity")
+        state.onResumed("com.android.settings", "Settings")
+        state.onPaused("com.netease.sky", "GameActivity")
+        state.onPaused("com.android.settings", "Settings")
+
+        assertFalse(state.shouldShow(usageAccessGranted = true, screenAvailable = true))
+    }
+
+    @Test
+    fun `out of order pauses preserve the most recently resumed surviving window`() {
+        val state = GameForegroundState()
+        state.onResumed("com.netease.sky", "GameActivity")
+        state.onResumed("com.android.settings", "Settings")
+        state.onResumed("com.miui.home", "Launcher")
+        state.onPaused("com.android.settings", "Settings")
+        assertFalse(state.shouldShow(usageAccessGranted = true, screenAvailable = true))
+
+        state.onPaused("com.miui.home", "Launcher")
+        assertTrue(state.shouldShow(usageAccessGranted = true, screenAvailable = true))
+    }
+
+    @Test
+    fun `repeated resume and pause events do not resurrect a departed game`() {
+        val state = GameForegroundState()
+        state.onResumed("com.netease.sky", "GameActivity")
+        state.onResumed("com.android.settings", "Settings")
+        state.onResumed("com.netease.sky", "GameActivity")
+        state.onResumed("com.netease.sky", "GameActivity")
+        assertTrue(state.shouldShow(usageAccessGranted = true, screenAvailable = true))
+
+        state.onPaused("com.netease.sky", "GameActivity")
+        assertFalse(state.shouldShow(usageAccessGranted = true, screenAvailable = true))
+        state.onPaused("com.android.settings", "Settings")
+        state.onPaused("com.android.settings", "Settings")
+        assertFalse(state.shouldShow(usageAccessGranted = true, screenAvailable = true))
+    }
+
+    @Test
+    fun `clearing state removes every resumed window`() {
+        val state = GameForegroundState()
+        state.onResumed("com.netease.sky", "GameActivity")
+        state.onResumed("com.android.settings", "Settings")
+        state.clear()
+        state.onPaused("com.android.settings", "Settings")
+
+        assertFalse(state.shouldShow(usageAccessGranted = true, screenAvailable = true))
+    }
 }
