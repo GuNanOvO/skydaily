@@ -319,7 +319,7 @@ export function renderApiGuide(date) {
     ['/v1/daily/YYYY-MM-DD', '指定日期的完整数据，最近 30 天'],
   ]
   return `<!doctype html>
-<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="no-referrer"><meta name="theme-color" content="#f4f4f4"><meta name="keywords" content="光遇国服, 光遇国服 API, 国服每日任务 API, 光遇国服数据接口, JSON 接口, API 使用说明"><title>API 使用说明 · 光遇国服每日任务</title>${faviconLinks()}<script src="assets/theme.js?v=${ASSET_VERSION}"></script><link rel="stylesheet" href="assets/notebook.css?v=${ASSET_VERSION}"></head><body>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="no-referrer"><meta name="theme-color" content="#f4f4f4"><meta name="keywords" content="光遇, 光遇 API, 每日任务 API, 光遇数据接口, JSON 接口, API 使用说明"><title>API 使用说明 · 光遇国服每日任务</title>${faviconLinks()}<script src="assets/theme.js?v=${ASSET_VERSION}"></script><link rel="stylesheet" href="assets/notebook.css?v=${ASSET_VERSION}"></head><body>
 <main id="page-top" class="api-guide">${themeToggle()}<div class="binding" aria-hidden="true"></div>
 <header class="page-header"><h1>API 使用说明</h1><p class="api-meta">GET · JSON · 北京时间</p></header>
 <nav class="jump" aria-label="页面导航"><a href="index.html">返回每日任务</a><a href="#endpoints">接口</a><a href="#example">示例</a><a href="#response">返回数据</a><a href="app/">下载 App</a></nav>
@@ -372,7 +372,7 @@ export function renderPage(envelope, options = {}) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#f4f4f4">
-<meta name="keywords" content="光遇国服, 光遇国服每日任务, ${archive ? '光遇国服历史任务, 国服任务归档' : '光遇国服今日任务'}, 光遇国服任务攻略, 国服季节蜡烛, 光遇国服天气预报, 光遇国服日历">
+<meta name="keywords" content="光遇, 光遇每日任务, ${archive ? '光遇历史任务, 任务归档' : '光遇今日任务'}, 光遇任务攻略, 季节蜡烛, 光遇天气预报, 光遇日历">
 <meta property="og:type" content="website">
 <meta property="og:title" content="光遇国服每日任务 · ${escapeHtml(envelope.date)}">
 ${summary ? `<meta property="og:description" content="${escapeHtml(summary)}">` : ''}
@@ -452,7 +452,7 @@ export function renderAppPage(release, options = {}) {
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="referrer" content="no-referrer">
 <meta name="theme-color" content="#f4f4f4">
-<meta name="keywords" content="SkyDaily 下载, 光遇国服 App, 光遇每日任务 App, 安卓安装包">
+<meta name="keywords" content="SkyDaily 下载, 光遇 App, 光遇每日任务 App, 安卓安装包">
 <title>下载 App · SkyDaily</title>
 ${faviconLinks(assets)}
 <script src="${assets}theme.js?v=${ASSET_VERSION}"></script>
