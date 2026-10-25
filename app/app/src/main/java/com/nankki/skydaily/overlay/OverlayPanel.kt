@@ -15,9 +15,11 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
@@ -27,9 +29,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,8 +44,11 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import com.nankki.skydaily.MainActivity
 import com.nankki.skydaily.core.ThemeMode
+import com.nankki.skydaily.ui.home.PaperBottomNav
+import com.nankki.skydaily.ui.journal.InformationPage
 import com.nankki.skydaily.ui.journal.JournalPage
 import com.nankki.skydaily.ui.journal.rememberJournalPresenter
+import com.nankki.skydaily.ui.journal.rememberSeasonGuideSession
 import com.nankki.skydaily.ui.theme.LocalPaperPalette
 import com.nankki.skydaily.ui.theme.PaperTheme
 import com.nankki.skydaily.ui.theme.rememberDarkMode
@@ -59,10 +67,23 @@ fun OverlayPanel(
         val palette = LocalPaperPalette.current
         val context = LocalContext.current
         val presenter = rememberJournalPresenter(context)
+        val guideSession = rememberSeasonGuideSession()
+        val pageState = rememberSaveableStateHolder()
+        var page by rememberSaveable { mutableIntStateOf(0) }
         val scope = rememberCoroutineScope()
         var shown by remember { mutableStateOf(false) }
         var closing by remember { mutableStateOf(false) }
         val scrimAlpha by animateFloatAsState(if (shown) 1f else 0f, label = "panel-scrim")
+        val closePanel: () -> Unit = {
+            if (!closing) {
+                closing = true
+                shown = false
+                scope.launch {
+                    delay(180)
+                    onClose()
+                }
+            }
+        }
 
         LaunchedEffect(Unit) { shown = true }
 
@@ -74,16 +95,7 @@ fun OverlayPanel(
                     .clickable(
                         interactionSource = remember { MutableInteractionSource() },
                         indication = null,
-                        onClick = {
-                            if (!closing) {
-                                closing = true
-                                shown = false
-                                scope.launch {
-                                    delay(180)
-                                    onClose()
-                                }
-                            }
-                        },
+                        onClick = closePanel,
                     ),
             )
             AnimatedVisibility(
@@ -108,23 +120,41 @@ fun OverlayPanel(
                             onClick = {},
                         ),
                 ) {
-                    JournalPage(
-                        state = presenter.state,
-                        onRefresh = presenter::refresh,
-                        onToggleTask = presenter::toggle,
-                        modifier = Modifier.fillMaxSize(),
-                        onClose = {
-                            if (!closing) {
-                                closing = true
-                                shown = false
-                                scope.launch {
-                                    delay(180)
-                                    onClose()
+                    Column(Modifier.fillMaxSize()) {
+                        Box(Modifier.weight(1f).fillMaxWidth()) {
+                            pageState.SaveableStateProvider(page) {
+                                when (page) {
+                                    0 -> JournalPage(
+                                        state = presenter.state,
+                                        onRefresh = {
+                                            presenter.refresh()
+                                            guideSession.refresh()
+                                        },
+                                        onToggleTask = presenter::toggle,
+                                        modifier = Modifier.fillMaxSize(),
+                                        onClose = closePanel,
+                                        onOpenApp = onOpenApp,
+                                        guideSession = guideSession,
+                                    )
+                                    else -> InformationPage(
+                                        state = presenter.state,
+                                        onRefresh = presenter::refresh,
+                                        onMealSettings = null,
+                                        modifier = Modifier.fillMaxSize(),
+                                        onClose = closePanel,
+                                        onOpenApp = onOpenApp,
+                                    )
                                 }
                             }
-                        },
-                        onOpenApp = onOpenApp,
-                    )
+                        }
+                        PaperBottomNav(
+                            selected = page,
+                            done = presenter.state.done.size,
+                            total = presenter.state.envelope?.data?.tasks?.size ?: 0,
+                            showRecords = false,
+                            onSelect = { page = it },
+                        )
+                    }
                 }
             }
         }

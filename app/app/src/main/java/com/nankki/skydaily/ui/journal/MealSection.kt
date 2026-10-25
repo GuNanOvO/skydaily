@@ -42,7 +42,7 @@ internal fun mealHourLabel(hour: Int): String = mealHourLabels.getValue(hour)
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-internal fun ColumnScope.MealSection(onSettings: () -> Unit) {
+internal fun ColumnScope.MealSection(onSettings: (() -> Unit)?) {
     val palette = LocalPaperPalette.current
     val now = rememberMinuteTime()
     val status = remember(now) { MealSchedule.status(now) }
@@ -94,8 +94,10 @@ internal fun ColumnScope.MealSection(onSettings: () -> Unit) {
                     nextHour = status.next.hour,
                     palette = palette,
                 )
-                Spacer(Modifier.height(8.dp))
-                PaperButton("提醒设置", onSettings, modifier = Modifier.align(Alignment.End))
+                if (onSettings != null) {
+                    Spacer(Modifier.height(8.dp))
+                    PaperButton("提醒设置", onSettings, modifier = Modifier.align(Alignment.End))
+                }
             }
             Tape(Modifier.align(Alignment.TopCenter), width = 58.dp, height = 12.dp, rotation = -3f)
         }

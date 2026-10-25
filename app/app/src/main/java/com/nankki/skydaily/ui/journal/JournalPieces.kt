@@ -12,6 +12,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -56,10 +57,22 @@ import com.nankki.skydaily.data.TaskDetail
 import com.nankki.skydaily.ui.paper.PaperCheckbox
 import com.nankki.skydaily.ui.paper.PaperDivider
 import com.nankki.skydaily.ui.paper.PaperButton
+import com.nankki.skydaily.ui.paper.PaperBlock
 import com.nankki.skydaily.ui.paper.Tape
 import com.nankki.skydaily.ui.paper.hardShadow
 import com.nankki.skydaily.ui.theme.LocalPaperPalette
 import com.nankki.skydaily.ui.theme.LightPalette
+
+@Composable
+internal fun PanelActions(onClose: (() -> Unit)?, onOpenApp: (() -> Unit)?) {
+    if (onClose == null && onOpenApp == null) return
+    PaperBlock {
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            onClose?.let { PaperButton("关闭", it) }
+            onOpenApp?.let { PaperButton("打开应用", it) }
+        }
+    }
+}
 
 @Composable
 fun RemoteImage(

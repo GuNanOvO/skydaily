@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -24,7 +23,6 @@ import com.nankki.skydaily.R
 import com.nankki.skydaily.core.BeijingClock
 import com.nankki.skydaily.data.TaskDetail
 import com.nankki.skydaily.ui.paper.PaperBlock
-import com.nankki.skydaily.ui.paper.PaperButton
 import com.nankki.skydaily.ui.paper.PaperScroll
 import com.nankki.skydaily.ui.paper.RuledText
 import com.nankki.skydaily.ui.paper.NotebookHeader
@@ -80,14 +78,7 @@ fun JournalPage(
                     onToggleTheme = onToggleTheme,
                 )
             }
-            if (onClose != null || onOpenApp != null) {
-                PaperBlock {
-                    Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        onClose?.let { PaperButton("关闭", it) }
-                        onOpenApp?.let { PaperButton("打开应用", it) }
-                    }
-                }
-            }
+            PanelActions(onClose = onClose, onOpenApp = onOpenApp)
             DataStatus(state, archived)
             if (onClose == null && tasks.isNotEmpty()) {
                 NotebookSection("每日任务", R.drawable.sky_jelly_handdrawn, stickerInset = 64.dp)

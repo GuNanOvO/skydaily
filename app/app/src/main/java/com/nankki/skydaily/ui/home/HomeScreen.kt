@@ -137,6 +137,7 @@ fun HomeScreen(
                 selected = page,
                 done = state.done.size,
                 total = state.envelope?.data?.tasks?.size ?: 0,
+                showRecords = true,
                 onSelect = { page = it },
             )
         }

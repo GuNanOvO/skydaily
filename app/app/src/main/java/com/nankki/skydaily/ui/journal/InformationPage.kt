@@ -22,13 +22,17 @@ import com.nankki.skydaily.ui.paper.RuledText
 fun InformationPage(
     state: JournalUiState,
     onRefresh: () -> Unit,
-    onMealSettings: () -> Unit,
+    onMealSettings: (() -> Unit)?,
     modifier: Modifier = Modifier,
+    onClose: (() -> Unit)? = null,
+    onOpenApp: (() -> Unit)? = null,
 ) {
     var images by remember { mutableStateOf<List<String>?>(null) }
     var noticeOpen by remember { mutableStateOf(false) }
-    BackHandler(enabled = images != null || noticeOpen) {
-        if (images != null) images = null else noticeOpen = false
+    if (onClose == null) {
+        BackHandler(enabled = images != null || noticeOpen) {
+            if (images != null) images = null else noticeOpen = false
+        }
     }
     Box(modifier.fillMaxSize()) {
         PaperScroll {
@@ -36,12 +40,13 @@ fun InformationPage(
                 NotebookHeader(
                     title = "资讯",
                     subtitle = "公告 · 天气 · 活动日历",
-                    date = state.envelope?.date ?: state.today,
-                    onRefresh = onRefresh,
+                    date = if (onClose == null) state.envelope?.date ?: state.today else null,
+                    onRefresh = if (onClose == null) onRefresh else null,
                     refreshing = state.loading || state.refreshing,
                     sticker = R.drawable.sky_butterfly_handdrawn,
                 )
             }
+            PanelActions(onClose = onClose, onOpenApp = onOpenApp)
             MealSection(onSettings = onMealSettings)
             DataStatus(state)
             if (state.envelope == null) {

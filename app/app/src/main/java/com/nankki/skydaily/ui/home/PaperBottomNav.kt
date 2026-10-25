@@ -36,11 +36,11 @@ import com.nankki.skydaily.ui.theme.LocalPaperPalette
 
 private data class NavItem(val label: String, val hint: String)
 
-private val items = listOf(
+private val journalItems = listOf(
     NavItem("今日", "任务进度"),
     NavItem("资讯", "天气 · 日历 · 公告"),
-    NavItem("记录", "历史与快捷操作"),
 )
+private val mainItems = journalItems + NavItem("记录", "历史与快捷操作")
 
 /** 纸面风格的移动端底部分页。 */
 @Composable
@@ -48,10 +48,12 @@ fun PaperBottomNav(
     selected: Int,
     done: Int,
     total: Int,
+    showRecords: Boolean,
     onSelect: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val palette = LocalPaperPalette.current
+    val items = if (showRecords) mainItems else journalItems
     Column(modifier.fillMaxWidth().background(palette.page)) {
         Box(
             Modifier
