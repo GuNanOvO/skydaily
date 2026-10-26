@@ -98,7 +98,7 @@
     "weather": {
       "text": "今日无碎片降落",
       "images": [
-        "https://skydaily.nankki.com/history/media/786738d123af1a8767665d93.webp"
+        "https://skydaily.nankki.com/history/media/e3610120e39f1752b2c247d3.webp"
       ]
     },
     "calendar": {
@@ -135,7 +135,7 @@
     "seasonCandleMap": "云野"
   },
   "meta": {
-    "fetched_at": "2026-10-26T05:51:08.078Z",
+    "fetched_at": "2026-10-26T08:31:07.595Z",
     "cached": false,
     "stale": false
   },
