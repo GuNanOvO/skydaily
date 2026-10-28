@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-29",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "在巨兽荒原的神坛旁冥想",
+        "keyword": "巨兽荒原冥想"
+      },
+      {
+        "number": 2,
+        "text": "向一位朋友招手",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "收集30点烛火",
+        "keyword": null
+      },
+      {
+        "number": 4,
+        "text": "帮助苦修行者",
+        "keyword": "苦修行者任务"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "巨兽荒原冥想",
+        "title": "每日任务－在巨兽荒原的神坛旁冥想",
+        "sections": [
+          {
+            "label": "任务",
+            "text": "在巨兽荒原的神坛旁冥想"
+          },
+          {
+            "label": "位置",
+            "text": "暮土－巨兽荒原(四龙图)"
+          },
+          {
+            "label": "步骤",
+            "text": "先进入暮土四龙图，往前飞，在下一个图的入口附近即可找到"
+          },
+          {
+            "label": "视频指引",
+            "text": ""
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/e300c7cfb01908e211baa417.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "任务： 在巨兽荒原的神坛旁冥想\n位置： 暮土－巨兽荒原(四龙图)\n步骤： 先进入暮土四龙图，往前飞，在下一个图的入口附近即可找到\n视频指引："
+      },
+      {
+        "keyword": "苦修行者任务",
+        "title": "每日任务－帮助苦修行者",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "请旅人先查看接到的任务名称，然后在下方选择对应指南\n在云峰找到苦修行者 ｜ 苦修行者在云巢需要帮助"
+          },
+          {
+            "label": "小精灵提示",
+            "text": "1、若旅人从未收集过该先祖，任务会显示为：在云峰找到苦修行者 ；\n2、若旅人之前已收集过该先祖，任务会显示为：苦修行者在仙乡需要帮助 。"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "请旅人先查看接到的任务名称，然后在下方选择对应指南\n在云峰找到苦修行者 ｜ 苦修行者在云巢需要帮助\n小精灵提示：\n1、若旅人从未收集过该先祖，任务会显示为：在云峰找到苦修行者 ；\n2、若旅人之前已收集过该先祖，任务会显示为：苦修行者在仙乡需要帮助 。",
+        "variants": [
+          {
+            "label": "在云峰找到苦修行者",
+            "title": "在云峰找到苦修行者",
+            "sections": [
+              {
+                "label": "先祖位置",
+                "text": "云野·云峰"
+              },
+              {
+                "label": "任务流程",
+                "text": "1、先前往云峰找到并收集苦修行者先祖\n2、接着前往云巢\n3、在云巢找到冥想之地\n4、找到苦修行者先祖，跟着先祖一起散步一会儿，即可完成任务"
+              },
+              {
+                "label": "图片流程",
+                "text": ""
+              },
+              {
+                "label": "视频流程",
+                "text": ""
+              }
+            ],
+            "images": [
+              "https://skydaily.nankki.com/history/media/171072781db49c6af49a8a73.webp"
+            ],
+            "videos": [],
+            "links": [],
+            "text": "先祖位置： 云野·云峰\n任务流程：\n1、先前往云峰找到并收集苦修行者先祖\n2、接着前往云巢\n3、在云巢找到冥想之地\n4、找到苦修行者先祖，跟着先祖一起散步一会儿，即可完成任务\n图片流程：\n视频流程："
+          },
+          {
+            "label": "苦修行者在云巢需要帮助",
+            "title": "苦修行者在云巢需要帮助",
+            "sections": [
+              {
+                "label": "先祖位置",
+                "text": "云巢·冥想之地"
+              },
+              {
+                "label": "任务流程",
+                "text": "1、在云巢找到冥想之地\n2、找到苦修行者先祖，跟着先祖一起散步一会儿，即可完成任务"
+              },
+              {
+                "label": "图片流程",
+                "text": ""
+              },
+              {
+                "label": "视频流程",
+                "text": ""
+              }
+            ],
+            "images": [
+              "https://skydaily.nankki.com/history/media/91869d8af8beaa65b32b9c13.webp"
+            ],
+            "videos": [],
+            "links": [],
+            "text": "先祖位置： 云巢·冥想之地\n任务流程：\n1、在云巢找到冥想之地\n2、找到苦修行者先祖，跟着先祖一起散步一会儿，即可完成任务\n图片流程：\n视频流程："
+          }
+        ]
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [
+          "https://h5.ds.163.com/v1/6ad585a083a764003172a423/"
+        ],
+        "text": ""
+      }
+    ],
+    "weather": {
+      "text": "今日无碎片降落",
+      "images": [
+        "https://skydaily.nankki.com/history/media/0788e49012847d24e4cc0a91.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/5a7afa8abe7bf94d4688c40d.webp"
+      ]
+    },
+    "candles": [
+      {
+        "keyword": "大蜡烛",
+        "title": "每日大蜡烛位置",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~"
+          },
+          {
+            "label": "位置分布参考",
+            "text": "大蜡烛堆攻略"
+          },
+          {
+            "label": "小精灵温馨提示",
+            "text": "4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/c37d38160f147e9dc76df94f.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~\n位置分布参考：大蜡烛堆攻略\n小精灵温馨提示：\n4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+      }
+    ],
+    "seasonCandleMap": "暮土"
+  },
+  "meta": {
+    "fetched_at": "2026-10-28T16:08:52.483Z",
+    "cached": false,
+    "stale": false
+  },
+  "errors": []
+}
