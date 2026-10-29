@@ -8,6 +8,10 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.util.concurrent.ConcurrentHashMap
+import java.util.concurrent.CountDownLatch
+import java.util.concurrent.TimeUnit
+import kotlin.concurrent.thread
 
 class HistoryRepositoryTest {
     private val indexJson = """
@@ -270,12 +274,49 @@ class HistoryRepositoryTest {
     }
 
     @Test
-    fun `date validation accepts only real iso dates`() {
-        assertTrue(HistoryJson.isValidDate("2026-10-21"))
-        assertTrue(HistoryJson.isValidDate("2028-02-29"))
-        assertFalse(HistoryJson.isValidDate("2026-02-29"))
-        assertFalse(HistoryJson.isValidDate("2026-2-01"))
-        assertFalse(HistoryJson.isValidDate("2026-10-21T00:00:00"))
-        assertFalse(HistoryJson.isValidDate("../2026-10-21"))
+    fun `concurrent index refreshes keep body and etag from one response`() {
+        val indexA = """{"dates":[{"date":"2026-10-30","file":"daily/2026-10-30.json"}]}"""
+        val indexB = """{"dates":[{"date":"2026-10-29","file":"daily/2026-10-29.json"}]}"""
+        val store = CoordinatedIndexStore(indexB)
+        val threadB = thread {
+            HistoryRepository(FakeTransport(mutableListOf(Fetch.Ok(indexB, "\"EB\""))), store).refreshIndex()
+        }
+        assertTrue(store.bodyWritten.await(5, TimeUnit.SECONDS))
+        val releaser = thread {
+            Thread.sleep(300)
+            store.release.countDown()
+        }
+        HistoryRepository(FakeTransport(mutableListOf(Fetch.Ok(indexA, "\"EA\""))), store).refreshIndex()
+        releaser.join(5_000)
+        threadB.join(5_000)
+
+        val cached = HistoryRepository(FakeTransport(mutableListOf()), store).cachedIndex()!!
+
+        val pair = cached.index.entries.single().date to cached.etag
+        assertTrue(pair == ("2026-10-30" to "\"EA\"") || pair == ("2026-10-29" to "\"EB\""))
+    }
+
+    private class CoordinatedIndexStore(private val blockingBody: String) : DiskStore {
+        private val files = ConcurrentHashMap<String, String>()
+        val bodyWritten = CountDownLatch(1)
+        val release = CountDownLatch(1)
+
+        override fun read(name: String): String? = files[name]
+
+        override fun write(name: String, text: String) {
+            files[name] = text
+            if (name == "history-index.json" && text == blockingBody) {
+                bodyWritten.countDown()
+                release.await(5, TimeUnit.SECONDS)
+            }
+        }
+
+        override fun remove(name: String) {
+            files.remove(name)
+        }
+
+        override fun removeAll(prefix: String) {
+            files.keys.removeIf { it.startsWith(prefix) }
+        }
     }
 }

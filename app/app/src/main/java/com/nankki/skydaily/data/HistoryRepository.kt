@@ -44,9 +44,9 @@ class HistoryRepository(
     private val store: DiskStore,
 ) {
     fun cachedIndex(): CachedHistoryIndex? {
-        val raw = store.read(INDEX_BODY) ?: return null
+        val (raw, etag) = readIndexCache() ?: return null
         val index = HistoryJson.parseIndex(raw) ?: return null
-        return CachedHistoryIndex(index, store.read(INDEX_ETAG))
+        return CachedHistoryIndex(index, etag)
     }
 
     fun refreshIndex(): HistoryIndexLoad {
@@ -62,8 +62,7 @@ class HistoryRepository(
                     cached?.let { HistoryIndexLoad.Offline(it.index, INVALID_INDEX_REASON) }
                         ?: HistoryIndexLoad.Failure(INVALID_INDEX_REASON)
                 } else {
-                    store.write(INDEX_BODY, fetch.body)
-                    writeEtag(INDEX_ETAG, fetch.etag)
+                    writeIndexCache(fetch.body, fetch.etag)
                     HistoryIndexLoad.Success(index, fromCache = false)
                 }
             }
@@ -76,10 +75,10 @@ class HistoryRepository(
 
     fun cachedDate(date: String): CachedHistoryRecord? {
         if (!HistoryJson.isValidDate(date)) return null
-        val raw = store.read(recordBody(date)) ?: return null
+        val (raw, etag) = readRecordCache(date) ?: return null
         val envelope = runCatching { JournalJson.parseEnvelope(raw) }.getOrNull() ?: return null
         if (envelope.date != date) return null
-        return CachedHistoryRecord(envelope, store.read(recordEtag(date)))
+        return CachedHistoryRecord(envelope, etag)
     }
 
     fun loadDate(date: String): HistoryRecordLoad {
@@ -97,8 +96,7 @@ class HistoryRepository(
                     cached?.let { HistoryRecordLoad.Offline(it.envelope, INVALID_RECORD_REASON) }
                         ?: HistoryRecordLoad.Failure(INVALID_RECORD_REASON)
                 } else {
-                    store.write(recordBody(date), fetch.body)
-                    writeEtag(recordEtag(date), fetch.etag)
+                    writeRecordCache(date, fetch.body, fetch.etag)
                     HistoryRecordLoad.Success(record, fromCache = false)
                 }
             }
@@ -107,6 +105,26 @@ class HistoryRepository(
                 HistoryRecordLoad.Offline(it.envelope, fetch.reason)
             } ?: HistoryRecordLoad.Failure(fetch.reason)
         }
+    }
+
+    private fun readIndexCache(): Pair<String, String?>? = synchronized(CACHE_LOCK) {
+        val body = store.read(INDEX_BODY) ?: return null
+        body to store.read(INDEX_ETAG)
+    }
+
+    private fun writeIndexCache(body: String, etag: String?) = synchronized(CACHE_LOCK) {
+        store.write(INDEX_BODY, body)
+        writeEtag(INDEX_ETAG, etag)
+    }
+
+    private fun readRecordCache(date: String): Pair<String, String?>? = synchronized(CACHE_LOCK) {
+        val body = store.read(recordBody(date)) ?: return null
+        body to store.read(recordEtag(date))
+    }
+
+    private fun writeRecordCache(date: String, body: String, etag: String?) = synchronized(CACHE_LOCK) {
+        store.write(recordBody(date), body)
+        writeEtag(recordEtag(date), etag)
     }
 
     private fun writeEtag(name: String, etag: String?) {
@@ -118,6 +136,8 @@ class HistoryRepository(
     private fun recordEtag(date: String) = "$RECORD_PREFIX$date.etag"
 
     private companion object {
+        /** 正文与 ETag 必须成对读写；历史仓库可能被多个界面实例并发调用。 */
+        val CACHE_LOCK = Any()
         const val INDEX_PATH = "/history/index.json"
         const val INDEX_BODY = "history-index.json"
         const val INDEX_ETAG = "history-index.etag"
