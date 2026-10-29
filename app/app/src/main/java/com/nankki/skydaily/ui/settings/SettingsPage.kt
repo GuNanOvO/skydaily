@@ -215,14 +215,12 @@ fun SettingsPage(
                 tone = palette.tabColors[3],
                 accent = palette.noteAccents[3],
                 onCheckedChange = onAllowMeteredAutoRefreshChange,
-                modifier = Modifier.padding(start = 12.dp),
             )
             Text(
                 text = "关闭时不在移动或计费网络下自动获取；手动刷新不受限制。",
                 color = palette.muted,
                 fontSize = 11.sp,
                 lineHeight = 18.sp,
-                modifier = Modifier.padding(start = 12.dp),
             )
             val route = state.dataRoute
             if (route != null) {
