@@ -2,6 +2,11 @@ package com.nankki.skydaily.data
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.booleanOrNull
 import kotlinx.serialization.json.Json as JsonParser
 
 @Serializable
@@ -13,6 +18,11 @@ data class Envelope(
     val meta: Meta = Meta(),
     val errors: List<SectionError> = emptyList(),
 )
+
+/** 任务与攻略错误阻止当日完成；已发布的天气、日历、媒体缺失不阻止查看任务。 */
+internal fun Envelope.isUsableFor(date: String): Boolean =
+    schemaVersion == 1 && this.date == date && !meta.stale && data.tasks.isNotEmpty() &&
+        errors.none { it.section == "tasks" || it.section.startsWith("detail:") }
 
 @Serializable
 data class Meta(
@@ -138,4 +148,36 @@ object JournalJson {
     fun parseEnvelope(raw: String): Envelope = parser.decodeFromString(Envelope.serializer(), raw)
 
     fun parseNotices(raw: String): NoticeArchive = parser.decodeFromString(NoticeArchive.serializer(), raw)
+
+    /**
+     * `/v1/notice`：Envelope 外壳，`data` 即当前公告。
+     * `meta.stale` 或非空 `errors` 表示上游不可信；缺字段的默认模型同样拒绝。
+     */
+    fun parseNoticeApi(raw: String): NoticeVersion? {
+        val root = objectOf(raw) ?: return null
+        val meta = root["meta"] as? JsonObject
+        if ((meta?.get("stale") as? JsonPrimitive)?.booleanOrNull == true) return null
+        if ((root["errors"] as? JsonArray)?.isNotEmpty() == true) return null
+        val data = root["data"] as? JsonObject ?: return null
+        val notice = runCatching { parser.decodeFromJsonElement(NoticeVersion.serializer(), data) }.getOrNull() ?: return null
+        return notice.takeIf { it.hash.isNotBlank() && it.title.isNotBlank() }
+    }
+
+    /**
+     * `history/notices.json`：必须是显式归档——`versions` 数组存在，空数组表示确认当前无公告。
+     * 缺少 `versions` 的默认对象和空白公告不参与择路；版本选择沿用归档的当前版本规则。
+     */
+    fun parseNoticeArchive(raw: String): NoticeArchive? {
+        val root = objectOf(raw) ?: return null
+        val versions = root["versions"] as? JsonArray ?: return null
+        val current = root["current"]
+        if (current != null && current !is JsonObject && current !is JsonNull) return null
+        val archive = runCatching { parser.decodeFromJsonElement(NoticeArchive.serializer(), root) }.getOrNull() ?: return null
+        if (versions.isEmpty()) return archive.takeUnless { current is JsonObject }
+        val selected = archive.currentVersion() ?: return null
+        return archive.takeIf { selected.hash.isNotBlank() && selected.title.isNotBlank() }
+    }
+
+    private fun objectOf(raw: String): JsonObject? =
+        runCatching { parser.parseToJsonElement(raw) as? JsonObject }.getOrNull()
 }

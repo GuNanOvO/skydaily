@@ -20,6 +20,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.selection.selectable
+import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
@@ -30,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -38,6 +41,7 @@ import com.nankki.skydaily.AppConfig
 import com.nankki.skydaily.R
 import com.nankki.skydaily.core.BeijingClock
 import com.nankki.skydaily.core.openWebLink
+import com.nankki.skydaily.data.Mirror
 import com.nankki.skydaily.meals.MealReminderManager
 import com.nankki.skydaily.core.ThemeMode
 import com.nankki.skydaily.ui.journal.JournalUiState
@@ -46,6 +50,7 @@ import com.nankki.skydaily.ui.paper.PaperBlock
 import com.nankki.skydaily.ui.paper.PaperButton
 import com.nankki.skydaily.ui.paper.PaperDivider
 import com.nankki.skydaily.ui.paper.PaperScroll
+import com.nankki.skydaily.ui.paper.PaperToggleRow
 import com.nankki.skydaily.ui.paper.StarMark
 import com.nankki.skydaily.ui.paper.Sticker
 import com.nankki.skydaily.ui.paper.Tape
@@ -65,6 +70,8 @@ fun SettingsPage(
     onOpenFeedback: () -> Unit,
     onBack: () -> Unit,
     mealManager: MealReminderManager,
+    onAutoRefreshChange: (Boolean) -> Unit,
+    onMirrorChange: (Mirror) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val palette = LocalPaperPalette.current
@@ -172,11 +179,68 @@ fun SettingsPage(
         }
 
         SettingsSection(
-            title = "缓存",
+            title = "今日数据",
             note = if (state.fetchedAt > 0) "已缓存" else "尚无缓存",
             tone = palette.tabColors[3],
             tape = palette.noteTapes[3],
         ) {
+            PaperToggleRow(
+                title = "自动刷新今日数据",
+                checked = state.autoRefreshEnabled,
+                tone = palette.tabColors[3],
+                accent = palette.noteAccents[3],
+                onCheckedChange = onAutoRefreshChange,
+            )
+            Text(
+                text = "应用运行时跨天获取；失败每 10 分钟重试，成功后当天停止自动请求。",
+                color = palette.muted,
+                fontSize = 11.sp,
+                lineHeight = 18.sp,
+            )
+            if (!state.autoRefreshEnabled) {
+                Spacer(Modifier.height(2.dp))
+                Text(
+                    text = "已关闭：只在手动刷新或清除缓存时获取。",
+                    color = palette.muted,
+                    fontSize = 11.sp,
+                    lineHeight = 18.sp,
+                )
+            }
+            val route = state.dataRoute
+            if (route != null) {
+                Spacer(Modifier.height(2.dp))
+                Text(
+                    text = buildString {
+                        if (state.completedDate == state.today) append("今日已完成 · ")
+                        append("上次成功 ${route.label}")
+                        state.routeElapsedMs?.takeIf { it > 0 }?.let { append(" · 用时 ${it} 毫秒") }
+                    },
+                    color = palette.muted,
+                    fontSize = 11.sp,
+                    lineHeight = 18.sp,
+                )
+            }
+            Spacer(Modifier.height(8.dp))
+            PaperDivider()
+            Spacer(Modifier.height(8.dp))
+            Text(
+                text = "第三来源",
+                color = palette.muted,
+                fontSize = 10.sp,
+                lineHeight = 16.sp,
+            )
+            Spacer(Modifier.height(6.dp))
+            MirrorPicker(mirror = state.mirror, onMirrorChange = onMirrorChange)
+            Spacer(Modifier.height(6.dp))
+            Text(
+                text = "CF API、Pages 与所选镜像同时尝试，优先使用完整返回有效今日数据的线路。",
+                color = palette.muted,
+                fontSize = 11.sp,
+                lineHeight = 18.sp,
+            )
+            Spacer(Modifier.height(8.dp))
+            PaperDivider()
+            Spacer(Modifier.height(8.dp))
             if (state.fetchedAt > 0) {
                 Text(
                     text = "上次更新",
@@ -469,6 +533,83 @@ private fun ThemeChoice(
         Spacer(Modifier.height(2.dp))
         Text(
             text = if (selected) "当前" else hint,
+            color = if (selected) palette.tabMuted else palette.muted,
+            fontSize = 9.sp,
+            lineHeight = 14.sp,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+    }
+}
+
+/**
+ * 第三个来源二选一：jsDelivr 或 ghfast.top，与 CF API、Pages 同时参与竞速。
+ */
+@Composable
+private fun MirrorPicker(
+    mirror: Mirror,
+    onMirrorChange: (Mirror) -> Unit,
+) {
+    val fontScale = LocalDensity.current.fontScale
+    BoxWithConstraints(Modifier.fillMaxWidth()) {
+        val chipWidth = ((maxWidth - 6.dp) / 2f).coerceAtLeast((128f * fontScale).dp)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .horizontalScroll(rememberScrollState())
+                .selectableGroup(),
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
+        ) {
+            Mirror.entries.forEach { option ->
+                MirrorChoice(
+                    mirror = option,
+                    selected = option == mirror,
+                    onClick = { onMirrorChange(option) },
+                    modifier = Modifier.width(chipWidth),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun MirrorChoice(
+    mirror: Mirror,
+    selected: Boolean,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val palette = LocalPaperPalette.current
+    val hint = when (mirror) {
+        Mirror.JSDELIVR -> "默认 CDN"
+        Mirror.GHFAST -> "GitHub 加速"
+    }
+    Column(
+        modifier = modifier
+            .heightIn(min = 48.dp)
+            .hardShadow(palette.shadow, dx = 1.dp, dy = 2.dp)
+            .background(if (selected) palette.tabColors[3] else palette.photoPaper, RoundedCornerShape(2.dp))
+            .border(
+                width = 1.dp,
+                color = if (selected) palette.noteAccents[3] else palette.outline,
+                shape = RoundedCornerShape(2.dp),
+            )
+            .selectable(selected = selected, role = Role.RadioButton, onClick = onClick)
+            .padding(horizontal = 10.dp, vertical = 7.dp),
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text(
+            text = mirror.route.label,
+            color = if (selected) palette.tabInk else palette.ink,
+            fontSize = 13.sp,
+            lineHeight = 18.sp,
+            fontWeight = if (selected) FontWeight.SemiBold else FontWeight.Medium,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+        Spacer(Modifier.height(2.dp))
+        Text(
+            text = if (selected) "已选" else hint,
             color = if (selected) palette.tabMuted else palette.muted,
             fontSize = 9.sp,
             lineHeight = 14.sp,

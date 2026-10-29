@@ -37,6 +37,7 @@ import com.nankki.skydaily.core.CheckState
 import com.nankki.skydaily.core.ThemeMode
 import com.nankki.skydaily.core.ThemePreference
 import com.nankki.skydaily.data.DirectoryDiskStore
+import com.nankki.skydaily.data.DataRoutes
 import com.nankki.skydaily.data.JournalRepository
 import com.nankki.skydaily.data.OkHttpTransport
 import com.nankki.skydaily.ui.theme.PaperTheme
@@ -111,7 +112,7 @@ class OverlayService : Service() {
         preferences = BallPreferences(store)
         themePreference = ThemePreference(store)
         modeState.value = themePreference.mode
-        repository = JournalRepository(OkHttpTransport(AppConfig.SITE_URL), DirectoryDiskStore(this))
+        repository = JournalRepository(OkHttpTransport(AppConfig.SITE_URL), DirectoryDiskStore(this), DataRoutes(store))
         checks = CheckState(store)
         windowManager = getSystemService(WINDOW_SERVICE) as WindowManager
         displayManager = (getSystemService(DISPLAY_SERVICE) as DisplayManager).also {

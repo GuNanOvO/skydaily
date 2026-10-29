@@ -1,6 +1,12 @@
 package com.nankki.skydaily.data
 
 import com.nankki.skydaily.AppConfig
+import kotlinx.coroutines.suspendCancellableCoroutine
+import okhttp3.Call
+import okhttp3.Callback
+import okhttp3.Response
+import java.io.IOException
+import kotlin.coroutines.resume
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.util.concurrent.TimeUnit
@@ -17,9 +23,9 @@ interface HttpTransport {
 }
 
 /**
- * 全应用共享的 JSON HTTP 客户端：连接池与后台线程池只创建一份。
- *
- * 图片加载继续使用 Coil 自己的传输策略，不与这里合并，避免改变图片缓存行为。
+ * 共享连接池与后台线程池。JSON 竞争的总时限由 RacingDataClient 控制，
+ * 不限制持续有进度的 APK 下载。图片使用派生客户端，只改网络来源，
+ * 保留 Coil 使用的原始 URL 缓存键。
  */
 object JsonHttpClient {
     val shared: OkHttpClient by lazy {
@@ -33,21 +39,46 @@ object JsonHttpClient {
 class OkHttpTransport(
     private val baseUrl: String = AppConfig.SITE_URL,
     private val client: OkHttpClient = JsonHttpClient.shared,
-) : HttpTransport {
-    override fun get(path: String, etag: String?): Fetch {
+) : HttpTransport, AsyncHttpTransport {
+    private fun request(path: String, etag: String?): Request {
         val builder = Request.Builder()
-            .url(baseUrl.trimEnd('/') + path)
+            .url(if (path.startsWith("https://") || path.startsWith("http://")) path else baseUrl.trimEnd('/') + path)
             .header("accept", "application/json")
             .header("user-agent", AppConfig.USER_AGENT)
         if (etag != null) builder.header("if-none-match", etag)
-        return try {
-            client.newCall(builder.build()).execute().use { response ->
-                when {
-                    response.code == 304 -> Fetch.NotModified
-                    response.isSuccessful -> Fetch.Ok(response.body.string(), response.header("etag"))
-                    else -> Fetch.Failed("HTTP ${response.code}")
-                }
+        return builder.build()
+    }
+
+    private fun read(response: Response): Fetch = response.use {
+        when {
+            it.code == 304 -> Fetch.NotModified
+            it.isSuccessful -> Fetch.Ok(it.body.string(), it.header("etag"))
+            else -> Fetch.Failed("HTTP ${it.code}")
+        }
+    }
+
+    override suspend fun getAsync(url: String, etag: String?): Fetch = suspendCancellableCoroutine { continuation ->
+        val call = client.newCall(request(url, etag))
+        continuation.invokeOnCancellation { call.cancel() }
+        call.enqueue(object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+                continuation.resume(Fetch.Failed(e.message ?: "网络不可用"))
             }
+
+            override fun onResponse(call: Call, response: Response) {
+                val result = try {
+                    read(response)
+                } catch (error: IOException) {
+                    Fetch.Failed(error.message ?: "响应读取失败")
+                }
+                continuation.resume(result)
+            }
+        })
+    }
+
+    override fun get(path: String, etag: String?): Fetch {
+        return try {
+            read(client.newCall(request(path, etag)).execute())
         } catch (error: Exception) {
             Fetch.Failed(error.message ?: "网络不可用")
         }

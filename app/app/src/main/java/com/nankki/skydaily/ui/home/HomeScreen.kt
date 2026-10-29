@@ -98,6 +98,8 @@ fun HomeScreen(
                         onOpenFeedback = { openWebLink(context, AppConfig.FEEDBACK_URL) },
                         onBack = { route = null },
                         mealManager = mealManager,
+                        onAutoRefreshChange = presenter::setAutoRefreshEnabled,
+                        onMirrorChange = presenter::setMirror,
                     )
                     null -> Crossfade(targetState = page, animationSpec = tween(160), label = "main-pages") { target ->
                         when (target) {
