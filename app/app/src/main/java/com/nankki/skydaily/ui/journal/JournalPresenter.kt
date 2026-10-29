@@ -46,6 +46,7 @@ data class JournalUiState(
     val refreshing: Boolean = false,
     val message: String? = null,
     val autoRefreshEnabled: Boolean = true,
+    val allowMeteredAutoRefresh: Boolean = false,
     val completedDate: String? = null,
     val mirror: Mirror = Mirror.JSDELIVR,
     val dataRoute: DataRoute? = null,
@@ -59,6 +60,7 @@ class JournalPresenter(
     private val policy: DailyRefreshPolicy,
     private val routes: DataRoutes,
     private val scope: CoroutineScope,
+    private val isUnmeteredNetwork: () -> Boolean,
     private val io: CoroutineDispatcher = Dispatchers.IO,
     private val now: () -> Long = System::currentTimeMillis,
 ) {
@@ -75,6 +77,7 @@ class JournalPresenter(
     var state by mutableStateOf(JournalUiState(
         today = BeijingClock.today(now()),
         autoRefreshEnabled = policy.enabled,
+        allowMeteredAutoRefresh = policy.allowMetered,
         completedDate = policy.completedDate,
         mirror = routes.mirror,
         dataRoute = routes.lastDailyRoute,
@@ -119,7 +122,7 @@ class JournalPresenter(
     fun refreshAutomatically() {
         rollDate()
         if (!warmed || clearingCache) return
-        if (policy.shouldAttempt(now())) requestToday()
+        if (policy.shouldAttempt(now()) && (policy.allowMetered || isUnmeteredNetwork())) requestToday()
         val last = lastNoticeAttempt
         if (visibleOwners.isNotEmpty() && (last == null || now() < last || now() - last >= NOTICE_INTERVAL_MS)) requestNotice()
     }
@@ -143,6 +146,12 @@ class JournalPresenter(
         policy.enabled = enabled
         state = state.copy(autoRefreshEnabled = policy.enabled)
         if (enabled) refreshAutomatically()
+    }
+
+    fun setAllowMeteredAutoRefresh(allowed: Boolean) {
+        policy.allowMetered = allowed
+        state = state.copy(allowMeteredAutoRefresh = policy.allowMetered)
+        if (allowed) refreshAutomatically()
     }
 
     fun setMirror(mirror: Mirror) {

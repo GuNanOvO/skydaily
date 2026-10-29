@@ -16,6 +16,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -40,6 +41,7 @@ fun PaperToggleRow(
     tone: Color,
     accent: Color,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
 ) {
     val palette = LocalPaperPalette.current
     val controlShape = remember { RoundedCornerShape(2.dp) }
@@ -47,8 +49,10 @@ fun PaperToggleRow(
         modifier = modifier
             .fillMaxWidth()
             .heightIn(min = 48.dp)
+            .alpha(if (enabled) 1f else 0.5f)
             .toggleable(
                 value = checked,
+                enabled = enabled,
                 role = Role.Switch,
                 onValueChange = onCheckedChange,
             ),

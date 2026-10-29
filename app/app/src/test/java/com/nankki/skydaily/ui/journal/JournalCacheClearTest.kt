@@ -29,7 +29,7 @@ class JournalCacheClearTest {
             }
         }
         val repository = JournalRepository(transport, MemoryDiskStore(), routes) { now }
-        val presenter = JournalPresenter(repository, CheckState(prefs), policy, routes, scope, io, { now })
+        val presenter = JournalPresenter(repository, CheckState(prefs), policy, routes, scope, { true }, io, { now })
         try {
             presenter.initialize()
             io.drain()

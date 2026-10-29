@@ -11,6 +11,7 @@ import coil3.request.crossfade
 import com.nankki.skydaily.core.AndroidKeyValueStore
 import com.nankki.skydaily.core.CheckState
 import com.nankki.skydaily.core.DailyRefreshPolicy
+import com.nankki.skydaily.core.isUnmeteredRefreshNetwork
 import com.nankki.skydaily.data.DataRoutes
 import com.nankki.skydaily.data.ArchiveImageInterceptor
 import com.nankki.skydaily.data.DirectoryDiskStore
@@ -31,6 +32,7 @@ class SkyApp : Application() {
         JournalPresenter(
             JournalRepository(OkHttpTransport(), DirectoryDiskStore(this), routes),
             CheckState(preferences), DailyRefreshPolicy(preferences), routes, appScope,
+            isUnmeteredNetwork = { isUnmeteredRefreshNetwork(this) },
         )
     }
     private val imageClient by lazy {

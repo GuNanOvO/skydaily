@@ -19,6 +19,10 @@ class DailyRefreshPolicy(private val store: KeyValueStore) {
             }
         }
 
+    var allowMetered: Boolean
+        get() = store.getString(ALLOW_METERED) == "true"
+        set(value) { store.putString(ALLOW_METERED, value.toString()) }
+
     val completedDate: String?
         get() = store.getString(COMPLETED_DATE)
 
@@ -49,6 +53,7 @@ class DailyRefreshPolicy(private val store: KeyValueStore) {
 
     private companion object {
         const val ENABLED = "refresh:enabled"
+        const val ALLOW_METERED = "refresh:allow-metered"
         const val COMPLETED_DATE = "refresh:completed-date"
         const val RETRY_INTERVAL_MS = 10 * 60_000L
     }

@@ -100,6 +100,7 @@ fun HomeScreen(
                         mealManager = mealManager,
                         onAutoRefreshChange = presenter::setAutoRefreshEnabled,
                         onMirrorChange = presenter::setMirror,
+                        onAllowMeteredAutoRefreshChange = presenter::setAllowMeteredAutoRefresh,
                     )
                     null -> Crossfade(targetState = page, animationSpec = tween(160), label = "main-pages") { target ->
                         when (target) {

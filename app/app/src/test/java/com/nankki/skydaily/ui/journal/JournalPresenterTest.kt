@@ -67,13 +67,74 @@ class JournalPresenterTest {
         } finally { harness.scope.cancel() }
     }
 
-    private class Harness(enabled: Boolean = true) {
+    @Test fun `restricted network blocks automatic attempts without delaying unmetered recovery`() {
+        val harness = Harness()
+        harness.restrictedNetwork = true
+        try {
+            harness.presenter.initialize()
+            harness.presenter.refreshAutomatically()
+            assertEquals(0, harness.dailyRequests)
+            harness.restrictedNetwork = false
+            harness.presenter.refreshAutomatically()
+            assertEquals(3, harness.dailyRequests)
+            assertEquals("2026-10-30", harness.presenter.state.completedDate)
+            harness.restrictedNetwork = true
+            harness.presenter.refreshAutomatically()
+            assertEquals(3, harness.dailyRequests)
+        } finally { harness.scope.cancel() }
+    }
+
+    @Test fun `metered allowance persists independently of disabled master`() {
+        val store = MemoryKeyValueStore()
+        val first = Harness(enabled = false, store = store)
+        first.restrictedNetwork = true
+        try {
+            first.presenter.initialize()
+            first.presenter.setAllowMeteredAutoRefresh(true)
+            assertEquals(0, first.dailyRequests)
+        } finally { first.scope.cancel() }
+        val restored = Harness(enabled = false, store = store)
+        restored.restrictedNetwork = true
+        try {
+            restored.presenter.initialize()
+            assertEquals(0, restored.dailyRequests)
+            restored.presenter.setAutoRefreshEnabled(true)
+            assertEquals(3, restored.dailyRequests)
+            assertEquals("2026-10-30", restored.presenter.state.completedDate)
+        } finally { restored.scope.cancel() }
+    }
+
+    @Test fun `manual bypasses metered restriction and enabling allowance fetches next day`() {
+        val harness = Harness()
+        harness.restrictedNetwork = true
+        try {
+            harness.presenter.initialize()
+            harness.presenter.refresh()
+            assertEquals(3, harness.dailyRequests)
+            harness.now += 86_400_000
+            harness.presenter.refreshAutomatically()
+            assertEquals(3, harness.dailyRequests)
+            harness.presenter.setAllowMeteredAutoRefresh(true)
+            assertEquals(6, harness.dailyRequests)
+            assertEquals("2026-10-31", harness.presenter.state.completedDate)
+            harness.presenter.setAllowMeteredAutoRefresh(false)
+            harness.restrictedNetwork = false
+            harness.presenter.refreshAutomatically()
+            assertEquals(6, harness.dailyRequests)
+            harness.now += 86_400_000
+            harness.restrictedNetwork = true
+            harness.presenter.refreshAutomatically()
+            assertEquals(6, harness.dailyRequests)
+        } finally { harness.scope.cancel() }
+    }
+
+    private class Harness(enabled: Boolean = true, val store: MemoryKeyValueStore = MemoryKeyValueStore()) {
         var now = Instant.parse("2026-10-30T04:00:00Z").toEpochMilli()
         var dailyRequests = 0
         var noticeRequests = 0
         var fail = false
+        var restrictedNetwork = false
         val scope = CoroutineScope(SupervisorJob() + Dispatchers.Unconfined)
-        val store = MemoryKeyValueStore()
         val policy = DailyRefreshPolicy(store).also { it.enabled = enabled }
         val routes = DataRoutes(store)
         val template = fixture("sample-daily.json")
@@ -88,7 +149,7 @@ class JournalPresenterTest {
         }
         val presenter = JournalPresenter(
             JournalRepository(transport, MemoryDiskStore(), routes) { now }, CheckState(store), policy, routes,
-            scope, Dispatchers.Unconfined, { now },
+            scope, { !restrictedNetwork }, Dispatchers.Unconfined, { now },
         )
     }
 }
