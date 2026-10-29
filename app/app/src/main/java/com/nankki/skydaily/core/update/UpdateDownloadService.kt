@@ -92,11 +92,11 @@ class UpdateDownloadService : Service() {
             }
             publish(session, UpdateState.Downloading(0, release.size))
             if (!managed.exists() && !managed.mkdirs()) throw IOException("无法创建更新目录")
-            UpdatePaths.clearOtherParts(filesDir, release.versionCode)
             UpdatePaths.clearOtherApks(filesDir, release.versionCode)
-            val target = UpdatePaths.part(filesDir, release.versionCode)
+            val target = UpdatePaths.part(filesDir, release.versionCode, session)
             part = target
             partFile = target
+            UpdatePaths.clearOtherParts(filesDir, target)
             target.delete()
 
             val client = SameOriginClient(updateHttpClient)
@@ -160,16 +160,19 @@ class UpdateDownloadService : Service() {
             }
 
             val apk = UpdatePaths.apk(filesDir, release.versionCode)
-            apk.delete()
-            if (!target.renameTo(apk)) throw UpdateRequestException("无法保存安装包", retryable = true)
-            partFile = null
-            part = null
-            if (UpdateStore.isDownloadActive(session) && !stopping) {
-                UpdateStore.hold(release)
-                UpdateStore.update(UpdateState.Ready(apk, release))
-            } else {
-                // 取消恰好发生在落盘之后：不留没有界面状态的安装包。
-                apk.delete()
+            synchronized(FILE_LOCK) {
+                if (!UpdateStore.isDownloadActive(session) || stopping) {
+                    target.delete()
+                } else {
+                    apk.delete()
+                    if (!target.renameTo(apk)) throw UpdateRequestException("无法保存安装包", retryable = true)
+                    partFile = null
+                    part = null
+                    UpdateStore.hold(release)
+                    publish(session, UpdateState.Ready(apk, release))
+                    // 取消与落盘交错时不留没有界面状态的安装包。
+                    if (!UpdateStore.isDownloadActive(session) || stopping) apk.delete()
+                }
             }
         } catch (cancelled: CancellationException) {
             part?.delete()
@@ -276,6 +279,8 @@ class UpdateDownloadService : Service() {
     }
 
     companion object {
+        /** 新旧服务实例可能短暂并存，最终安装包路径必须串行更新。 */
+        private val FILE_LOCK = Any()
         private const val CHANNEL_ID = "skydaily-updates"
         private const val CHANNEL_NAME = "应用更新"
         private const val CHANNEL_DESCRIPTION = "下载新版本安装包"

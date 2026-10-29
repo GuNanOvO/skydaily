@@ -76,11 +76,12 @@ class UpdatePathsTest {
     }
 
     @Test
-    fun `part and final names follow the version code`() {
+    fun `part names include the version and download session`() {
         val filesDir = folder.newFolder("files")
-        assertEquals("1025.part", UpdatePaths.part(filesDir, 1025).name)
+        assertEquals("1025-7.part", UpdatePaths.part(filesDir, 1025, 7).name)
+        assertEquals("1025-8.part", UpdatePaths.part(filesDir, 1025, 8).name)
         assertEquals("1025.apk", UpdatePaths.apk(filesDir, 1025).name)
-        assertEquals(UpdatePaths.directory(filesDir), UpdatePaths.part(filesDir, 1025).parentFile)
+        assertEquals(UpdatePaths.directory(filesDir), UpdatePaths.part(filesDir, 1025, 7).parentFile)
         assertEquals(UpdatePaths.directory(filesDir), UpdatePaths.apk(filesDir, 1025).parentFile)
     }
 
@@ -89,13 +90,13 @@ class UpdatePathsTest {
         val filesDir = folder.newFolder("files")
         val root = UpdatePaths.directory(filesDir)
         assertTrue(root.mkdirs())
-        val keepPart = UpdatePaths.part(filesDir, 1025).apply { writeText("part") }
-        val oldPart = UpdatePaths.part(filesDir, 1024).apply { writeText("part") }
+        val keepPart = UpdatePaths.part(filesDir, 1025, 7).apply { writeText("part") }
+        val oldPart = UpdatePaths.part(filesDir, 1025, 6).apply { writeText("part") }
         val keepApk = UpdatePaths.apk(filesDir, 1025).apply { writeText("apk") }
         val oldApk = UpdatePaths.apk(filesDir, 1024).apply { writeText("apk") }
         val unrelated = File(root, "notes.txt").apply { writeText("keep") }
 
-        UpdatePaths.clearOtherParts(filesDir, 1025)
+        UpdatePaths.clearOtherParts(filesDir, keepPart)
         UpdatePaths.clearOtherApks(filesDir, 1025)
 
         assertTrue(keepPart.isFile)
@@ -103,7 +104,7 @@ class UpdatePathsTest {
         assertTrue(unrelated.isFile)
         assertFalse(oldPart.exists())
         assertFalse(oldApk.exists())
-        assertEquals(listOf("1025.apk", "1025.part", "notes.txt"), root.list()?.sorted())
+        assertEquals(listOf("1025-7.part", "1025.apk", "notes.txt"), root.list()?.sorted())
     }
 
     @Test
@@ -111,7 +112,7 @@ class UpdatePathsTest {
         val filesDir = folder.newFolder("files")
         val root = UpdatePaths.directory(filesDir)
         assertTrue(root.mkdirs())
-        val part = UpdatePaths.part(filesDir, 1025).apply { writeText("part") }
+        val part = UpdatePaths.part(filesDir, 1025, 7).apply { writeText("part") }
         val apk = UpdatePaths.apk(filesDir, 1025).apply { writeText("apk") }
         val unrelated = File(root, "notes.txt").apply { writeText("keep") }
 

@@ -12,7 +12,8 @@ object UpdatePaths {
 
     fun directory(filesDir: File): File = File(filesDir, DIRECTORY)
 
-    fun part(filesDir: File, versionCode: Int): File = File(directory(filesDir), "$versionCode.part")
+    fun part(filesDir: File, versionCode: Int, session: Long): File =
+        File(directory(filesDir), "$versionCode-$session.part")
 
     fun apk(filesDir: File, versionCode: Int): File = File(directory(filesDir), "$versionCode.apk")
 
@@ -33,11 +34,10 @@ object UpdatePaths {
         return file.canonicalFile.parentFile == root.canonicalFile
     }
 
-    /** 只保留当前候选的临时文件。 */
-    fun clearOtherParts(filesDir: File, versionCode: Int) {
-        val keep = part(filesDir, versionCode).name
+    /** 只保留当前下载会话的临时文件。 */
+    fun clearOtherParts(filesDir: File, keep: File) {
         for (file in directory(filesDir).listFiles().orEmpty()) {
-            if (file.name.endsWith(".part") && file.name != keep) file.delete()
+            if (file.name.endsWith(".part") && file.name != keep.name) file.delete()
         }
     }
 
