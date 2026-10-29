@@ -53,88 +53,107 @@ fun NotebookHeader(
     @DrawableRes sticker: Int = R.drawable.sky_cape_handdrawn,
     subtitle: String? = null,
     updatedAt: String? = null,
+    overlayRunning: Boolean = false,
+    onOverlayAction: (() -> Unit)? = null,
 ) {
     val palette = LocalPaperPalette.current
     BoxWithConstraints(Modifier.fillMaxWidth()) {
         val compact = maxWidth < 360.dp
-        Row(
-            Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.Top,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-        ) {
-            Column(Modifier.weight(1f)) {
-                Row(
-                    Modifier.heightIn(min = with(LocalDensity.current) { 32.sp.toDp() }),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    RuledText(
-                        title,
-                        fontSize = if (compact) 20.sp else 22.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        modifier = Modifier.weight(1f, fill = false).alignToPaperRule(),
-                    )
-                    Box(Modifier.size(width = 48.dp, height = 32.dp), contentAlignment = Alignment.Center) {
-                        Sticker(
-                            sticker,
-                            size = 48.dp,
-                            rotation = -8f,
-                            modifier = Modifier.requiredSize(48.dp),
+        Column(Modifier.fillMaxWidth()) {
+            Row(
+                Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.Top,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                Column(Modifier.weight(1f)) {
+                    Row(
+                        Modifier.heightIn(min = with(LocalDensity.current) { 32.sp.toDp() }),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        RuledText(
+                            title,
+                            fontSize = if (compact) 20.sp else 22.sp,
+                            fontWeight = FontWeight.SemiBold,
+                            modifier = Modifier.weight(1f, fill = false).alignToPaperRule(),
                         )
-                    }
-                }
-                FlowRow(
-                    modifier = Modifier.heightIn(min = with(LocalDensity.current) { 32.sp.toDp() }),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-                    subtitle?.let {
-                        Text(
-                            it,
-                            modifier = Modifier.alignToPaperRule(),
-                            color = palette.muted,
-                            fontSize = 12.sp,
-                            lineHeight = 32.sp,
-                        )
-                    }
-                    updatedAt?.let {
-                        Text(
-                            it,
-                            modifier = Modifier.alignToPaperRule(),
-                            color = palette.muted,
-                            fontSize = 11.sp,
-                            lineHeight = 32.sp,
-                        )
-                    }
-                }
-                onRefresh?.let {
-                    PaperButton(
-                        text = if (refreshing) "刷新中" else "刷新",
-                        onClick = it,
-                        enabled = !refreshing,
-                    )
-                }
-            }
-            if (date != null || onToggleTheme != null) {
-                // 主题开关与日期卡并排：日期卡下方留空会把页头撑高整整一行。
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(6.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    onToggleTheme?.let { toggle ->
-                        Box(
-                            Modifier.size(44.dp)
-                                .semantics { contentDescription = if (darkTheme) "切换浅色" else "切换深色" }
-                                .clickable(role = Role.Button, onClick = toggle),
-                            contentAlignment = Alignment.Center,
-                        ) {
+                        Box(Modifier.size(width = 48.dp, height = 32.dp), contentAlignment = Alignment.Center) {
                             Sticker(
-                                if (darkTheme) R.drawable.theme_sun else R.drawable.theme_moon,
+                                sticker,
                                 size = 48.dp,
+                                rotation = -8f,
                                 modifier = Modifier.requiredSize(48.dp),
-                                rotation = if (darkTheme) 8f else -8f,
                             )
                         }
                     }
-                    date?.let { DateSticker(it) }
+                    FlowRow(
+                        modifier = Modifier.heightIn(min = with(LocalDensity.current) { 32.sp.toDp() }),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    ) {
+                        subtitle?.let {
+                            Text(
+                                it,
+                                modifier = Modifier.alignToPaperRule(),
+                                color = palette.muted,
+                                fontSize = 12.sp,
+                                lineHeight = 32.sp,
+                            )
+                        }
+                        updatedAt?.let {
+                            Text(
+                                it,
+                                modifier = Modifier.alignToPaperRule(),
+                                color = palette.muted,
+                                fontSize = 11.sp,
+                                lineHeight = 32.sp,
+                            )
+                        }
+                    }
+                }
+                if (date != null || onToggleTheme != null) {
+                    // 主题开关与日期卡并排：日期卡下方留空会把页头撑高整整一行。
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(6.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        onToggleTheme?.let { toggle ->
+                            Box(
+                                Modifier.size(44.dp)
+                                    .semantics { contentDescription = if (darkTheme) "切换浅色" else "切换深色" }
+                                    .clickable(role = Role.Button, onClick = toggle),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Sticker(
+                                    if (darkTheme) R.drawable.theme_sun else R.drawable.theme_moon,
+                                    size = 48.dp,
+                                    modifier = Modifier.requiredSize(48.dp),
+                                    rotation = if (darkTheme) 8f else -8f,
+                                )
+                            }
+                        }
+                        date?.let { DateSticker(it) }
+                    }
+                }
+            }
+            if (onRefresh != null || onOverlayAction != null) {
+                FlowRow(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    onRefresh?.let { refresh ->
+                        PaperButton(
+                            text = if (refreshing) "刷新中" else "刷新",
+                            onClick = refresh,
+                            enabled = !refreshing,
+                        )
+                    }
+                    onOverlayAction?.let { toggle ->
+                        PaperButton(
+                            text = if (overlayRunning) "关闭悬浮窗" else "开启悬浮窗",
+                            onClick = toggle,
+                            tone = if (overlayRunning) palette.tabColors[2] else null,
+                        )
+                    }
                 }
             }
         }

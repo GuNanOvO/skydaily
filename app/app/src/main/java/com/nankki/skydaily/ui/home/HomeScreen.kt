@@ -113,6 +113,8 @@ fun HomeScreen(
                                 onToggleTask = presenter::toggle,
                                 darkTheme = palette.dark,
                                 guideSession = guideSession,
+                                overlayRunning = overlayRunning,
+                                onOverlayAction = onOverlayAction,
                                 onToggleTheme = {
                                     onThemeModeChange(if (palette.dark) ThemeMode.Light else ThemeMode.Dark)
                                 },

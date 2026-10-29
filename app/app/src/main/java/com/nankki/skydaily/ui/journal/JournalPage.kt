@@ -41,6 +41,8 @@ fun JournalPage(
     onToggleTheme: (() -> Unit)? = null,
     headerDate: String? = null,
     guideSession: SeasonGuideSession? = null,
+    overlayRunning: Boolean = false,
+    onOverlayAction: (() -> Unit)? = null,
 ) {
     val envelope = state.envelope
     val data = envelope?.data
@@ -76,6 +78,8 @@ fun JournalPage(
                     refreshing = state.loading || state.refreshing,
                     darkTheme = darkTheme,
                     onToggleTheme = onToggleTheme,
+                    overlayRunning = overlayRunning,
+                    onOverlayAction = if (!archived && onClose == null) onOverlayAction else null,
                 )
             }
             PanelActions(onClose = onClose, onOpenApp = onOpenApp)
