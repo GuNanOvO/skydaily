@@ -71,6 +71,7 @@ class JournalPresenter(
     private val visibleOwners = mutableSetOf<Any>()
     private var warmed = false
     private var manualPending = false
+    private var manualRefreshPending = false
     private var clearingCache = false
     private var lastNoticeAttempt: Long? = null
 
@@ -138,6 +139,7 @@ class JournalPresenter(
             return
         }
         rollDate()
+        if (todayJob?.isActive == true) manualRefreshPending = true
         requestToday()
         requestNotice()
     }
@@ -170,6 +172,7 @@ class JournalPresenter(
     fun clearCache() {
         if (clearingCache) return
         clearingCache = true
+        manualRefreshPending = false
         scope.launch {
             try {
                 loadJob?.join()
@@ -211,6 +214,10 @@ class JournalPresenter(
             } finally {
                 todayJob = null
                 state = state.copy(loading = false, refreshing = noticeJob?.isActive == true)
+                if (manualRefreshPending && !clearingCache) {
+                    manualRefreshPending = false
+                    refresh()
+                }
             }
         }
         todayJob = job

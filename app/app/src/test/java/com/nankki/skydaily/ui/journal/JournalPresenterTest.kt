@@ -128,12 +128,29 @@ class JournalPresenterTest {
         } finally { harness.scope.cancel() }
     }
 
+    @Test fun `manual refresh during an in-flight midnight request is replayed`() {
+        val harness = Harness()
+        harness.gate = CompletableDeferred()
+        try {
+            harness.presenter.initialize()
+            assertEquals(3, harness.dailyRequests)
+            harness.now += 86_400_000
+            harness.presenter.refresh()
+            harness.gate?.complete(Unit)
+            harness.gate = null
+
+            assertEquals(6, harness.dailyRequests)
+            assertEquals("2026-10-31", harness.presenter.state.completedDate)
+        } finally { harness.scope.cancel() }
+    }
+
     private class Harness(enabled: Boolean = true, val store: MemoryKeyValueStore = MemoryKeyValueStore()) {
         var now = Instant.parse("2026-10-30T04:00:00Z").toEpochMilli()
         var dailyRequests = 0
         var noticeRequests = 0
         var fail = false
         var restrictedNetwork = false
+        var gate: CompletableDeferred<Unit>? = null
         val scope = CoroutineScope(SupervisorJob() + Dispatchers.Unconfined)
         val policy = DailyRefreshPolicy(store).also { it.enabled = enabled }
         val routes = DataRoutes(store)
@@ -144,6 +161,7 @@ class JournalPresenterTest {
                 Fetch.Failed("offline")
             } else {
                 dailyRequests++
+                gate?.await()
                 if (fail) Fetch.Failed("offline") else Fetch.Ok(template.replace("2026-10-21", com.nankki.skydaily.core.BeijingClock.today(now)), null)
             }
         }
