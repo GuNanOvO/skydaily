@@ -1,0 +1,215 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-31",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "在幽光山洞里冥想",
+        "keyword": "幽光山洞冥想"
+      },
+      {
+        "number": 2,
+        "text": "收集30点烛火",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "向一位玩家招手",
+        "keyword": null
+      },
+      {
+        "number": 4,
+        "text": "帮助苦修行者",
+        "keyword": "苦修行者任务"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "幽光山洞冥想",
+        "title": "每日任务－在幽光山洞里冥想",
+        "sections": [
+          {
+            "label": "任务",
+            "text": "在幽光山洞里冥想"
+          },
+          {
+            "label": "位置",
+            "text": "在云野－幽光山洞(左侧隐藏图)"
+          },
+          {
+            "label": "步骤",
+            "text": "穿越云野大厅后，前往左侧隐藏门，进去后往洞口里飞就看到啦"
+          },
+          {
+            "label": "小精灵提醒旅人",
+            "text": "进入幽光山洞地图需先收集2名晨岛先祖，3名云野先祖"
+          },
+          {
+            "label": "视频指引",
+            "text": ""
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/23f4f14c450f0f30508fb275.webp",
+          "https://skydaily.nankki.com/history/media/8216b81e61f89cb8e24d3264.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "任务： 在幽光山洞里冥想\n位置： 在云野－幽光山洞(左侧隐藏图)\n步骤： 穿越云野大厅后，前往左侧隐藏门，进去后往洞口里飞就看到啦\n小精灵提醒旅人： 进入幽光山洞地图需先收集2名晨岛先祖，3名云野先祖\n视频指引："
+      },
+      {
+        "keyword": "苦修行者任务",
+        "title": "每日任务－帮助苦修行者",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "请旅人先查看接到的任务名称，然后在下方选择对应指南\n在云峰找到苦修行者 ｜ 苦修行者在仙乡要帮助"
+          },
+          {
+            "label": "小精灵提示",
+            "text": "1、若旅人从未收集过该先祖，任务会显示为：在云峰找到苦修行者 ；\n2、若旅人之前已收集过该先祖，任务会显示为：苦修行者在仙乡需要帮助 。"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "请旅人先查看接到的任务名称，然后在下方选择对应指南\n在云峰找到苦修行者 ｜ 苦修行者在仙乡要帮助\n小精灵提示：\n1、若旅人从未收集过该先祖，任务会显示为：在云峰找到苦修行者 ；\n2、若旅人之前已收集过该先祖，任务会显示为：苦修行者在仙乡需要帮助 。",
+        "variants": [
+          {
+            "label": "在云峰找到苦修行者",
+            "title": "在云峰找到苦修行者",
+            "sections": [
+              {
+                "label": "先祖位置",
+                "text": "云野·云峰"
+              },
+              {
+                "label": "任务流程",
+                "text": "1、先前往云峰找到并收集苦修行者先祖\n2、接着前往仙乡\n3、在仙乡找到苦修行者，与先祖一起做伸展运动，即可完成任务"
+              },
+              {
+                "label": "图片流程",
+                "text": ""
+              },
+              {
+                "label": "视频指引",
+                "text": ""
+              }
+            ],
+            "images": [
+              "https://skydaily.nankki.com/history/media/b976862d541dad3988a7581f.webp",
+              "https://skydaily.nankki.com/history/media/94909362cdd71dba17fa43d6.webp"
+            ],
+            "videos": [],
+            "links": [],
+            "text": "先祖位置： 云野·云峰\n任务流程：\n1、先前往云峰找到并收集苦修行者先祖\n2、接着前往仙乡\n3、在仙乡找到苦修行者，与先祖一起做伸展运动，即可完成任务\n图片流程：\n视频指引："
+          },
+          {
+            "label": "苦修行者在仙乡要帮助",
+            "title": "苦修行者在仙乡需要帮助",
+            "sections": [
+              {
+                "label": "先祖位置",
+                "text": "云野·仙乡"
+              },
+              {
+                "label": "任务流程",
+                "text": "前往仙乡，找到苦修行者，与先祖一起做伸展运动，即可完成任务"
+              },
+              {
+                "label": "图片流程",
+                "text": ""
+              },
+              {
+                "label": "视频指引",
+                "text": ""
+              }
+            ],
+            "images": [
+              "https://skydaily.nankki.com/history/media/9bd5b1af8443d504344e95c5.webp"
+            ],
+            "videos": [],
+            "links": [],
+            "text": "先祖位置： 云野·仙乡\n任务流程： 前往仙乡，找到苦修行者，与先祖一起做伸展运动，即可完成任务\n图片流程：\n视频指引："
+          }
+        ]
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [
+          "https://h5.ds.163.com/v1/6ad585a083a764003172a423/"
+        ],
+        "text": ""
+      },
+      {
+        "keyword": "小精灵的旅行",
+        "title": "下一站？小精灵也不知道！",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "“小精灵的旅行团，现在出发！”\n“等等，目的地还没定呢！”\n“不如就用抽签来决定吧~”\n在下方用手机截图 动图，即可获取与小精灵的旅行关键词～"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "“小精灵的旅行团，现在出发！”\n“等等，目的地还没定呢！”\n“不如就用抽签来决定吧~”\n在下方用手机截图 动图，即可获取与小精灵的旅行关键词～"
+      }
+    ],
+    "weather": {
+      "text": "今日无碎片降落",
+      "images": [
+        "https://skydaily.nankki.com/history/media/e3610120e39f1752b2c247d3.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/5a7afa8abe7bf94d4688c40d.webp"
+      ]
+    },
+    "candles": [
+      {
+        "keyword": "大蜡烛",
+        "title": "每日大蜡烛位置",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~"
+          },
+          {
+            "label": "位置分布参考",
+            "text": "大蜡烛堆攻略"
+          },
+          {
+            "label": "小精灵温馨提示",
+            "text": "4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/c37d38160f147e9dc76df94f.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~\n位置分布参考：大蜡烛堆攻略\n小精灵温馨提示：\n4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+      }
+    ],
+    "seasonCandleMap": "云野"
+  },
+  "meta": {
+    "fetched_at": "2026-10-30T16:09:10.962Z",
+    "cached": false,
+    "stale": false
+  },
+  "errors": [
+    {
+      "section": "media",
+      "code": "image_unavailable"
+    }
+  ]
+}
