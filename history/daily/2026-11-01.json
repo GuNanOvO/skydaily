@@ -1,0 +1,228 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-01",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "拾起一只螃蟹",
+        "keyword": "掀螃蟹攻略"
+      },
+      {
+        "number": 2,
+        "text": "和陌生人一起坐在长凳上",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "在荧光小菇旁回复能量",
+        "keyword": "荧光小菇"
+      },
+      {
+        "number": 4,
+        "text": "帮助忧郁自艾者",
+        "keyword": "忧郁自艾者任务"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "掀螃蟹攻略",
+        "title": "掀螃蟹",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "在螃蟹周围长按角色，发出呐喊 ，即可掀翻周围的螃蟹哦。\n走近被掀翻 的螃蟹，会出现小图标 ，点击就可以抓起螃蟹啦~"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "在螃蟹周围长按角色，发出呐喊 ，即可掀翻周围的螃蟹哦。\n走近被掀翻 的螃蟹，会出现小图标 ，点击就可以抓起螃蟹啦~"
+      },
+      {
+        "keyword": "荧光小菇",
+        "title": "荧光小菇",
+        "sections": [
+          {
+            "label": "小贴士",
+            "text": "旅人们跳到荧光小菇上可补充能量\n(能量几乎消耗完时再跳上去会更容易完成每日任务 哦)"
+          },
+          {
+            "label": "地点",
+            "text": "荧光小菇 是生长在雨林的植物。"
+          },
+          {
+            "label": "特性",
+            "text": "荧光小菇 呈半透明状态并且会发光，旅人们站在荧光蘑菇上可以悬浮起来，极容易辨认。"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/147bcbe5c9be71e5ae7b40c8.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "小贴士： 旅人们跳到荧光小菇上可补充能量\n(能量几乎消耗完时再跳上去会更容易完成每日任务 哦)\n地点： 荧光小菇 是生长在雨林的植物。\n特性： 荧光小菇 呈半透明状态并且会发光，旅人们站在荧光蘑菇上可以悬浮起来，极容易辨认。"
+      },
+      {
+        "keyword": "忧郁自艾者任务",
+        "title": "每日任务－帮助忧郁自艾者",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "请旅人先查看接到的任务名称，然后在下方选择对应指南\n在晨岛找到忧郁自艾者 ｜ 忧郁自艾者在荧光森林需要帮助"
+          },
+          {
+            "label": "小精灵提示",
+            "text": "1、若旅人从未收集过该先祖，任务会显示为：在晨岛找到忧郁自艾者 ；\n2、若旅人之前已收集过该先祖，任务会显示为：忧郁自艾者在荧光森林要帮助 。"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "请旅人先查看接到的任务名称，然后在下方选择对应指南\n在晨岛找到忧郁自艾者 ｜ 忧郁自艾者在荧光森林需要帮助\n小精灵提示：\n1、若旅人从未收集过该先祖，任务会显示为：在晨岛找到忧郁自艾者 ；\n2、若旅人之前已收集过该先祖，任务会显示为：忧郁自艾者在荧光森林要帮助 。",
+        "variants": [
+          {
+            "label": "在晨岛找到忧郁自艾者",
+            "title": "在晨岛找到忧郁自艾者",
+            "sections": [
+              {
+                "label": "先祖位置",
+                "text": "晨岛"
+              },
+              {
+                "label": "任务流程",
+                "text": "1、前往晨岛·历练之石旁打坐\n2、跟随指引找到忧郁自艾者先祖\n3、点亮先祖追随先祖记忆（收集完先祖需要点亮）\n3、点亮收集完先祖后前往荧光森林\n4、在荧光森林找到先祖，帮助先祖即可完成任务"
+              },
+              {
+                "label": "图片流程",
+                "text": ""
+              },
+              {
+                "label": "视频流程",
+                "text": ""
+              }
+            ],
+            "images": [
+              "https://skydaily.nankki.com/history/media/6e71db180cb047a51b8b5e9d.webp",
+              "https://skydaily.nankki.com/history/media/b487f910a0d17d524e2d3e99.webp",
+              "https://skydaily.nankki.com/history/media/cd2dd76b6ded4b61094bc61e.webp",
+              "https://skydaily.nankki.com/history/media/8e48eadbeb19cbed66d5d3f8.webp",
+              "https://skydaily.nankki.com/history/media/b39751d7e9ac4d591194eb79.webp"
+            ],
+            "videos": [],
+            "links": [],
+            "text": "先祖位置： 晨岛\n任务流程：\n1、前往晨岛·历练之石旁打坐\n2、跟随指引找到忧郁自艾者先祖\n3、点亮先祖追随先祖记忆（收集完先祖需要点亮）\n3、点亮收集完先祖后前往荧光森林\n4、在荧光森林找到先祖，帮助先祖即可完成任务\n图片流程：\n视频流程："
+          },
+          {
+            "label": "忧郁自艾者在荧光森林需要帮助",
+            "title": "忧郁自艾者在荧光森林需要帮助",
+            "sections": [
+              {
+                "label": "先祖位置",
+                "text": "雨林·荧光森林"
+              },
+              {
+                "label": "任务流程",
+                "text": "1、前往雨林的荧光森林\n2、找到忧郁自艾者，并帮先祖找回丢失的诗集即可完成任务"
+              },
+              {
+                "label": "图片流程",
+                "text": ""
+              },
+              {
+                "label": "视频流程",
+                "text": ""
+              }
+            ],
+            "images": [
+              "https://skydaily.nankki.com/history/media/b487f910a0d17d524e2d3e99.webp",
+              "https://skydaily.nankki.com/history/media/cd2dd76b6ded4b61094bc61e.webp",
+              "https://skydaily.nankki.com/history/media/8e48eadbeb19cbed66d5d3f8.webp",
+              "https://skydaily.nankki.com/history/media/b39751d7e9ac4d591194eb79.webp"
+            ],
+            "videos": [],
+            "links": [],
+            "text": "先祖位置： 雨林·荧光森林\n任务流程：\n1、前往雨林的荧光森林\n2、找到忧郁自艾者，并帮先祖找回丢失的诗集即可完成任务\n图片流程：\n视频流程："
+          }
+        ]
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [
+          "https://h5.ds.163.com/v1/6ad585a083a764003172a423/"
+        ],
+        "text": ""
+      },
+      {
+        "keyword": "小精灵的旅行",
+        "title": "下一站？小精灵也不知道！",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "“小精灵的旅行团，现在出发！”\n“等等，目的地还没定呢！”\n“不如就用抽签来决定吧~”\n在下方用手机截图 动图，即可获取与小精灵的旅行关键词～"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "“小精灵的旅行团，现在出发！”\n“等等，目的地还没定呢！”\n“不如就用抽签来决定吧~”\n在下方用手机截图 动图，即可获取与小精灵的旅行关键词～"
+      }
+    ],
+    "weather": {
+      "text": "大部分地区地区阴天多云，失落方舟将会有灼热碎片降落",
+      "images": [
+        "https://skydaily.nankki.com/history/media/0445c8e3f6bdb3319620a5f6.webp",
+        "https://skydaily.nankki.com/history/media/696bcd88614597ab8fef68ab.webp",
+        "https://skydaily.nankki.com/history/media/99b7cd35ea97bbbeda12070a.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/5a7afa8abe7bf94d4688c40d.webp"
+      ]
+    },
+    "candles": [
+      {
+        "keyword": "大蜡烛",
+        "title": "每日大蜡烛位置",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~"
+          },
+          {
+            "label": "位置分布参考",
+            "text": "大蜡烛堆攻略"
+          },
+          {
+            "label": "小精灵温馨提示",
+            "text": "4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/c37d38160f147e9dc76df94f.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~\n位置分布参考：大蜡烛堆攻略\n小精灵温馨提示：\n4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+      }
+    ],
+    "seasonCandleMap": "雨林"
+  },
+  "meta": {
+    "fetched_at": "2026-10-31T16:11:38.588Z",
+    "cached": false,
+    "stale": false
+  },
+  "errors": [
+    {
+      "section": "media",
+      "code": "image_unavailable"
+    }
+  ]
+}
