@@ -1,0 +1,181 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-02",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "点亮一位玩家",
+        "keyword": null
+      },
+      {
+        "number": 2,
+        "text": "点燃20根蜡烛",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "和朋友击掌",
+        "keyword": null
+      },
+      {
+        "number": 4,
+        "text": "帮助忙碌舞台管理员",
+        "keyword": "帮助忙碌舞台管理员"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "帮助忙碌舞台管理员",
+        "title": "每日任务－帮助忙碌舞台管理员",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "请旅人先查看接到的任务名称，然后在下方选择对应指南\n在圆梦村剧场找到忙碌舞台管理员 ｜ 忙碌舞台管理员在圆梦村剧场需要你的帮助"
+          },
+          {
+            "label": "小精灵提示",
+            "text": "1、若旅人从未收集过该先祖，任务会显示为：在圆梦村剧场找到忙碌舞台管理员 ；\n2、若旅人之前已收集过该先祖，任务会显示为：忙碌舞台管理员 在圆梦村剧场，需要你的帮助"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "请旅人先查看接到的任务名称，然后在下方选择对应指南\n在圆梦村剧场找到忙碌舞台管理员 ｜ 忙碌舞台管理员在圆梦村剧场需要你的帮助\n小精灵提示：\n1、若旅人从未收集过该先祖，任务会显示为：在圆梦村剧场找到忙碌舞台管理员 ；\n2、若旅人之前已收集过该先祖，任务会显示为：忙碌舞台管理员 在圆梦村剧场，需要你的帮助",
+        "variants": [
+          {
+            "label": "在圆梦村剧场找到忙碌舞台管理员",
+            "title": "在圆梦村剧场找到忙碌舞台管理员",
+            "sections": [
+              {
+                "label": "先祖位置",
+                "text": "霞谷·圆梦村剧场"
+              },
+              {
+                "label": "任务流程",
+                "text": "1、先前往圆梦村剧场找到并收集忙碌舞台管理员先祖\n2、在圆梦村剧场跟着任务提示找到先祖，帮先祖掀起凳子即可完成任务"
+              },
+              {
+                "label": "图片流程",
+                "text": ""
+              },
+              {
+                "label": "视频流程",
+                "text": ""
+              }
+            ],
+            "images": [
+              "https://skydaily.nankki.com/history/media/7f1975abc95f1050acfc100d.webp"
+            ],
+            "videos": [],
+            "links": [],
+            "text": "先祖位置： 霞谷·圆梦村剧场\n任务流程：\n1、先前往圆梦村剧场找到并收集忙碌舞台管理员先祖\n2、在圆梦村剧场跟着任务提示找到先祖，帮先祖掀起凳子即可完成任务\n图片流程：\n视频流程："
+          },
+          {
+            "label": "忙碌舞台管理员在圆梦村剧场需要你的帮助",
+            "title": "忙碌舞台管理员在圆梦村需要你的帮助",
+            "sections": [
+              {
+                "label": "先祖位置",
+                "text": "霞谷·圆梦村剧场"
+              },
+              {
+                "label": "任务流程",
+                "text": "前往霞谷圆梦村剧场，跟着任务提示找到先祖，帮先祖把凳子掀起即可完成任务"
+              },
+              {
+                "label": "图片流程",
+                "text": ""
+              },
+              {
+                "label": "视频流程",
+                "text": ""
+              }
+            ],
+            "images": [
+              "https://skydaily.nankki.com/history/media/47ad016a6a325a89f4e91fde.webp"
+            ],
+            "videos": [],
+            "links": [],
+            "text": "先祖位置： 霞谷·圆梦村剧场\n任务流程： 前往霞谷圆梦村剧场，跟着任务提示找到先祖，帮先祖把凳子掀起即可完成任务\n图片流程：\n视频流程："
+          }
+        ]
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [
+          "https://h5.ds.163.com/v1/6ad585a083a764003172a423/"
+        ],
+        "text": ""
+      },
+      {
+        "keyword": "小精灵的旅行",
+        "title": "下一站？小精灵也不知道！",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "“小精灵的旅行团，现在出发！”\n“等等，目的地还没定呢！”\n“不如就用抽签来决定吧~”\n在下方用手机截图 动图，即可获取与小精灵的旅行关键词～"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "“小精灵的旅行团，现在出发！”\n“等等，目的地还没定呢！”\n“不如就用抽签来决定吧~”\n在下方用手机截图 动图，即可获取与小精灵的旅行关键词～"
+      }
+    ],
+    "weather": {
+      "text": "今日无碎片降落",
+      "images": [
+        "https://skydaily.nankki.com/history/media/786738d123af1a8767665d93.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/5a7afa8abe7bf94d4688c40d.webp"
+      ]
+    },
+    "candles": [
+      {
+        "keyword": "大蜡烛",
+        "title": "每日大蜡烛位置",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~"
+          },
+          {
+            "label": "位置分布参考",
+            "text": "大蜡烛堆攻略"
+          },
+          {
+            "label": "小精灵温馨提示",
+            "text": "4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/c37d38160f147e9dc76df94f.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~\n位置分布参考：大蜡烛堆攻略\n小精灵温馨提示：\n4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+      }
+    ],
+    "seasonCandleMap": "霞谷"
+  },
+  "meta": {
+    "fetched_at": "2026-11-01T16:02:33.930Z",
+    "cached": false,
+    "stale": false
+  },
+  "errors": [
+    {
+      "section": "media",
+      "code": "image_unavailable"
+    }
+  ]
+}
