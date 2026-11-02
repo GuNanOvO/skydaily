@@ -12,7 +12,7 @@ import { assertApkMatchesRelease } from '../src/apk-inspect.mjs'
 const SEASON_GUIDE_URL = seasonGuidePolicy.fallback
 const SITE_URL = (process.env.SITE_URL ?? 'https://skydaily.nankki.com').replace(/\/$/, '')
 const ASSET_VERSION = createHash('sha256').update(readFileSync(new URL('../assets/notebook.css', import.meta.url))).update(readFileSync(new URL('../assets/notebook.js', import.meta.url))).update(readFileSync(new URL('../assets/theme.js', import.meta.url))).digest('hex').slice(0, 12)
-const ICON_VERSION = createHash('sha256').update(readFileSync(new URL('../assets/favicon.svg', import.meta.url))).digest('hex').slice(0, 12)
+const ICON_VERSION = createHash('sha256').update(readFileSync(new URL('../assets/favicon.png', import.meta.url))).digest('hex').slice(0, 12)
 const SHARE_QR = await QRCode.toString(SITE_URL + '/', { type: 'svg', margin: 0 })
 // 内联 SVG 不需要 XML 声明和命名空间，去掉后页面里不会出现 http:// 字样。
 const APP_QR = (await QRCode.toString(SITE_URL + APP_PAGE_PATH, { type: 'svg', margin: 0 }))
@@ -20,7 +20,7 @@ const APP_QR = (await QRCode.toString(SITE_URL + APP_PAGE_PATH, { type: 'svg', m
   .replace(' xmlns="http://www.w3.org/2000/svg"', '')
 
 function faviconLinks(assets = 'assets/') {
-  return `<link rel="icon" href="${assets}favicon.ico?v=${ICON_VERSION}" sizes="16x16 32x32 48x48"><link rel="icon" href="${assets}favicon.svg?v=${ICON_VERSION}" type="image/svg+xml" sizes="any">`
+  return `<link rel="icon" href="${assets}favicon.ico?v=${ICON_VERSION}" sizes="16x16 32x32 48x48"><link rel="icon" href="${assets}favicon.png?v=${ICON_VERSION}" type="image/png" sizes="64x64">`
 }
 
 export function escapeHtml(s) {
