@@ -1,0 +1,130 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-05",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "向一位玩家鞠躬",
+        "keyword": null
+      },
+      {
+        "number": 2,
+        "text": "向一位玩家招手",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "接受一位朋友的礼物",
+        "keyword": null
+      },
+      {
+        "number": 4,
+        "text": "前往云野重温鼓掌钟匠的回忆",
+        "keyword": "鼓掌钟匠路线"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "鼓掌钟匠路线",
+        "title": "云野·鼓掌钟匠",
+        "sections": [
+          {
+            "label": "先祖位置",
+            "text": "进入云野仙乡，飞向左边的小岛，在小岛前方的洞口和小伙伴一起合力开门，先祖就在里面等候~"
+          },
+          {
+            "label": "温馨提示",
+            "text": "2、若在图示位置找不到先祖，有可能是因为其他旅人正在收集，可重新进入地图再试试看～"
+          },
+          {
+            "label": "兑换图鉴",
+            "text": ""
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/55ecd9b341854ddf023f145b.webp",
+          "https://skydaily.nankki.com/history/media/848e214c5928a9029b918683.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "先祖位置： 进入云野仙乡，飞向左边的小岛，在小岛前方的洞口和小伙伴一起合力开门，先祖就在里面等候~\n温馨提示：\n2、若在图示位置找不到先祖，有可能是因为其他旅人正在收集，可重新进入地图再试试看～\n兑换图鉴："
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [
+          "https://h5.ds.163.com/v1/6ad585a083a764003172a423/"
+        ],
+        "text": ""
+      },
+      {
+        "keyword": "小精灵的旅行",
+        "title": "下一站？小精灵也不知道！",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "“小精灵的旅行团，现在出发！”\n“等等，目的地还没定呢！”\n“不如就用抽签来决定吧~”\n在下方用手机截图 动图，即可获取与小精灵的旅行关键词～"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "“小精灵的旅行团，现在出发！”\n“等等，目的地还没定呢！”\n“不如就用抽签来决定吧~”\n在下方用手机截图 动图，即可获取与小精灵的旅行关键词～"
+      }
+    ],
+    "weather": {
+      "text": "今日无碎片降落",
+      "images": [
+        "https://skydaily.nankki.com/history/media/36e438b8ab2bffcf5297649a.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/5a7afa8abe7bf94d4688c40d.webp"
+      ]
+    },
+    "candles": [
+      {
+        "keyword": "大蜡烛",
+        "title": "每日大蜡烛位置",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~"
+          },
+          {
+            "label": "位置分布参考",
+            "text": "大蜡烛堆攻略"
+          },
+          {
+            "label": "小精灵温馨提示",
+            "text": "4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/c37d38160f147e9dc76df94f.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~\n位置分布参考：大蜡烛堆攻略\n小精灵温馨提示：\n4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+      }
+    ],
+    "seasonCandleMap": "云野"
+  },
+  "meta": {
+    "fetched_at": "2026-11-04T16:02:05.042Z",
+    "cached": false,
+    "stale": false
+  },
+  "errors": [
+    {
+      "section": "media",
+      "code": "image_unavailable"
+    }
+  ]
+}
