@@ -17,6 +17,15 @@
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_DATA_SYNC" />
 
+    <queries>
+        <package android:name="com.netease.sky" />
+        <package android:name="com.netease.sky.huawei" />
+        <package android:name="com.netease.sky.vivo" />
+        <package android:name="com.netease.sky.bilibili" />
+        <package android:name="com.netease.sky.aligames" />
+        <package android:name="com.tencent.tmgp.eyou.eygy" />
+    </queries>
+
     <application
         android:name=".SkyApp"
         android:allowBackup="false"
@@ -37,6 +46,14 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".meals.MealGameActivity"
+            android:exported="false"
+            android:noHistory="true"
+            android:excludeFromRecents="true"
+            android:taskAffinity=""
+            android:theme="@android:style/Theme.NoDisplay" />
 
         <receiver
             android:name=".meals.MealAlarmReceiver"

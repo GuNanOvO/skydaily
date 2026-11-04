@@ -13,7 +13,6 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
-import com.nankki.skydaily.MainActivity
 import com.nankki.skydaily.R
 import com.nankki.skydaily.core.AndroidKeyValueStore
 import com.nankki.skydaily.core.KeyValueStore
@@ -214,8 +213,7 @@ class MealReminderManager(context: Context) {
         val contentIntent = PendingIntent.getActivity(
             appContext,
             CONTENT_REQUEST_BASE + hour,
-            Intent(appContext, MainActivity::class.java).apply {
-                action = OPEN_MEALS_ACTION
+            Intent(appContext, MealGameActivity::class.java).apply {
                 putExtra(EXTRA_MEAL_START, reminder.meal.startsAtMillis)
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
             },
