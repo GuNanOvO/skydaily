@@ -418,7 +418,7 @@ private fun installedVersionName(context: Context): String? = runCatching {
  * 纸面上的分组：左上角一枚色纸标签，右侧一条状态注记。
  */
 @Composable
-private fun SettingsSection(
+internal fun SettingsSection(
     title: String,
     note: String?,
     tone: Color,

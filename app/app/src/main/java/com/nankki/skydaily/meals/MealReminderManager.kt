@@ -10,6 +10,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.drawable.Icon
 import android.net.Uri
 import android.os.Build
 import android.provider.Settings
@@ -251,7 +252,8 @@ class MealReminderManager(context: Context) {
             PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT,
         )
         val notification = Notification.Builder(appContext, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_notification)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setLargeIcon(Icon.createWithResource(appContext, R.mipmap.ic_launcher))
             .setContentTitle(title)
             .setContentText(text)
             .setCategory(Notification.CATEGORY_REMINDER)

@@ -2,20 +2,21 @@ package com.nankki.skydaily.ui.settings
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.Lifecycle
@@ -27,7 +28,6 @@ import com.nankki.skydaily.meals.MealTestResult
 import com.nankki.skydaily.ui.paper.NotebookHeader
 import com.nankki.skydaily.ui.paper.PaperBlock
 import com.nankki.skydaily.ui.paper.PaperButton
-import com.nankki.skydaily.ui.paper.PaperDivider
 import com.nankki.skydaily.ui.paper.PaperScroll
 import com.nankki.skydaily.ui.theme.LocalPaperPalette
 
@@ -50,19 +50,32 @@ internal fun DebugPage(
     BackHandler(onBack = onBack)
     PaperScroll(modifier) {
         PaperBlock {
-            PaperButton("返回设置", onBack, modifier = Modifier.padding(vertical = 8.dp))
-            NotebookHeader(
-                title = "调试",
-                subtitle = "饭点通知 · 系统权限",
-                sticker = R.drawable.sky_candles_handdrawn,
-            )
+            Column(Modifier.fillMaxWidth()) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(with(LocalDensity.current) { (32.sp.roundToPx() * 2).toDp() }),
+                    contentAlignment = Alignment.CenterStart,
+                ) {
+                    PaperButton("返回设置", onBack)
+                }
+                NotebookHeader(
+                    title = "调试",
+                    subtitle = "饭点通知 · 系统权限",
+                    sticker = R.drawable.sky_candles_handdrawn,
+                )
+            }
         }
-        PaperBlock {
+        SettingsSection(
+            title = "饭点通知",
+            note = null,
+            tone = palette.tabColors[1],
+            tape = palette.noteTapes[1],
+        ) {
             Column(
-                Modifier.fillMaxWidth().padding(vertical = 16.dp),
+                Modifier.fillMaxWidth(),
                 verticalArrangement = Arrangement.spacedBy(12.dp),
             ) {
-                Text("饭点通知", color = palette.ink, fontSize = 16.sp, lineHeight = 24.sp, fontWeight = FontWeight.Medium)
                 PaperButton(
                     "发送饭点测试通知",
                     onClick = {
@@ -88,8 +101,18 @@ internal fun DebugPage(
                     result ?: "测试通知会在 5 分钟后自动消失。",
                     color = palette.muted, fontSize = 12.sp, lineHeight = 20.sp,
                 )
-                PaperDivider()
-                Text("系统状态", color = palette.ink, fontSize = 16.sp, lineHeight = 24.sp, fontWeight = FontWeight.Medium)
+            }
+        }
+        SettingsSection(
+            title = "系统状态",
+            note = null,
+            tone = palette.tabColors[3],
+            tape = palette.noteTapes[0],
+        ) {
+            Column(
+                Modifier.fillMaxWidth(),
+                verticalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
                 Text(
                     "通知可用 · ${if (access.notificationsAllowed) "是" else "否"}\n" +
                         "饭点渠道 · ${when (channel) {
@@ -102,9 +125,15 @@ internal fun DebugPage(
                 )
                 PaperButton("通知设置", { openSystemSettings(context, manager.notificationSettingsIntent()) })
                 PaperButton("精确提醒设置", { openSystemSettings(context, manager.exactAlarmSettingsIntent()) })
-                PaperDivider()
-                PaperButton("隐藏调试入口", onHide, modifier = Modifier.fillMaxWidth())
             }
+        }
+        SettingsSection(
+            title = "入口管理",
+            note = null,
+            tone = palette.tabColors[2],
+            tape = palette.noteTapes[1],
+        ) {
+            PaperButton("隐藏调试入口", onHide, modifier = Modifier.fillMaxWidth())
         }
         Spacer(Modifier.height(24.dp))
     }

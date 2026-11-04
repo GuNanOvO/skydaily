@@ -9,6 +9,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.PixelFormat
+import android.graphics.drawable.Icon
 import android.hardware.display.DisplayManager
 import android.net.Uri
 import android.os.Build
@@ -413,7 +414,8 @@ class OverlayService : Service() {
         return Notification.Builder(this, CHANNEL_ID)
             .setContentTitle(getString(R.string.overlay_notification_title))
             .setContentText(getString(R.string.overlay_notification_text))
-            .setSmallIcon(R.drawable.ic_notification)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setLargeIcon(Icon.createWithResource(this, R.mipmap.ic_launcher))
             .setContentIntent(intent)
             .setOngoing(true)
             .setShowWhen(false)

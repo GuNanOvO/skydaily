@@ -7,6 +7,7 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.graphics.drawable.Icon
 import android.os.IBinder
 import android.os.SystemClock
 import com.nankki.skydaily.MainActivity
@@ -227,7 +228,8 @@ class UpdateDownloadService : Service() {
         )
         val percent = if (total > 0) ((received * 100) / total).toInt().coerceIn(0, 100) else 0
         val builder = Notification.Builder(this, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_notification)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setLargeIcon(Icon.createWithResource(this, R.mipmap.ic_launcher))
             .setContentTitle("正在下载更新")
             .setContentText(if (indeterminate) "准备下载" else "已下载 $percent%")
             .setContentIntent(openApp)
