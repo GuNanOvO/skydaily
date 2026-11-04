@@ -20,6 +20,9 @@ import com.nankki.skydaily.core.KeyValueStore
 /** 通知权限与精确闹钟权限的当前读取结果。 */
 data class MealAccess(val notificationsAllowed: Boolean, val exactAlarmAllowed: Boolean)
 
+enum class MealChannelStatus { NotCreated, Blocked, Enabled }
+enum class MealTestResult { Sent, NotificationBlocked }
+
 /**
  * 饭点提醒的本地持久化与系统适配：保存设置、创建专属通知渠道、
  * 维护最多七个精确一次性闹钟，并在触发前后按当前设置与权限核对。
@@ -76,6 +79,34 @@ class MealReminderManager(context: Context) {
         notificationsAllowed = notificationsAllowed(),
         exactAlarmAllowed = exactAlarmAllowed(),
     )
+
+    fun channelStatus(): MealChannelStatus {
+        val channel = notificationManager.getNotificationChannel(CHANNEL_ID)
+            ?: return MealChannelStatus.NotCreated
+        return if (channel.importance == NotificationManager.IMPORTANCE_NONE) {
+            MealChannelStatus.Blocked
+        } else {
+            MealChannelStatus.Enabled
+        }
+    }
+
+    /** 立即发送独立测试通知，不调整闹钟、提醒设置或正式通知的去重记录。 */
+    fun sendTestNotification(): MealTestResult {
+        if (!notificationsAllowed()) return MealTestResult.NotificationBlocked
+        val now = System.currentTimeMillis()
+        val status = MealSchedule.status(now)
+        val reminder = MealReminder(status.current ?: status.next, now)
+        return try {
+            if (postNotification(reminder, now, test = true)) MealTestResult.Sent
+            else MealTestResult.NotificationBlocked
+        } catch (_: SecurityException) {
+            MealTestResult.NotificationBlocked
+        }
+    }
+
+    fun cancelTestNotification() {
+        notificationManager.cancel(TEST_NOTIFICATION_ID)
+    }
 
     /**
      * 前台返回、开机、应用更新、系统时间或时区变化、精确闹钟授权后重新核对。
@@ -201,18 +232,18 @@ class MealReminderManager(context: Context) {
         )
     }
 
-    private fun postNotification(reminder: MealReminder, nowMillis: Long) {
+    private fun postNotification(reminder: MealReminder, nowMillis: Long, test: Boolean = false): Boolean {
         ensureChannel()
-        val channel = notificationManager.getNotificationChannel(CHANNEL_ID) ?: return
-        if (channel.importance == NotificationManager.IMPORTANCE_NONE) return
+        val channel = notificationManager.getNotificationChannel(CHANNEL_ID) ?: return false
+        if (channel.importance == NotificationManager.IMPORTANCE_NONE) return false
         val hour = reminder.meal.hour
         val open = nowMillis >= reminder.meal.startsAtMillis
         val range = rangeLabel(hour)
-        val title = if (open) "开饭中" else "即将开饭"
+        val title = (if (test) "饭点测试 · " else "") + if (open) "开饭中" else "即将开饭"
         val text = if (open) "老奶奶食堂 $range 正在开饭" else "老奶奶食堂 $range 即将开饭"
         val contentIntent = PendingIntent.getActivity(
             appContext,
-            CONTENT_REQUEST_BASE + hour,
+            if (test) TEST_CONTENT_REQUEST else CONTENT_REQUEST_BASE + hour,
             Intent(appContext, MealGameActivity::class.java).apply {
                 putExtra(EXTRA_MEAL_START, reminder.meal.startsAtMillis)
                 addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TOP)
@@ -227,10 +258,11 @@ class MealReminderManager(context: Context) {
             .setContentIntent(contentIntent)
             .setAutoCancel(true)
             .setShowWhen(false)
-            .setTimeoutAfter((reminder.meal.endsAtMillis - nowMillis).coerceAtLeast(1L))
+            .setTimeoutAfter(if (test) TEST_TIMEOUT_MILLIS else (reminder.meal.endsAtMillis - nowMillis).coerceAtLeast(1L))
             .build()
-        notificationManager.notify(NOTIFICATION_ID_BASE + hour, notification)
-        store.putString(KEY_LAST_NOTIFIED + hour, reminder.meal.startsAtMillis.toString())
+        notificationManager.notify(if (test) TEST_NOTIFICATION_ID else NOTIFICATION_ID_BASE + hour, notification)
+        if (!test) store.putString(KEY_LAST_NOTIFIED + hour, reminder.meal.startsAtMillis.toString())
+        return true
     }
 
     private fun ensureChannel() {
@@ -309,6 +341,9 @@ class MealReminderManager(context: Context) {
         private const val NOTIFICATION_ID_BASE = 2000
         private const val ALARM_REQUEST_BASE = 5000
         private const val CONTENT_REQUEST_BASE = 7000
+        private const val TEST_NOTIFICATION_ID = 2999
+        private const val TEST_CONTENT_REQUEST = 7999
+        private const val TEST_TIMEOUT_MILLIS = 5 * 60 * 1000L
         private const val KEY_ENABLED = "meals:enabled"
         private const val KEY_HOURS = "meals:hours"
         private const val KEY_LEAD = "meals:lead_minutes"

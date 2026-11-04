@@ -1,6 +1,8 @@
 package com.nankki.skydaily.ui.settings
 
 import android.content.Context
+import android.os.SystemClock
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -27,6 +29,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -39,6 +45,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.nankki.skydaily.AppConfig
 import com.nankki.skydaily.R
+import com.nankki.skydaily.core.AndroidKeyValueStore
+import com.nankki.skydaily.core.DebugAccess
 import com.nankki.skydaily.core.BeijingClock
 import com.nankki.skydaily.core.openWebLink
 import com.nankki.skydaily.data.Mirror
@@ -78,6 +86,23 @@ fun SettingsPage(
     val palette = LocalPaperPalette.current
     val context = LocalContext.current
     val versionName = remember(context) { installedVersionName(context) }
+    val debugAccess = remember(context) { DebugAccess(AndroidKeyValueStore(context)) }
+    var debugUnlocked by remember(debugAccess) { mutableStateOf(debugAccess.isUnlocked) }
+    var debugOpen by rememberSaveable { mutableStateOf(false) }
+    if (debugOpen && debugUnlocked) {
+        DebugPage(
+            manager = mealManager,
+            onBack = { debugOpen = false },
+            onHide = {
+                debugAccess.hide()
+                debugUnlocked = false
+                debugOpen = false
+                Toast.makeText(context, "调试入口已隐藏", Toast.LENGTH_SHORT).show()
+            },
+            modifier = modifier,
+        )
+        return
+    }
     PaperScroll(modifier) {
         PaperBlock {
             Column(Modifier.fillMaxWidth()) {
@@ -312,7 +337,25 @@ fun SettingsPage(
                 color = palette.muted,
                 fontSize = 10.sp,
                 lineHeight = 16.sp,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .heightIn(min = 48.dp)
+                    .clickable(role = Role.Button) {
+                        if (debugAccess.tap(SystemClock.elapsedRealtime())) {
+                            debugUnlocked = true
+                            Toast.makeText(context, "调试入口已开启", Toast.LENGTH_SHORT).show()
+                        }
+                    }
+                    .padding(vertical = 12.dp),
             )
+            if (debugUnlocked) {
+                PaperButton(
+                    "调试",
+                    onClick = { debugOpen = true },
+                    modifier = Modifier.fillMaxWidth(),
+                    tone = palette.tabColors[2],
+                )
+            }
             Spacer(Modifier.height(8.dp))
             Text(
                 text = "作者 · ${AppConfig.AUTHOR}\n" +
