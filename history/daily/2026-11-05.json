@@ -35,6 +35,10 @@
             "text": "进入云野仙乡，飞向左边的小岛，在小岛前方的洞口和小伙伴一起合力开门，先祖就在里面等候~"
           },
           {
+            "label": "视频指引",
+            "text": ""
+          },
+          {
             "label": "温馨提示",
             "text": "2、若在图示位置找不到先祖，有可能是因为其他旅人正在收集，可重新进入地图再试试看～"
           },
@@ -44,12 +48,14 @@
           }
         ],
         "images": [
+          "https://skydaily.nankki.com/history/media/8a4703203d434cf8410b4bb2.webp",
+          "https://skydaily.nankki.com/history/media/65c4c598e466c42617f97612.webp",
           "https://skydaily.nankki.com/history/media/55ecd9b341854ddf023f145b.webp",
           "https://skydaily.nankki.com/history/media/848e214c5928a9029b918683.webp"
         ],
         "videos": [],
         "links": [],
-        "text": "先祖位置： 进入云野仙乡，飞向左边的小岛，在小岛前方的洞口和小伙伴一起合力开门，先祖就在里面等候~\n温馨提示：\n2、若在图示位置找不到先祖，有可能是因为其他旅人正在收集，可重新进入地图再试试看～\n兑换图鉴："
+        "text": "先祖位置： 进入云野仙乡，飞向左边的小岛，在小岛前方的洞口和小伙伴一起合力开门，先祖就在里面等候~\n视频指引：\n温馨提示：\n2、若在图示位置找不到先祖，有可能是因为其他旅人正在收集，可重新进入地图再试试看～\n兑换图鉴："
       },
       {
         "keyword": "季节蜡烛探索指南",
@@ -117,7 +123,7 @@
     "seasonCandleMap": "云野"
   },
   "meta": {
-    "fetched_at": "2026-11-04T16:02:05.042Z",
+    "fetched_at": "2026-11-05T05:31:09.005Z",
     "cached": false,
     "stale": false
   },
