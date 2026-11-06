@@ -1,0 +1,233 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-07",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "在水母上回复能量",
+        "keyword": "水母位置"
+      },
+      {
+        "number": 2,
+        "text": "在荧光小菇旁回复能量",
+        "keyword": "荧光小菇"
+      },
+      {
+        "number": 3,
+        "text": "和朋友击掌",
+        "keyword": null
+      },
+      {
+        "number": 4,
+        "text": "帮助健忘说书人",
+        "keyword": "健忘说书人任务"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "水母位置",
+        "title": "每日任务－在水母上恢复能量",
+        "sections": [
+          {
+            "label": "位置",
+            "text": "密林遗迹(水母图)"
+          },
+          {
+            "label": "步骤",
+            "text": "密林遗迹后往前飞，来到终点图前的雨亭，点亮蜡烛即可召唤出一排水母"
+          },
+          {
+            "label": "注意",
+            "text": "几乎消耗完能量后再跳上水母会更容易完成任务哦"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/20ab602b08dc7bbc7543ab97.webp",
+          "https://skydaily.nankki.com/history/media/4c6c0134eed11351ab03141b.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "位置：密林遗迹(水母图)\n步骤：密林遗迹后往前飞，来到终点图前的雨亭，点亮蜡烛即可召唤出一排水母\n注意：几乎消耗完能量后再跳上水母会更容易完成任务哦"
+      },
+      {
+        "keyword": "荧光小菇",
+        "title": "荧光小菇",
+        "sections": [
+          {
+            "label": "小贴士",
+            "text": "旅人们跳到荧光小菇上可补充能量\n(能量几乎消耗完时再跳上去会更容易完成每日任务 哦)"
+          },
+          {
+            "label": "地点",
+            "text": "荧光小菇 是生长在雨林的植物。"
+          },
+          {
+            "label": "特性",
+            "text": "荧光小菇 呈半透明状态并且会发光，旅人们站在荧光蘑菇上可以悬浮起来，极容易辨认。"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/147bcbe5c9be71e5ae7b40c8.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "小贴士： 旅人们跳到荧光小菇上可补充能量\n(能量几乎消耗完时再跳上去会更容易完成每日任务 哦)\n地点： 荧光小菇 是生长在雨林的植物。\n特性： 荧光小菇 呈半透明状态并且会发光，旅人们站在荧光蘑菇上可以悬浮起来，极容易辨认。"
+      },
+      {
+        "keyword": "健忘说书人任务",
+        "title": "每日任务－帮助健忘说书人",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "请旅人先查看接到的任务名称，然后在下方选择对应指南\n在圆梦村剧场找到健忘说书人 ｜ 健忘说书人在圆梦村需要帮忙"
+          },
+          {
+            "label": "小精灵提示",
+            "text": "1、若旅人从未收集过该先祖，任务会显示为：在圆梦村剧场找到健忘说书人 ；\n2、若旅人之前已收集过该先祖，任务会显示为：健忘说书人 在在圆梦村需要帮忙"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "请旅人先查看接到的任务名称，然后在下方选择对应指南\n在圆梦村剧场找到健忘说书人 ｜ 健忘说书人在圆梦村需要帮忙\n小精灵提示：\n1、若旅人从未收集过该先祖，任务会显示为：在圆梦村剧场找到健忘说书人 ；\n2、若旅人之前已收集过该先祖，任务会显示为：健忘说书人 在在圆梦村需要帮忙",
+        "variants": [
+          {
+            "label": "在圆梦村剧场找到健忘说书人",
+            "title": "在圆梦村剧场找到健忘说书人",
+            "sections": [
+              {
+                "label": "先祖位置",
+                "text": "霞谷·圆梦村剧场"
+              },
+              {
+                "label": "任务流程",
+                "text": "1、先前往圆梦村剧场找到并收集健忘说书人先祖\n2、前往霞谷圆梦村，跟着任务提示找到先祖，帮先祖送物品给另一个先祖即可完成任务"
+              },
+              {
+                "label": "图片流程",
+                "text": ""
+              },
+              {
+                "label": "视频流程",
+                "text": ""
+              }
+            ],
+            "images": [
+              "https://skydaily.nankki.com/history/media/782b7f139f1e9634f41bb0ee.webp"
+            ],
+            "videos": [],
+            "links": [],
+            "text": "先祖位置： 霞谷·圆梦村剧场\n任务流程：\n1、先前往圆梦村剧场找到并收集健忘说书人先祖\n2、前往霞谷圆梦村，跟着任务提示找到先祖，帮先祖送物品给另一个先祖即可完成任务\n图片流程：\n视频流程："
+          },
+          {
+            "label": "健忘说书人在圆梦村需要帮忙",
+            "title": "健忘说书人在圆梦村需要帮助",
+            "sections": [
+              {
+                "label": "先祖位置",
+                "text": "霞谷·圆梦村"
+              },
+              {
+                "label": "任务流程",
+                "text": "前往霞谷圆梦村，跟着任务提示找到先祖，帮先祖把物品送给另一个先祖即可完成任务"
+              },
+              {
+                "label": "图片流程",
+                "text": ""
+              },
+              {
+                "label": "视频流程",
+                "text": ""
+              }
+            ],
+            "images": [
+              "https://skydaily.nankki.com/history/media/12e9722616dcf9d12b2df574.webp"
+            ],
+            "videos": [],
+            "links": [],
+            "text": "先祖位置： 霞谷·圆梦村\n任务流程： 前往霞谷圆梦村，跟着任务提示找到先祖，帮先祖把物品送给另一个先祖即可完成任务\n图片流程：\n视频流程："
+          }
+        ]
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [
+          "https://h5.ds.163.com/v1/6ad585a083a764003172a423/"
+        ],
+        "text": ""
+      },
+      {
+        "keyword": "小精灵的旅行",
+        "title": "下一站？小精灵也不知道！",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "“小精灵的旅行团，现在出发！”\n“等等，目的地还没定呢！”\n“不如就用抽签来决定吧~”\n在下方用手机截图 动图，即可获取与小精灵的旅行关键词～"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "“小精灵的旅行团，现在出发！”\n“等等，目的地还没定呢！”\n“不如就用抽签来决定吧~”\n在下方用手机截图 动图，即可获取与小精灵的旅行关键词～"
+      }
+    ],
+    "weather": {
+      "text": "大部分地区地区夜间晴朗，星光沙漠一隅将会有灼热碎片降落",
+      "images": [
+        "https://skydaily.nankki.com/history/media/2aa91c91e2ea0604a2cb2bcc.webp",
+        "https://skydaily.nankki.com/history/media/fdace23becd3ce6fc32d42fc.webp",
+        "https://skydaily.nankki.com/history/media/defbe5f0978d77a3c3da2415.webp",
+        "https://skydaily.nankki.com/history/media/3aac008fc33c8322f34a3721.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/5a7afa8abe7bf94d4688c40d.webp"
+      ]
+    },
+    "candles": [
+      {
+        "keyword": "大蜡烛",
+        "title": "每日大蜡烛位置",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~"
+          },
+          {
+            "label": "位置分布参考",
+            "text": "大蜡烛堆攻略"
+          },
+          {
+            "label": "小精灵温馨提示",
+            "text": "4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/c37d38160f147e9dc76df94f.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~\n位置分布参考：大蜡烛堆攻略\n小精灵温馨提示：\n4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+      }
+    ],
+    "seasonCandleMap": "霞谷"
+  },
+  "meta": {
+    "fetched_at": "2026-11-06T16:04:47.673Z",
+    "cached": false,
+    "stale": false
+  },
+  "errors": [
+    {
+      "section": "media",
+      "code": "image_unavailable"
+    }
+  ]
+}
