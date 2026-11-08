@@ -1,0 +1,150 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-09",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "净化10株黑暗植物",
+        "keyword": null
+      },
+      {
+        "number": 2,
+        "text": "向一位朋友做个动作",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "拾起一只螃蟹",
+        "keyword": "掀螃蟹攻略"
+      },
+      {
+        "number": 4,
+        "text": "在禁阁神殿冥想",
+        "keyword": "禁阁顶层冥想"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "掀螃蟹攻略",
+        "title": "掀螃蟹",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "在螃蟹周围长按角色，发出呐喊 ，即可掀翻周围的螃蟹哦。\n走近被掀翻 的螃蟹，会出现小图标 ，点击就可以抓起螃蟹啦~"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "在螃蟹周围长按角色，发出呐喊 ，即可掀翻周围的螃蟹哦。\n走近被掀翻 的螃蟹，会出现小图标 ，点击就可以抓起螃蟹啦~"
+      },
+      {
+        "keyword": "禁阁顶层冥想",
+        "title": "每日任务－在禁阁神殿冥想",
+        "sections": [
+          {
+            "label": "任务",
+            "text": "在禁阁的神坛旁冥想"
+          },
+          {
+            "label": "位置",
+            "text": "禁阁终点旁"
+          },
+          {
+            "label": "步骤",
+            "text": "进入禁阁后一直上到第六层(最高层)，往左前方走就看到啦"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/a7be00338373f6ee951f5ffb.webp",
+          "https://skydaily.nankki.com/history/media/fc0612a709d4d337b69b8267.webp",
+          "https://skydaily.nankki.com/history/media/862d80594f52c1fc60e4385a.webp",
+          "https://skydaily.nankki.com/history/media/1554775aa55c466fd520f48a.webp",
+          "https://skydaily.nankki.com/history/media/5e4b2936df0766eb2241f06a.webp",
+          "https://skydaily.nankki.com/history/media/b662cf3479fe7c7b689994be.webp",
+          "https://skydaily.nankki.com/history/media/0e049ea6d785145a3bc7d201.webp",
+          "https://skydaily.nankki.com/history/media/f0bd5b57ab1eb7167e96e279.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "任务： 在禁阁的神坛旁冥想\n位置： 禁阁终点旁\n步骤： 进入禁阁后一直上到第六层(最高层)，往左前方走就看到啦"
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [
+          "https://h5.ds.163.com/v1/6ad585a083a764003172a423/"
+        ],
+        "text": ""
+      },
+      {
+        "keyword": "小精灵的旅行",
+        "title": "下一站？小精灵也不知道！",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "“小精灵的旅行团，现在出发！”\n“等等，目的地还没定呢！”\n“不如就用抽签来决定吧~”\n在下方用手机截图 动图，即可获取与小精灵的旅行关键词～"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "“小精灵的旅行团，现在出发！”\n“等等，目的地还没定呢！”\n“不如就用抽签来决定吧~”\n在下方用手机截图 动图，即可获取与小精灵的旅行关键词～"
+      }
+    ],
+    "weather": {
+      "text": "今日无碎片降落",
+      "images": [
+        "https://skydaily.nankki.com/history/media/0788e49012847d24e4cc0a91.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/5a7afa8abe7bf94d4688c40d.webp"
+      ]
+    },
+    "candles": [
+      {
+        "keyword": "大蜡烛",
+        "title": "每日大蜡烛位置",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~"
+          },
+          {
+            "label": "位置分布参考",
+            "text": "大蜡烛堆攻略"
+          },
+          {
+            "label": "小精灵温馨提示",
+            "text": "4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/c37d38160f147e9dc76df94f.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~\n位置分布参考：大蜡烛堆攻略\n小精灵温馨提示：\n4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+      }
+    ],
+    "seasonCandleMap": "禁阁"
+  },
+  "meta": {
+    "fetched_at": "2026-11-08T16:06:49.123Z",
+    "cached": false,
+    "stale": false
+  },
+  "errors": [
+    {
+      "section": "media",
+      "code": "image_unavailable"
+    }
+  ]
+}
