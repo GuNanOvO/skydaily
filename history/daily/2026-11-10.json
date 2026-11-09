@@ -1,0 +1,237 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-10",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "在云野的云顶浮石捕捉3个光点",
+        "keyword": "云顶浮石捕捉光点"
+      },
+      {
+        "number": 2,
+        "text": "向一位朋友招手",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "在水母上回复能量",
+        "keyword": "水母位置"
+      },
+      {
+        "number": 4,
+        "text": "帮助愉悦地理学家",
+        "keyword": "愉悦地理学家任务"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "云顶浮石捕捉光点",
+        "title": "在云野的云顶浮石捕捉3个光点",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "1、进入云野大厅前往云顶浮石\n2、到达云顶浮石后往前走，浮动的光点就在前方飞\n3、触碰后可捕捉光点"
+          },
+          {
+            "label": "小精灵提醒您",
+            "text": "1、需先收集4位云野常驻先祖后才可进入云顶浮石\n2、需要收集三个光点，点击角色可以获得星光指引\n3、在收集过程中若光点消失，旅人可尝试重新进入地图"
+          },
+          {
+            "label": "图片指引",
+            "text": ""
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/7288f876f317adeb67b8c249.webp",
+          "https://skydaily.nankki.com/history/media/82001463bff77ab170262554.webp",
+          "https://skydaily.nankki.com/history/media/3bd4212edd687e91ae9fd992.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "1、进入云野大厅前往云顶浮石\n2、到达云顶浮石后往前走，浮动的光点就在前方飞\n3、触碰后可捕捉光点\n小精灵提醒您：\n1、需先收集4位云野常驻先祖后才可进入云顶浮石\n2、需要收集三个光点，点击角色可以获得星光指引\n3、在收集过程中若光点消失，旅人可尝试重新进入地图\n图片指引："
+      },
+      {
+        "keyword": "水母位置",
+        "title": "每日任务－在水母上恢复能量",
+        "sections": [
+          {
+            "label": "位置",
+            "text": "密林遗迹(水母图)"
+          },
+          {
+            "label": "步骤",
+            "text": "密林遗迹后往前飞，来到终点图前的雨亭，点亮蜡烛即可召唤出一排水母"
+          },
+          {
+            "label": "注意",
+            "text": "几乎消耗完能量后再跳上水母会更容易完成任务哦"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/20ab602b08dc7bbc7543ab97.webp",
+          "https://skydaily.nankki.com/history/media/4c6c0134eed11351ab03141b.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "位置：密林遗迹(水母图)\n步骤：密林遗迹后往前飞，来到终点图前的雨亭，点亮蜡烛即可召唤出一排水母\n注意：几乎消耗完能量后再跳上水母会更容易完成任务哦"
+      },
+      {
+        "keyword": "愉悦地理学家任务",
+        "title": "每日任务－帮助愉悦地理学家",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "请旅人先查看接到的任务名称，然后在下方选择对应指南\n在云峰找到愉悦地理学家 ｜ 愉悦地理学家在圣岛需要帮助"
+          },
+          {
+            "label": "小精灵提示",
+            "text": "1、若旅人从未收集过该先祖，任务会显示为：在云峰找到愉悦地理学家；\n2、若旅人之前已收集过该先祖，任务会显示为：愉悦地理学家在圣岛需要帮助#"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "请旅人先查看接到的任务名称，然后在下方选择对应指南\n在云峰找到愉悦地理学家 ｜ 愉悦地理学家在圣岛需要帮助\n小精灵提示：\n1、若旅人从未收集过该先祖，任务会显示为：在云峰找到愉悦地理学家；\n2、若旅人之前已收集过该先祖，任务会显示为：愉悦地理学家在圣岛需要帮助#",
+        "variants": [
+          {
+            "label": "在云峰找到愉悦地理学家",
+            "title": "在云峰找到愉悦地理学家",
+            "sections": [
+              {
+                "label": "先祖位置",
+                "text": "云野·云峰"
+              },
+              {
+                "label": "任务流程",
+                "text": "1、先前往云峰找到并收集愉悦地理学家先祖\n2、在云野·圣岛跟着任务提示找到先祖 >>查看圣岛路线指引\n3、跟随先祖去岩石处，然后对着先祖拍照，即可完成任务"
+              },
+              {
+                "label": "图片流程",
+                "text": ""
+              },
+              {
+                "label": "视频流程",
+                "text": ""
+              }
+            ],
+            "images": [
+              "https://skydaily.nankki.com/history/media/cca8bd624f57a64a2944b895.webp"
+            ],
+            "videos": [],
+            "links": [],
+            "text": "先祖位置： 云野·云峰\n任务流程：\n1、先前往云峰找到并收集愉悦地理学家先祖\n2、在云野·圣岛跟着任务提示找到先祖 >>查看圣岛路线指引\n3、跟随先祖去岩石处，然后对着先祖拍照，即可完成任务\n图片流程：\n视频流程："
+          },
+          {
+            "label": "愉悦地理学家在圣岛需要帮助",
+            "title": "愉悦地理学家在圣岛需要帮助",
+            "sections": [
+              {
+                "label": "先祖位置",
+                "text": "云野·圣岛"
+              },
+              {
+                "label": "任务流程",
+                "text": "前往圣岛，跟着任务提示找到先祖，与其互动获得相机并给先祖拍照，即可完成任务"
+              },
+              {
+                "label": "图片流程",
+                "text": ""
+              },
+              {
+                "label": "视频流程",
+                "text": ""
+              }
+            ],
+            "images": [
+              "https://skydaily.nankki.com/history/media/7288f876f317adeb67b8c249.webp",
+              "https://skydaily.nankki.com/history/media/9aed9befbc57e44f1014f765.webp",
+              "https://skydaily.nankki.com/history/media/3960eea40a131203663f8f63.webp",
+              "https://skydaily.nankki.com/history/media/2587927d493d29ab93d1cc58.webp"
+            ],
+            "videos": [],
+            "links": [],
+            "text": "先祖位置： 云野·圣岛\n任务流程： 前往圣岛，跟着任务提示找到先祖，与其互动获得相机并给先祖拍照，即可完成任务\n图片流程：\n视频流程："
+          }
+        ]
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [
+          "https://h5.ds.163.com/v1/6ad585a083a764003172a423/"
+        ],
+        "text": ""
+      },
+      {
+        "keyword": "小精灵的旅行",
+        "title": "下一站？小精灵也不知道！",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "“小精灵的旅行团，现在出发！”\n“等等，目的地还没定呢！”\n“不如就用抽签来决定吧~”\n在下方用手机截图 动图，即可获取与小精灵的旅行关键词～"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "“小精灵的旅行团，现在出发！”\n“等等，目的地还没定呢！”\n“不如就用抽签来决定吧~”\n在下方用手机截图 动图，即可获取与小精灵的旅行关键词～"
+      }
+    ],
+    "weather": {
+      "text": "大部分地区地区阴天多云，滑冰场将会有冷却碎片降落",
+      "images": [
+        "https://skydaily.nankki.com/history/media/8b4f2f75bcdf92389c4d2a5e.webp",
+        "https://skydaily.nankki.com/history/media/1b83625df624b95d2d2ffbd7.webp",
+        "https://skydaily.nankki.com/history/media/9b07749a8bd739ac1b42c3e9.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/6a7a7fedc5109d855550d059.webp"
+      ]
+    },
+    "candles": [
+      {
+        "keyword": "大蜡烛",
+        "title": "每日大蜡烛位置",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~"
+          },
+          {
+            "label": "位置分布参考",
+            "text": "大蜡烛堆攻略"
+          },
+          {
+            "label": "小精灵温馨提示",
+            "text": "4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/c37d38160f147e9dc76df94f.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~\n位置分布参考：大蜡烛堆攻略\n小精灵温馨提示：\n4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+      }
+    ],
+    "seasonCandleMap": "云野"
+  },
+  "meta": {
+    "fetched_at": "2026-11-09T16:01:10.647Z",
+    "cached": false,
+    "stale": false
+  },
+  "errors": [
+    {
+      "section": "media",
+      "code": "image_unavailable"
+    }
+  ]
+}
