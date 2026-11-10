@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-11",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "和朋友击掌",
+        "keyword": null
+      },
+      {
+        "number": 2,
+        "text": "点燃20根蜡烛",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "掀翻5只螃蟹",
+        "keyword": "掀螃蟹攻略"
+      },
+      {
+        "number": 4,
+        "text": "在荧光森林捕捉浮动的光点",
+        "keyword": "荧光森林捕捉光点"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "掀螃蟹攻略",
+        "title": "掀螃蟹",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "在螃蟹周围长按角色，发出呐喊 ，即可掀翻周围的螃蟹哦。\n走近被掀翻 的螃蟹，会出现小图标 ，点击就可以抓起螃蟹啦~"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "在螃蟹周围长按角色，发出呐喊 ，即可掀翻周围的螃蟹哦。\n走近被掀翻 的螃蟹，会出现小图标 ，点击就可以抓起螃蟹啦~"
+      },
+      {
+        "keyword": "荧光森林捕捉光点",
+        "title": "在荧光森林捕捉浮动的光点",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "1.进入雨林后，一路往前，前往静谧庭院\n2.直走穿过静谧庭院，即可到达荧光森林\n3.到达荧光森林，能看到天空上浮动的光点，触碰后可捕捉光点"
+          },
+          {
+            "label": "小精灵提醒您",
+            "text": "1、旅人们收集时请万分小心，护佑心火\n2、需要收集三个光点\n3、在收集过程中若光点消失，旅人可尝试重新进入地图"
+          },
+          {
+            "label": "图片指引",
+            "text": ""
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/b487f910a0d17d524e2d3e99.webp",
+          "https://skydaily.nankki.com/history/media/cd2dd76b6ded4b61094bc61e.webp",
+          "https://skydaily.nankki.com/history/media/8e48eadbeb19cbed66d5d3f8.webp",
+          "https://skydaily.nankki.com/history/media/3a22f035aba8031d801bd704.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "1.进入雨林后，一路往前，前往静谧庭院\n2.直走穿过静谧庭院，即可到达荧光森林\n3.到达荧光森林，能看到天空上浮动的光点，触碰后可捕捉光点\n小精灵提醒您：\n1、旅人们收集时请万分小心，护佑心火\n2、需要收集三个光点\n3、在收集过程中若光点消失，旅人可尝试重新进入地图\n图片指引："
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [
+          "https://h5.ds.163.com/v1/6ad585a083a764003172a423/"
+        ],
+        "text": ""
+      },
+      {
+        "keyword": "小精灵的旅行",
+        "title": "下一站？小精灵也不知道！",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "“小精灵的旅行团，现在出发！”\n“等等，目的地还没定呢！”\n“不如就用抽签来决定吧~”\n在下方用手机截图 动图，即可获取与小精灵的旅行关键词～"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "“小精灵的旅行团，现在出发！”\n“等等，目的地还没定呢！”\n“不如就用抽签来决定吧~”\n在下方用手机截图 动图，即可获取与小精灵的旅行关键词～"
+      }
+    ],
+    "weather": {
+      "text": "大部分地区地区阴天多云，滑冰场将会有冷却碎片降落",
+      "images": [
+        "https://skydaily.nankki.com/history/media/8b4f2f75bcdf92389c4d2a5e.webp",
+        "https://skydaily.nankki.com/history/media/1b83625df624b95d2d2ffbd7.webp",
+        "https://skydaily.nankki.com/history/media/9b07749a8bd739ac1b42c3e9.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/6a7a7fedc5109d855550d059.webp"
+      ]
+    },
+    "candles": [
+      {
+        "keyword": "大蜡烛",
+        "title": "每日大蜡烛位置",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~"
+          },
+          {
+            "label": "位置分布参考",
+            "text": "大蜡烛堆攻略"
+          },
+          {
+            "label": "小精灵温馨提示",
+            "text": "4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/c37d38160f147e9dc76df94f.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~\n位置分布参考：大蜡烛堆攻略\n小精灵温馨提示：\n4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+      }
+    ],
+    "seasonCandleMap": "雨林"
+  },
+  "meta": {
+    "fetched_at": "2026-11-10T16:00:36.895Z",
+    "cached": false,
+    "stale": false
+  },
+  "errors": [
+    {
+      "section": "media",
+      "code": "image_unavailable"
+    }
+  ]
+}
