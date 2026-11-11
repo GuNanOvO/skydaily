@@ -94,11 +94,9 @@
       }
     ],
     "weather": {
-      "text": "大部分地区地区阴天多云，滑冰场将会有冷却碎片降落",
+      "text": "今日无碎片降落",
       "images": [
-        "https://skydaily.nankki.com/history/media/8b4f2f75bcdf92389c4d2a5e.webp",
-        "https://skydaily.nankki.com/history/media/1b83625df624b95d2d2ffbd7.webp",
-        "https://skydaily.nankki.com/history/media/9b07749a8bd739ac1b42c3e9.webp"
+        "https://skydaily.nankki.com/history/media/e3610120e39f1752b2c247d3.webp"
       ]
     },
     "calendar": {
@@ -135,7 +133,7 @@
     "seasonCandleMap": "雨林"
   },
   "meta": {
-    "fetched_at": "2026-11-10T16:00:36.895Z",
+    "fetched_at": "2026-11-11T00:11:09.401Z",
     "cached": false,
     "stale": false
   },
