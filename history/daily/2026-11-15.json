@@ -1,28 +1,28 @@
 {
   "schema_version": 1,
-  "date": "2026-10-16",
+  "date": "2026-11-15",
   "timezone": "Asia/Shanghai",
   "data": {
     "tasks": [
       {
         "number": 1,
-        "text": "接受一位朋友的礼物",
+        "text": "点燃20根蜡烛",
         "keyword": null
       },
       {
         "number": 2,
-        "text": "在水母上回复能量",
-        "keyword": "水母位置"
-      },
-      {
-        "number": 3,
         "text": "向一位朋友招手",
         "keyword": null
       },
       {
-        "number": 4,
-        "text": "点亮一位玩家",
+        "number": 3,
+        "text": "净化10株黑暗植物",
         "keyword": null
+      },
+      {
+        "number": 4,
+        "text": "在水母上回复能量",
+        "keyword": "水母位置"
       }
     ],
     "taskDetails": [
@@ -50,21 +50,47 @@
         "videos": [],
         "links": [],
         "text": "位置：密林遗迹(水母图)\n步骤：密林遗迹后往前飞，来到终点图前的雨亭，点亮蜡烛即可召唤出一排水母\n注意：几乎消耗完能量后再跳上水母会更容易完成任务哦"
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [
+          "https://h5.ds.163.com/v1/6ad585a083a764003172a423/"
+        ],
+        "text": ""
+      },
+      {
+        "keyword": "小精灵的旅行",
+        "title": "下一站？小精灵也不知道！",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "“小精灵的旅行团，现在出发！”\n“等等，目的地还没定呢！”\n“不如就用抽签来决定吧~”\n在下方用手机截图 动图，即可获取与小精灵的旅行关键词～"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "“小精灵的旅行团，现在出发！”\n“等等，目的地还没定呢！”\n“不如就用抽签来决定吧~”\n在下方用手机截图 动图，即可获取与小精灵的旅行关键词～"
       }
     ],
     "weather": {
-      "text": "今日将会有灼热碎片坠落在黑水港湾",
+      "text": "大部分地区地区阴天多云，雪隐峰将会有灼热碎片降落",
       "images": [
-        "https://skydaily.nankki.com/history/media/765f0313fb3782b6155c7a0c.webp",
-        "https://skydaily.nankki.com/history/media/e25afa36ad0a8481440cbbee.webp",
-        "https://skydaily.nankki.com/history/media/f49c70413b5012328b63571b.webp",
-        "https://skydaily.nankki.com/history/media/0d30ee6148f514d232d51b9f.webp",
-        "https://skydaily.nankki.com/history/media/b078109a4eebbf532421c3d5.webp"
+        "https://skydaily.nankki.com/history/media/3f79d6c68d36852f80d2bbed.webp",
+        "https://skydaily.nankki.com/history/media/ab76bc316b3edc272ea21c36.webp",
+        "https://skydaily.nankki.com/history/media/2465048759cf97f69d9ab3f8.webp",
+        "https://skydaily.nankki.com/history/media/3ea875d9832d76815ca9e3bd.webp",
+        "https://skydaily.nankki.com/history/media/400ab1e0ef8bdff590f16d7a.webp",
+        "https://skydaily.nankki.com/history/media/967c499969eb5dba2482c23e.webp"
       ]
     },
     "calendar": {
       "images": [
-        "https://skydaily.nankki.com/history/media/82635faf378182c0ae1ee30b.webp"
+        "https://skydaily.nankki.com/history/media/b4de724bd872559deccce266.webp"
       ]
     },
     "candles": [
@@ -93,12 +119,17 @@
         "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~\n位置分布参考：大蜡烛堆攻略\n小精灵温馨提示：\n4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
       }
     ],
-    "seasonCandleMap": null
+    "seasonCandleMap": "云野"
   },
   "meta": {
-    "fetched_at": "2026-10-15T16:04:57.392Z",
+    "fetched_at": "2026-11-14T16:01:04.640Z",
     "cached": false,
     "stale": false
   },
-  "errors": []
+  "errors": [
+    {
+      "section": "media",
+      "code": "image_unavailable"
+    }
+  ]
 }
