@@ -152,7 +152,7 @@ jobs:
       - name: 发布页面
         id: deployment
         uses: actions/deploy-pages@v5
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v8
         with:
           name: github-pages
           path: ${{ runner.temp }}/pages-artifact
