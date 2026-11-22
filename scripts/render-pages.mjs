@@ -322,7 +322,7 @@ export function renderApiGuide(date) {
 <html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="referrer" content="no-referrer"><meta name="theme-color" content="#f4f4f4"><meta name="keywords" content="光遇, 光遇 API, 每日任务 API, 光遇数据接口, JSON 接口, API 使用说明"><title>API 使用说明 · 光遇国服每日任务</title>${faviconLinks()}<script src="assets/theme.js?v=${ASSET_VERSION}"></script><link rel="stylesheet" href="assets/notebook.css?v=${ASSET_VERSION}"></head><body>
 <main id="page-top" class="api-guide">${themeToggle()}<div class="binding" aria-hidden="true"></div>
 <header class="page-header"><h1>API 使用说明</h1><p class="api-meta">GET · JSON · 北京时间</p></header>
-<nav class="jump" aria-label="页面导航"><a href="index.html">返回每日任务</a><a href="#endpoints">接口</a><a href="#example">示例</a><a href="#response">返回数据</a><a href="app/">下载 App</a></nav>
+<nav class="jump" aria-label="页面导航"><a class="jump-link jump-home" href="index.html">返回每日任务</a><a class="jump-link jump-endpoints" href="#endpoints">接口</a><a class="jump-link jump-example" href="#example">示例</a><a class="jump-link jump-response" href="#response">返回数据</a><a class="jump-link jump-app" href="app/">下载 App</a></nav>
 <section><h2>服务地址</h2><p><code>${SITE_URL}</code></p><p>接口提供光遇国服数据，无需密钥，支持跨域请求。</p><p>同一 IP 每分钟约 30 次；超限返回 429，请按 Retry-After 等待后重试。</p></section>
 <section id="endpoints"><h2>接口</h2><dl class="api-endpoints">${endpoints.map(([path, text]) => `<div><dt><code>${path}</code></dt><dd>${text}</dd></div>`).join('')}</dl></section>
 <section id="example"><h2>调用示例</h2><pre class="api-example"><code>curl ${SITE_URL}/v1/daily/tasks
@@ -390,7 +390,7 @@ ${faviconLinks(assets)}
 ${themeToggle(assets)}
 <div class="binding" aria-hidden="true"></div><span class="journal-sticker sticker-butterfly-margin" aria-hidden="true"></span>
 <header class="page-header"><div class="header-body"><div><h1>光遇每日任务</h1><span class="journal-sticker sticker-cape" aria-hidden="true"></span><div class="status">${status}</div></div>${picker}</div></header>
-<nav class="jump" aria-label="页面导航"><span class="journal-sticker sticker-star" aria-hidden="true"></span><a href="#tasks">每日任务 <small>${data.tasks.length}</small></a><a href="#weather">天气预报</a><a href="#calendar">本月日历</a><a href="#candles">季节蜡烛</a>${notice ? '<a href="#notice">游戏公告</a>' : ''}<a href="${archive ? '../app/' : 'app/'}">下载 App</a></nav>
+<nav class="jump" aria-label="页面导航"><span class="journal-sticker sticker-star" aria-hidden="true"></span><a class="jump-link jump-tasks" href="#tasks">每日任务 <small>${data.tasks.length}</small></a><a class="jump-link jump-weather" href="#weather">天气预报</a><a class="jump-link jump-calendar" href="#calendar">本月日历</a><a class="jump-link jump-candles" href="#candles">季节蜡烛</a>${notice ? '<a class="jump-link jump-notice" href="#notice">游戏公告</a>' : ''}<a class="jump-link jump-app" href="${archive ? '../app/' : 'app/'}">下载 App</a></nav>
 <section id="tasks" aria-labelledby="h-tasks"><div class="section-head"><div><h2 id="h-tasks">每日任务</h2><span class="journal-sticker sticker-jelly" aria-hidden="true"></span></div><span class="progress" role="status" aria-live="polite" aria-atomic="true"><span id="complete-count">0</span> / ${data.tasks.length} 已完成</span></div><div class="tasks">${taskNotes(data, detailByKeyword)}</div></section>
 <div class="overview"><section id="weather"${sectionDialog('weather', data.weather)} aria-labelledby="h-weather"><h2 id="h-weather">天气预报 <span class="journal-sticker sticker-manta" aria-hidden="true"></span></h2><div class="info-card">${weather}</div></section><section id="calendar"${sectionDialog('calendar', data.calendar)} aria-labelledby="h-calendar"><h2 id="h-calendar">本月日历 <span class="journal-sticker sticker-butterfly" aria-hidden="true"></span></h2><div class="info-card">${calendar}</div></section></div>
 <section id="candles" aria-labelledby="h-candles"><h2 id="h-candles">季节蜡烛</h2><span class="journal-sticker sticker-candles" aria-hidden="true"></span>${candleSection(data, detailByKeyword)}</section>
@@ -493,7 +493,7 @@ ${faviconLinks(assets)}
 ${themeToggle(assets)}
 <div class="binding" aria-hidden="true"></div>
 <header class="page-header"><div class="header-body"><div><h1>下载 App</h1><div class="status">${status}</div></div></div></header>
-<nav class="jump" aria-label="页面导航"><a href="../index.html">返回每日任务</a><a href="#download">下载</a><a href="#preview">界面预览</a>${notes ? '<a href="#notes">更新内容</a>' : ''}${release ? '<a href="#install">安装说明</a>' : ''}</nav>
+<nav class="jump" aria-label="页面导航"><a class="jump-link jump-home" href="../index.html">返回每日任务</a><a class="jump-link jump-download" href="#download">下载</a><a class="jump-link jump-preview" href="#preview">界面预览</a>${notes ? '<a class="jump-link jump-notes" href="#notes">更新内容</a>' : ''}${release ? '<a class="jump-link jump-install" href="#install">安装说明</a>' : ''}</nav>
 <section id="download" aria-labelledby="h-download"><h2 id="h-download">下载</h2><p class="app-hint">SkyDaily 安卓客户端：每日任务、饭点提醒与悬浮面板。</p>${facts}</section>
 <section id="preview" aria-labelledby="h-preview"><h2 id="h-preview">界面预览</h2><div class="app-shots">${shots}</div></section>
 ${notes}
