@@ -1,0 +1,135 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-25",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "和陌生人一起坐在长凳上",
+        "keyword": null
+      },
+      {
+        "number": 2,
+        "text": "向一位朋友招手",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "点亮一位玩家",
+        "keyword": null
+      },
+      {
+        "number": 4,
+        "text": "前往云野重温母语者的回忆",
+        "keyword": "母语者路线"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "母语者路线",
+        "title": "母语者路线",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "【圣岛·母语者】 >>点击查看：迁徙水母语者位置<<"
+          },
+          {
+            "label": "先祖位置",
+            "text": "云野－圣岛"
+          },
+          {
+            "label": "图文指引",
+            "text": "1.进入云野后，通过蝴蝶平原，来到云顶浮石\n2.来到云顶浮石后，一路往前飞，即可前往圣岛"
+          },
+          {
+            "label": "视频指引",
+            "text": ""
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/82397ee11f641de0477db3b7.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "【圣岛·母语者】 >>点击查看：迁徙水母语者位置<<\n先祖位置： 云野－圣岛\n图文指引：\n1.进入云野后，通过蝴蝶平原，来到云顶浮石\n2.来到云顶浮石后，一路往前飞，即可前往圣岛\n视频指引："
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [
+          "https://h5.ds.163.com/v1/6ad585a083a764003172a423/"
+        ],
+        "text": ""
+      },
+      {
+        "keyword": "小精灵的旅行",
+        "title": "下一站？小精灵也不知道！",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "“小精灵的旅行团，现在出发！”\n“等等，目的地还没定呢！”\n“不如就用抽签来决定吧~”\n在下方用手机截图 动图，即可获取与小精灵的旅行关键词～"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "“小精灵的旅行团，现在出发！”\n“等等，目的地还没定呢！”\n“不如就用抽签来决定吧~”\n在下方用手机截图 动图，即可获取与小精灵的旅行关键词～"
+      }
+    ],
+    "weather": {
+      "text": "今日将会有冷却碎片 坠落在滑冰场",
+      "images": [
+        "https://skydaily.nankki.com/history/media/8b4f2f75bcdf92389c4d2a5e.webp",
+        "https://skydaily.nankki.com/history/media/1b83625df624b95d2d2ffbd7.webp",
+        "https://skydaily.nankki.com/history/media/9b07749a8bd739ac1b42c3e9.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/b4de724bd872559deccce266.webp"
+      ]
+    },
+    "candles": [
+      {
+        "keyword": "大蜡烛",
+        "title": "每日大蜡烛位置",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~"
+          },
+          {
+            "label": "位置分布参考",
+            "text": "大蜡烛堆攻略"
+          },
+          {
+            "label": "小精灵温馨提示",
+            "text": "4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/c37d38160f147e9dc76df94f.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~\n位置分布参考：大蜡烛堆攻略\n小精灵温馨提示：\n4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+      }
+    ],
+    "seasonCandleMap": "云野"
+  },
+  "meta": {
+    "fetched_at": "2026-11-24T16:12:46.879Z",
+    "cached": false,
+    "stale": false
+  },
+  "errors": [
+    {
+      "section": "media",
+      "code": "image_unavailable"
+    }
+  ]
+}
