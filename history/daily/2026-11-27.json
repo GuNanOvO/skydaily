@@ -1,0 +1,210 @@
+{
+  "schema_version": 1,
+  "date": "2026-11-27",
+  "timezone": "Asia/Shanghai",
+  "data": {
+    "tasks": [
+      {
+        "number": 1,
+        "text": "拾起一只螃蟹",
+        "keyword": null
+      },
+      {
+        "number": 2,
+        "text": "净化10株黑暗植物",
+        "keyword": null
+      },
+      {
+        "number": 3,
+        "text": "在水母上回复能量",
+        "keyword": "水母位置"
+      },
+      {
+        "number": 4,
+        "text": "帮助老练音乐家",
+        "keyword": "老练音乐家任务"
+      }
+    ],
+    "taskDetails": [
+      {
+        "keyword": "水母位置",
+        "title": "每日任务－在水母上恢复能量",
+        "sections": [
+          {
+            "label": "位置",
+            "text": "密林遗迹(水母图)"
+          },
+          {
+            "label": "步骤",
+            "text": "密林遗迹后往前飞，来到终点图前的雨亭，点亮蜡烛即可召唤出一排水母"
+          },
+          {
+            "label": "注意",
+            "text": "几乎消耗完能量后再跳上水母会更容易完成任务哦"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/20ab602b08dc7bbc7543ab97.webp",
+          "https://skydaily.nankki.com/history/media/4c6c0134eed11351ab03141b.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "位置：密林遗迹(水母图)\n步骤：密林遗迹后往前飞，来到终点图前的雨亭，点亮蜡烛即可召唤出一排水母\n注意：几乎消耗完能量后再跳上水母会更容易完成任务哦"
+      },
+      {
+        "keyword": "老练音乐家任务",
+        "title": "每日任务－帮助老练音乐家",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "请旅人先查看接到的任务名称，然后在下方选择对应指南\n在圆梦村剧场找到老练音乐家 ｜ 老练音乐家在圆梦村剧场需要你的帮助"
+          },
+          {
+            "label": "小精灵提示",
+            "text": "1、若旅人从未收集过该先祖，任务会显示为：在圆梦村剧场找到老练音乐家 ；\n2、若旅人之前已收集过该先祖，任务会显示为：老练音乐家 在圆梦村剧场，需要你的帮助"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "请旅人先查看接到的任务名称，然后在下方选择对应指南\n在圆梦村剧场找到老练音乐家 ｜ 老练音乐家在圆梦村剧场需要你的帮助\n小精灵提示：\n1、若旅人从未收集过该先祖，任务会显示为：在圆梦村剧场找到老练音乐家 ；\n2、若旅人之前已收集过该先祖，任务会显示为：老练音乐家 在圆梦村剧场，需要你的帮助",
+        "variants": [
+          {
+            "label": "在圆梦村剧场找到老练音乐家",
+            "title": "在圆梦村剧场找到老练音乐家",
+            "sections": [
+              {
+                "label": "先祖位置",
+                "text": "霞谷·圆梦村剧场"
+              },
+              {
+                "label": "任务流程",
+                "text": "1、先前往圆梦村剧场找到并收集老练音乐家先祖\n2、回到圆梦村，按提示找到先祖\n3、与先祖互动，拿起旁边的电子琴演奏即可"
+              },
+              {
+                "label": "图片流程",
+                "text": ""
+              },
+              {
+                "label": "视频流程",
+                "text": ""
+              }
+            ],
+            "images": [
+              "https://skydaily.nankki.com/history/media/98920251001a530eb4abb351.webp"
+            ],
+            "videos": [],
+            "links": [],
+            "text": "先祖位置： 霞谷·圆梦村剧场\n任务流程：\n1、先前往圆梦村剧场找到并收集老练音乐家先祖\n2、回到圆梦村，按提示找到先祖\n3、与先祖互动，拿起旁边的电子琴演奏即可\n图片流程：\n视频流程："
+          },
+          {
+            "label": "老练音乐家在圆梦村剧场需要你的帮助",
+            "title": "老练音乐家在圆梦村需要你的帮助",
+            "sections": [
+              {
+                "label": "先祖位置",
+                "text": "霞谷·圆梦村剧场"
+              },
+              {
+                "label": "任务流程",
+                "text": "1、前往霞谷圆梦村，按提示找到先祖\n2、与先祖互动，在旁边的垂钓点把电子琴钓上来，还给先祖即可"
+              },
+              {
+                "label": "图片流程",
+                "text": ""
+              },
+              {
+                "label": "视频流程",
+                "text": ""
+              }
+            ],
+            "images": [
+              "https://skydaily.nankki.com/history/media/638f90893386e38c2f7e1964.webp",
+              "https://skydaily.nankki.com/history/media/e610a224419dba3d974559fa.webp"
+            ],
+            "videos": [],
+            "links": [],
+            "text": "先祖位置： 霞谷·圆梦村剧场\n任务流程：\n1、前往霞谷圆梦村，按提示找到先祖\n2、与先祖互动，在旁边的垂钓点把电子琴钓上来，还给先祖即可\n图片流程：\n视频流程："
+          }
+        ]
+      },
+      {
+        "keyword": "季节蜡烛探索指南",
+        "title": "季节蜡烛探索指南",
+        "sections": [],
+        "images": [],
+        "videos": [],
+        "links": [
+          "https://h5.ds.163.com/v1/6ad585a083a764003172a423/"
+        ],
+        "text": ""
+      },
+      {
+        "keyword": "小精灵的旅行",
+        "title": "下一站？小精灵也不知道！",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "“小精灵的旅行团，现在出发！”\n“等等，目的地还没定呢！”\n“不如就用抽签来决定吧~”\n在下方用手机截图 动图，即可获取与小精灵的旅行关键词～"
+          }
+        ],
+        "images": [],
+        "videos": [],
+        "links": [],
+        "text": "“小精灵的旅行团，现在出发！”\n“等等，目的地还没定呢！”\n“不如就用抽签来决定吧~”\n在下方用手机截图 动图，即可获取与小精灵的旅行关键词～"
+      }
+    ],
+    "weather": {
+      "text": "今日将会有灼热碎片坠落在星光沙漠一隅",
+      "images": [
+        "https://skydaily.nankki.com/history/media/2aa91c91e2ea0604a2cb2bcc.webp",
+        "https://skydaily.nankki.com/history/media/db95520b926aed1525f5ee34.webp",
+        "https://skydaily.nankki.com/history/media/defbe5f0978d77a3c3da2415.webp",
+        "https://skydaily.nankki.com/history/media/3aac008fc33c8322f34a3721.webp"
+      ]
+    },
+    "calendar": {
+      "images": [
+        "https://skydaily.nankki.com/history/media/b4de724bd872559deccce266.webp"
+      ]
+    },
+    "candles": [
+      {
+        "keyword": "大蜡烛",
+        "title": "每日大蜡烛位置",
+        "sections": [
+          {
+            "label": "简介",
+            "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~"
+          },
+          {
+            "label": "位置分布参考",
+            "text": "大蜡烛堆攻略"
+          },
+          {
+            "label": "小精灵温馨提示",
+            "text": "4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+          }
+        ],
+        "images": [
+          "https://skydaily.nankki.com/history/media/c37d38160f147e9dc76df94f.webp"
+        ],
+        "videos": [],
+        "links": [],
+        "text": "在遇境/云巢里传送门门口处，若有两根小蜡烛在两边，即表示对应的地图里会有大蜡烛堆~\n位置分布参考：大蜡烛堆攻略\n小精灵温馨提示：\n4月29日 ~ 5月5日\n天空王国各地将出现多簇蜡烛堆"
+      }
+    ],
+    "seasonCandleMap": "霞谷"
+  },
+  "meta": {
+    "fetched_at": "2026-11-26T16:15:06.404Z",
+    "cached": false,
+    "stale": false
+  },
+  "errors": [
+    {
+      "section": "media",
+      "code": "image_unavailable"
+    }
+  ]
+}
